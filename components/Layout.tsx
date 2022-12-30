@@ -38,6 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div>
       <Toolbar />
       <Divider />
+
       <List>
         <ListItem disablePadding>
           <ListItemButton component={Link} href="/" sx={getActiveStyle("/")}>
