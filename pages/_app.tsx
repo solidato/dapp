@@ -5,10 +5,12 @@ import { theme } from "../styles/theme";
 import Layout from "../components/Layout";
 
 export default function App({ Component, pageProps }: AppProps) {
+  // @ts-ignore
+  const pageTitle = Component.title ? `NeokingdomDAO | ${Component.title}` : "NeokingdomDAO";
   return (
     <>
       <Head>
-        <title>NeoKingdomDAO</title>
+        <title>{pageTitle}</title>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta

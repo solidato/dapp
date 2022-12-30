@@ -1,6 +1,8 @@
 import { Button } from "@mui/material";
 import Link from "next/link";
 
+Tasks.title = "Tasks List";
+
 export default function Tasks() {
   return (
     <>
