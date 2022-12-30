@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import Link from 'next/link';
+import Link from "next/link";
 
 export default function Tasks() {
   return (
@@ -8,7 +8,9 @@ export default function Tasks() {
 
       <br />
 
-      <Button component={Link} href="/tasks/new" variant="outlined">New Task</Button>
+      <Button component={Link} href="/tasks/new" variant="outlined">
+        New Task
+      </Button>
     </>
-  )
+  );
 }

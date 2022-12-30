@@ -13,12 +13,7 @@ const users = async (req: NextApiRequest, res: NextApiResponse) => {
   const username = "";
   const password = "";
 
-  const session = await getSession(
-    process.env.ODOO_ENDPOINT!,
-    process.env.ODOO_DB_NAME!,
-    username,
-    password
-  );
+  const session = await getSession(process.env.ODOO_ENDPOINT!, process.env.ODOO_DB_NAME!, username, password);
 
   const data: OdooUser[] = await session.search("res.users", [], {
     fields: ["display_name", "email", "ethereum_address"],
