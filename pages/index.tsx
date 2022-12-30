@@ -1,6 +1,7 @@
 import styles from '../styles/Home.module.scss'
 
 export default function Home() {
+
   return (
     <div className={styles.container}>
       <main className={styles.main}>
@@ -13,15 +14,15 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <a className={styles.card}>
+          <div className={styles.card}>
             <h3>Desktop</h3>
-            <p>Log in now and start using Neokingdom DAO.</p>
-          </a>
+            <p>Login now and start using Neokingdom DAO.</p>
+          </div>
 
-          <a className={styles.card}>
+          <div className={styles.card}>
             <h3>Mobile</h3>
             <p>This website can also be installed as an app in your Android phone or iPhone. Open this website from your smartphone and follow the instructions.</p>
-          </a>
+          </div>
         </div>
       </main>
 
