@@ -4,5 +4,8 @@ const withPWA = require('next-pwa')({
 })
 
 module.exports = withPWA({
-  // config
+  reactStrictMode: false,
+  compiler: {
+    emotion: true,
+  },
 })
