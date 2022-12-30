@@ -41,7 +41,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <List>
         <ListItem disablePadding>
-          <ListItemButton component={Link} href="/" sx={getActiveStyle("/")}>
+          <ListItemButton component={Link} href="/" sx={getActiveStyle("/")} onClick={handleDrawerToggle}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
@@ -49,7 +49,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton component={Link} href="/tasks" sx={getActiveStyle("/tasks")}>
+          <ListItemButton component={Link} href="/tasks" sx={getActiveStyle("/tasks")} onClick={handleDrawerToggle}>
             <ListItemIcon>
               <TaskIcon />
             </ListItemIcon>
@@ -60,7 +60,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton component={Link} href="/settings" sx={getActiveStyle("/settings")}>
+          <ListItemButton
+            component={Link}
+            href="/settings"
+            sx={getActiveStyle("/settings")}
+            onClick={handleDrawerToggle}
+          >
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
