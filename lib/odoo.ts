@@ -27,8 +27,20 @@ async function jsonRpc(url: string, method: string, params: any) {
   }
 }
 
-async function call(url: string, service: string, method: string, ...args: any) {
-  return await jsonRpc(url, "call", { service, method, args });
+async function call(
+  url: string,
+  service: string,
+  method: string,
+  db: string,
+  uid: string | number,
+  password: string,
+  ...args: any
+) {
+  return await jsonRpc(url, "call", {
+    service,
+    method,
+    args: [db, uid, password, ...args],
+  });
 }
 
 function tuplify(query: { [key: string]: string } | string[] = {}) {
@@ -43,12 +55,12 @@ function tuplify(query: { [key: string]: string } | string[] = {}) {
 }
 
 export async function getSession(url: string, db: string, username: string, password: string) {
-  const uid = await call(url, "common", "login", db, username, password);
-  const model = call.bind(null, url, "object", "execute_kw", db, uid, password);
+  const uid: number = await call(url, "common", "login", db, username, password);
+  const model = (...args: any[]) => call(url, "object", "execute_kw", db, uid, password, args);
   return {
     create: async (name: string, object: any) => model(name, "create", [object]),
     read: async (name: string, ids: number[]) => model(name, "read", [ids]),
-    search: async (name: string, query: any, fields: any) => model(name, "search_read", [tuplify(query)], fields),
+    search: async (name: string, query: any, fields?: any) => model(name, "search_read", [tuplify(query)], fields),
     update: async (name: string, id: number, object: any) => model(name, "write", [[id], object]),
     remove: async (name: string, ids: number[]) => model(name, "unlink", [ids]),
     uid,
