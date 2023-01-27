@@ -108,7 +108,8 @@ export type OdooUser = {
   email: string;
   ethereum_address: string;
   display_name: string;
-  image: string;
+  image?: string;
+  avatar_256?: string;
 };
 
 export type OdooUserTransformed = {

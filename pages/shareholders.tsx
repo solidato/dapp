@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import useSWR from "swr";
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
-import { Chip, Skeleton, Stack } from "@mui/material";
+import { Chip, CircularProgress, Skeleton, Stack } from "@mui/material";
 import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { DaoUser } from "types";
@@ -64,14 +64,7 @@ export default function Shareholders() {
   }, [data, getShareholderStatus]);
 
   if (isLoading) {
-    return (
-      <>
-        <Skeleton animation="wave" height={40} />
-        <Skeleton animation="wave" height={40} />
-        <Skeleton animation="wave" height={40} />
-        <Skeleton animation="wave" height={40} />
-      </>
-    );
+    return <CircularProgress />;
   }
 
   return (

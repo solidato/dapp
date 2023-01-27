@@ -3,14 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { getSession } from "@lib/odoo";
 import { sessionOptions } from "@lib/session";
-
-export type OdooUser = {
-  email: string;
-  ethereum_address: string;
-  display_name: string;
-  image: string;
-  avatar_256: string;
-};
+import { OdooUser } from "types";
 
 const USER_FIELDS = {
   neokingdom: ["display_name", "email", "ethereum_address", "avatar_256"],
