@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import useSWR from "swr";
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
-import { Chip, CircularProgress, Skeleton, Stack } from "@mui/material";
+import { Chip, CircularProgress, Container, Skeleton, Stack } from "@mui/material";
 import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { DaoUser } from "types";
@@ -68,35 +68,37 @@ export default function Shareholders() {
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="shareholders table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align="right">Tokens</TableCell>
-            <TableCell align="right">Voting Power</TableCell>
-            <TableCell align="right">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {daoUsersAddresses?.map((address) => (
-            <TableRow key={address} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell component="th" scope="row">
-                <User address={address} />
-              </TableCell>
-              <TableCell align="right">{daoUsers[address].balance.toLocaleString()}</TableCell>
-              <TableCell align="right">{daoUsers[address].power}</TableCell>
-              <TableCell align="right">
-                <Stack direction="row" spacing={1} justifyContent="right">
-                  {getShareholderStatus(address).map((status) => (
-                    <Chip key={status} label={status} size="small" />
-                  ))}
-                </Stack>
-              </TableCell>
+    <Container maxWidth="lg">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="shareholders table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell align="right">Tokens</TableCell>
+              <TableCell align="right">Voting Power</TableCell>
+              <TableCell align="right">Status</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {daoUsersAddresses?.map((address) => (
+              <TableRow key={address} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell component="th" scope="row">
+                  <User address={address} />
+                </TableCell>
+                <TableCell align="right">{daoUsers[address].balance.toLocaleString()}</TableCell>
+                <TableCell align="right">{daoUsers[address].power}</TableCell>
+                <TableCell align="right">
+                  <Stack direction="row" spacing={1} justifyContent="right">
+                    {getShareholderStatus(address).map((status) => (
+                      <Chip key={status} label={status} size="small" />
+                    ))}
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 }

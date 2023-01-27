@@ -7,7 +7,6 @@ async function jsonRpc(url: string, method: string, params: any) {
     params: params,
     id: uuidv4(),
   };
-  console.log("data: ", data);
 
   const response = await fetch(url, {
     method: "POST",
