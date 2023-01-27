@@ -13,6 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import SettingsIcon from "@mui/icons-material/Settings";
 import TaskIcon from "@mui/icons-material/Task";
 import MenuIcon from "@mui/icons-material/Menu";
+import Groups2Icon from "@mui/icons-material/Groups2";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -97,6 +98,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <ListItemText primary="Tasks" />
           </ListItemButton>
         </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton
+            component={Link}
+            href="/shareholders"
+            sx={getActiveStyle("/shareholders")}
+            onClick={handleDrawerToggle}
+          >
+            <ListItemIcon>
+              <Groups2Icon />
+            </ListItemIcon>
+            <ListItemText primary="Shareholders" />
+          </ListItemButton>
+        </ListItem>
       </List>
       <Divider />
       <List>
@@ -142,7 +156,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Neokingdom DAO
           </Typography>
-          {!user || !user.isLoggedIn ? (
+          {!user?.isLoggedIn ? (
             <Button component={Link} href="/login" color="inherit">
               Login
             </Button>
@@ -152,7 +166,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
-                aria-haspopup="true"
+                aria-haspopup
                 onClick={handleMenu}
                 color="inherit"
               >
@@ -174,7 +188,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={() => logout()}>Logout</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
               </Menu>
             </div>
           )}
