@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
-import { getSession } from "../../lib/odoo";
-import { sessionOptions } from "../../lib/session";
+import { getSession } from "@lib/odoo";
+import { sessionOptions } from "@lib/session";
 
 function groupBy(arr: { [key: string]: any }[], key: string = "id") {
   return arr.reduce((acc, item) => {

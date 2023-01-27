@@ -7,6 +7,7 @@ async function jsonRpc(url: string, method: string, params: any) {
     params: params,
     id: uuidv4(),
   };
+  console.log("data: ", data);
 
   const response = await fetch(url, {
     method: "POST",
@@ -56,11 +57,14 @@ function tuplify(query: { [key: string]: string } | string[] = {}) {
 
 export async function getSession(url: string, db: string, username: string, password: string) {
   const uid: number = await call(url, "common", "login", db, username, password);
-  const model = (...args: any[]) => call(url, "object", "execute_kw", db, uid, password, args);
+  const model = (...args: any[]) => call(url, "object", "execute_kw", db, uid, password, ...args);
   return {
     create: async (name: string, object: any) => model(name, "create", [object]),
     read: async (name: string, ids: number[]) => model(name, "read", [ids]),
-    search: async (name: string, query: any, fields?: any) => model(name, "search_read", [tuplify(query)], fields),
+    search: async (name: string, query: any, fields?: any) => {
+      console.log(name, query, fields);
+      return model(name, "search_read", [tuplify(query)], fields);
+    },
     update: async (name: string, id: number, object: any) => model(name, "write", [[id], object]),
     remove: async (name: string, ids: number[]) => model(name, "unlink", [ids]),
     uid,
