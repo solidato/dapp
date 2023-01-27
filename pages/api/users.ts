@@ -12,9 +12,9 @@ const USER_FIELDS = {
 
 const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = req.session.user;
-  if (!user || user.isLoggedIn === false) {
-    res.status(401).end();
-    return;
+
+  if (!user?.isLoggedIn) {
+    return res.status(401).end();
   }
 
   const { username, password } = user;
@@ -25,7 +25,7 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (process.env.PROJECT_KEY === "neokingdom") {
-    return res.status(200).json(data.map((d) => ({ ...d, image: d.avatar_256 })));
+    return res.status(200).json(data.map((user) => ({ ...user, image: user.avatar_256 })));
   }
 
   res.status(200).json(data);
