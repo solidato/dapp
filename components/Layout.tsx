@@ -15,7 +15,7 @@ import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
-export default function Layout({ children, toggleTheme }: { children: React.ReactNode; toggleTheme: () => void }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const { isAlertOpen, alertMessage, alertSeverity, closeAlert } = useAlertStore(
     (state) => ({
       isAlertOpen: state.open,
@@ -35,8 +35,10 @@ export default function Layout({ children, toggleTheme }: { children: React.Reac
       <CssBaseline />
       <Box
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "dark" ? "rgba(33, 33, 33, 0.9)" : "rgba(255, 255, 255, 0.9)",
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          ['[data-mui-color-scheme="dark"] &']: {
+            backgroundColor: "rgba(33, 33, 33, 0.9)",
+          },
           backdropFilter: "blur(4px)",
           position: "fixed",
           width: "100%",
@@ -48,12 +50,19 @@ export default function Layout({ children, toggleTheme }: { children: React.Reac
       >
         <AppBar position="relative" elevation={0} variant="outlined" color="transparent">
           <Slide appear={false} direction="down" in={!trigger}>
-            <Toolbar sx={{ "& svg": { fill: (t) => (t.palette.mode === "dark" ? "#FFFFFF" : "#000000") } }}>
+            <Toolbar
+              sx={{
+                "& svg": { fill: "#000000" },
+                ['[data-mui-color-scheme="dark"] &']: {
+                  "& svg": { fill: "#FFFFFF" },
+                },
+              }}
+            >
               <Link href="/" style={{ display: "inherit" }}>
                 <NkdLogo height={70} />
               </Link>
               <Box sx={{ ml: "auto" }}>
-                <AccountMenu toggleTheme={toggleTheme} />
+                <AccountMenu />
               </Box>
             </Toolbar>
           </Slide>

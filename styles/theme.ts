@@ -1,5 +1,6 @@
 import { Red_Hat_Display } from "@next/font/google";
 import { createTheme } from "@mui/material/styles";
+import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 
 export const redHatFont = Red_Hat_Display({
   weight: ["300", "400", "500", "700"],
@@ -35,4 +36,13 @@ export const DarkTheme = createTheme({
   ...COMMON,
 });
 
-export const getTheme = (mode: "dark" | "light") => (mode === "dark" ? DarkTheme : LightTheme);
+export const newTheme = extendTheme({
+  colorSchemes: {
+    light: {
+      ...LightTheme,
+    },
+    dark: {
+      ...DarkTheme,
+    },
+  },
+});

@@ -15,7 +15,7 @@ import { shallow } from "zustand/shallow";
 import Link from "next/link";
 import { getLettersFromName } from "@lib/utils";
 import useOdooUsers from "@hooks/useOdooUsers";
-import { Modal, Typography, useTheme } from "@mui/material";
+import { Modal, Typography, useColorScheme, useTheme } from "@mui/material";
 import LoginForm from "./LoginForm";
 import useLoginModalStore from "@store/loginModal";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -32,7 +32,8 @@ const style = {
   p: 4,
 };
 
-export default function AccountMenu({ toggleTheme }: { toggleTheme: () => void }) {
+export default function AccountMenu() {
+  const { mode, setMode } = useColorScheme();
   const { user, mutateUser } = useUser();
   const theme = useTheme();
   const {
@@ -187,10 +188,10 @@ export default function AccountMenu({ toggleTheme }: { toggleTheme: () => void }
           </MenuItem>,
         ]}
         <Divider></Divider>
-        <MenuItem onClick={toggleTheme}>
-          Switch to {theme.palette.mode === "dark" ? "light" : "dark"}
+        <MenuItem onClick={() => setMode(mode === "light" ? "dark" : "light")}>
+          Turn {mode === "light" ? "dark" : "light"}
           <IconButton sx={{ ml: 1 }} color="inherit">
-            {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
         </MenuItem>
       </Menu>
