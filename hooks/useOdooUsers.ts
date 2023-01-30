@@ -10,7 +10,7 @@ const isSameAddress = (addressLeft: string, addressRight: string) =>
   typeof addressRight === "string" && // see ^
   addressLeft.toLowerCase() === addressRight.toLowerCase();
 
-export default function useUsers(address = ""): { users: OdooUser[]; error?: boolean; isLoading?: boolean } {
+export default function useOdooUsers(address = ""): { users: OdooUser[]; error?: boolean; isLoading?: boolean } {
   const { user } = useUser();
   const { data, error, isLoading } = useSWR(user?.isLoggedIn ? "/api/users" : null, fetcher);
 

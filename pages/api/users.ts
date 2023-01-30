@@ -4,11 +4,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { getSession } from "@lib/odoo";
 import { sessionOptions } from "@lib/session";
 import { OdooUser } from "types";
-
-const USER_FIELDS = {
-  neokingdom: ["display_name", "email", "ethereum_address", "avatar_256"],
-  teledisko: ["display_name", "email", "ethereum_address", "image"],
-};
+import { USER_FIELDS } from "@lib/constants";
 
 const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = req.session.user;

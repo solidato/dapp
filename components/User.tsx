@@ -1,15 +1,10 @@
 import React from "react";
 import { Avatar, Box, Skeleton, Typography } from "@mui/material";
-import useUsers from "@hooks/useUsers";
-
-const getLettersFromName = (name: string) =>
-  name
-    ?.split(/\s/)
-    .map((w) => Array.from(w)[0])
-    .join("");
+import useOdooUsers from "@hooks/useOdooUsers";
+import { getLettersFromName } from "@lib/utils";
 
 export default function User({ address }: { address: string }) {
-  const { users, isLoading } = useUsers(address);
+  const { users, isLoading } = useOdooUsers(address);
   const [currentUser] = users || [];
 
   return (

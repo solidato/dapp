@@ -9,18 +9,30 @@ import Paper from "@mui/material/Paper";
 import useSWR from "swr";
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
-import { Chip, CircularProgress, Container, Skeleton, Stack } from "@mui/material";
+import { Alert, Chip, CircularProgress, Divider, Stack, Box } from "@mui/material";
 import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { DaoUser } from "types";
 import User from "@components/User";
+import useUser from "@lib/useUser";
+import useLoginModalStore from "@store/loginModal";
+import { shallow } from "zustand/shallow";
+import Link from "next/link";
 
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 Shareholders.title = "Shareholders";
 
 export default function Shareholders() {
+  const { user } = useUser();
   const { data, isLoading } = useSWR(getShareholdersInfo, fetcher);
+
+  const { handleOpenLoginModalFromLink } = useLoginModalStore(
+    (state) => ({
+      handleOpenLoginModalFromLink: state.handleOpenLoginModalFromLink,
+    }),
+    shallow,
+  );
 
   const getShareholderStatus = React.useCallback(
     (address: string) => {
@@ -68,7 +80,17 @@ export default function Shareholders() {
   }
 
   return (
-    <Container maxWidth="lg">
+    <>
+      {!user?.isLoggedIn && (
+        <Box sx={{ mb: 2 }}>
+          <Alert severity="warning">
+            To be able to see shareholders information, please{" "}
+            <Link href="/login" onClick={handleOpenLoginModalFromLink}>
+              log in
+            </Link>
+          </Alert>
+        </Box>
+      )}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="shareholders table">
           <TableHead>
@@ -99,6 +121,6 @@ export default function Shareholders() {
           </TableBody>
         </Table>
       </TableContainer>
-    </Container>
+    </>
   );
 }
