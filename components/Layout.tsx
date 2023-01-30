@@ -85,7 +85,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Toolbar>
         </AppBar>
       </Box>
-      <Box component="main" sx={{ p: 3, pt: 18 }}>
+      <Box component="main" sx={{ p: { md: 3 }, pt: { xs: 18, md: 18 } }}>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={isAlertOpen}
