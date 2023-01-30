@@ -2,228 +2,90 @@ import React, { useMemo, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import HomeIcon from "@mui/icons-material/Home";
-import ListItemText from "@mui/material/ListItemText";
-import SettingsIcon from "@mui/icons-material/Settings";
-import TaskIcon from "@mui/icons-material/Task";
-import MenuIcon from "@mui/icons-material/Menu";
-import Groups2Icon from "@mui/icons-material/Groups2";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import { IconButton, Theme } from "@mui/material";
+import { Chip, Stack, Divider, Container, Slide, useScrollTrigger } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import useUser from "../lib/useUser";
 import useAlertStore from "../store/alertStore";
 import { shallow } from "zustand/shallow";
+import Image from "next/image";
+import Logo from "../images/logo-nkd.svg";
+import AccountMenu from "./AccountMenu";
 
-const drawerWidth = 240;
-
-const initActiveStyle = (currentPath: string) => (href: string) =>
-  currentPath === href ? { backgroundColor: (theme: Theme) => theme.palette.grey[300] } : {};
+const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { user, mutateUser } = useUser();
-  const { isAlertOpen, alertMessage, alertSeverity, openAlert, closeAlert } = useAlertStore(
+  const { isAlertOpen, alertMessage, alertSeverity, closeAlert } = useAlertStore(
     (state) => ({
       isAlertOpen: state.open,
       alertMessage: state.message,
       alertSeverity: state.severity,
-      openAlert: state.openAlert,
       closeAlert: state.closeAlert,
     }),
     shallow,
   );
 
   const router = useRouter();
-  const getActiveStyle = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
-
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
-  const logout = async () => {
-    try {
-      const res = await fetch("/api/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.status === 200) {
-        const user = await res.json();
-        mutateUser(user);
-      } else {
-        openAlert({ message: "Logout failed" });
-      }
-    } catch (error) {
-      openAlert({ message: "Network Error" });
-    }
-  };
-
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} href="/" sx={getActiveStyle("/")} onClick={handleDrawerToggle}>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} href="/tasks" sx={getActiveStyle("/tasks")} onClick={handleDrawerToggle}>
-            <ListItemIcon>
-              <TaskIcon />
-            </ListItemIcon>
-            <ListItemText primary="Tasks" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
-            component={Link}
-            href="/shareholders"
-            sx={getActiveStyle("/shareholders")}
-            onClick={handleDrawerToggle}
-          >
-            <ListItemIcon>
-              <Groups2Icon />
-            </ListItemIcon>
-            <ListItemText primary="Shareholders" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton
-            component={Link}
-            href="/settings"
-            sx={getActiveStyle("/settings")}
-            onClick={handleDrawerToggle}
-          >
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </div>
-  );
-
-  const container = typeof window !== "undefined" ? document.body : undefined;
+  const trigger = useScrollTrigger();
+  const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <>
       <CssBaseline />
-      <AppBar
-        position="fixed"
+      <Box
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          backdropFilter: "blur(4px)",
+          position: "fixed",
+          width: "100%",
+          zIndex: 2,
+          isolation: "isolate",
+          transition: "transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+          transform: trigger ? "translate3d(0, -71px, 0)" : "translate3d(0, 0, 0)",
         }}
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Neokingdom DAO
-          </Typography>
-          {!user?.isLoggedIn ? (
-            <Button component={Link} href="/login" color="inherit">
-              Login
-            </Button>
-          ) : (
-            <div>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={logout}>Logout</MenuItem>
-              </Menu>
-            </div>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+        <AppBar position="relative" elevation={0} variant="outlined" color="transparent">
+          <Slide appear={false} direction="down" in={!trigger}>
+            <Toolbar>
+              <Link href="/" style={{ display: "inherit" }}>
+                <Image priority src={Logo} height={70} alt="Neokingdom DAO" />
+              </Link>
+              <Box sx={{ ml: "auto" }}>
+                <AccountMenu />
+              </Box>
+            </Toolbar>
+          </Slide>
+          <Divider />
+          <Toolbar variant="dense">
+            <Stack direction="row" spacing={1} sx={{ overflow: "auto" }}>
+              <Chip
+                label="Dashboard"
+                component={Link}
+                href="/"
+                variant={isActive("/") ? "filled" : "outlined"}
+                clickable
+              />
+              <Chip
+                label="Tasks"
+                component={Link}
+                href="/tasks"
+                variant={isActive("/tasks") ? "filled" : "outlined"}
+                clickable
+              />
+              <Chip
+                label="Shareholders"
+                component={Link}
+                href="/shareholders"
+                variant={isActive("/shareholders") ? "filled" : "outlined"}
+                clickable
+              />
+            </Stack>
+          </Toolbar>
+        </AppBar>
       </Box>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
-        <Toolbar />
+      <Box component="main" sx={{ p: 3, pt: 18 }}>
         <Snackbar
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={isAlertOpen}
@@ -234,8 +96,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {alertMessage}
           </Alert>
         </Snackbar>
-        {children}
+        <Container maxWidth="lg">{children}</Container>
       </Box>
-    </Box>
+    </>
   );
 }
