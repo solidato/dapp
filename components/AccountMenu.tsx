@@ -15,9 +15,11 @@ import { shallow } from "zustand/shallow";
 import Link from "next/link";
 import { getLettersFromName } from "@lib/utils";
 import useOdooUsers from "@hooks/useOdooUsers";
-import { Modal, Typography } from "@mui/material";
+import { Modal, Typography, useTheme } from "@mui/material";
 import LoginForm from "./LoginForm";
 import useLoginModalStore from "@store/loginModal";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 const style = {
   position: "absolute" as "absolute",
@@ -30,8 +32,9 @@ const style = {
   p: 4,
 };
 
-export default function AccountMenu() {
+export default function AccountMenu({ toggleTheme }: { toggleTheme: () => void }) {
   const { user, mutateUser } = useUser();
+  const theme = useTheme();
   const {
     users: [currentOdooUser],
   } = useOdooUsers(user?.ethereum_address);
@@ -83,6 +86,14 @@ export default function AccountMenu() {
         onClose={handleModalClose}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
+        slotProps={{
+          backdrop: {
+            style: {
+              backgroundColor: theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(4px)",
+            },
+          },
+        }}
       >
         <Box sx={style}>
           <Typography id="modal-title" variant="h6" component="h2">
@@ -175,6 +186,13 @@ export default function AccountMenu() {
             Logout
           </MenuItem>,
         ]}
+        <Divider></Divider>
+        <MenuItem onClick={toggleTheme}>
+          Switch to {theme.palette.mode === "dark" ? "light" : "dark"}
+          <IconButton sx={{ ml: 1 }} color="inherit">
+            {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </MenuItem>
       </Menu>
     </React.Fragment>
   );

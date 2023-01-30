@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import useSWR from "swr";
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
-import { Alert, Chip, CircularProgress, Divider, Stack, Box } from "@mui/material";
+import { Alert, Chip, CircularProgress, Divider, Stack, Box, Link } from "@mui/material";
 import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { DaoUser } from "types";
@@ -17,7 +17,7 @@ import User from "@components/User";
 import useUser from "@lib/useUser";
 import useLoginModalStore from "@store/loginModal";
 import { shallow } from "zustand/shallow";
-import Link from "next/link";
+import NextLink from "next/link";
 
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
@@ -85,7 +85,7 @@ export default function Shareholders() {
         <Box sx={{ mb: 2 }}>
           <Alert severity="warning">
             To be able to see shareholders information, please{" "}
-            <Link href="/login" onClick={handleOpenLoginModalFromLink}>
+            <Link component={NextLink} href="/login" onClick={handleOpenLoginModalFromLink}>
               log in
             </Link>
           </Alert>

@@ -8,12 +8,7 @@ export const redHatFont = Red_Hat_Display({
   fallback: ["Helvetica", "Arial", "sans-serif"],
 });
 
-export const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#0500bf",
-    },
-  },
+const COMMON = {
   components: {
     MuiButtonBase: {
       defaultProps: {
@@ -24,4 +19,20 @@ export const theme = createTheme({
   typography: {
     fontFamily: redHatFont.style.fontFamily,
   },
+};
+
+export const LightTheme = createTheme({
+  palette: {
+    mode: "light",
+  },
+  ...COMMON,
 });
+
+export const DarkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+  ...COMMON,
+});
+
+export const getTheme = (mode: "dark" | "light") => (mode === "dark" ? DarkTheme : LightTheme);

@@ -5,18 +5,17 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import { Chip, Stack, Divider, Container, Slide, useScrollTrigger } from "@mui/material";
+import { Chip, Stack, Divider, Container, Slide, useScrollTrigger, useTheme } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useAlertStore from "../store/alertStore";
 import { shallow } from "zustand/shallow";
-import Image from "next/image";
-import Logo from "../images/logo-nkd.svg";
 import AccountMenu from "./AccountMenu";
+import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, toggleTheme }: { children: React.ReactNode; toggleTheme: () => void }) {
   const { isAlertOpen, alertMessage, alertSeverity, closeAlert } = useAlertStore(
     (state) => ({
       isAlertOpen: state.open,
@@ -36,7 +35,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <CssBaseline />
       <Box
         sx={{
-          backgroundColor: "rgba(255, 255, 255, 0.9)",
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "rgba(33, 33, 33, 0.9)" : "rgba(255, 255, 255, 0.9)",
           backdropFilter: "blur(4px)",
           position: "fixed",
           width: "100%",
@@ -48,12 +48,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <AppBar position="relative" elevation={0} variant="outlined" color="transparent">
           <Slide appear={false} direction="down" in={!trigger}>
-            <Toolbar>
+            <Toolbar sx={{ "& svg": { fill: (t) => (t.palette.mode === "dark" ? "#FFFFFF" : "#000000") } }}>
               <Link href="/" style={{ display: "inherit" }}>
-                <Image priority src={Logo} height={70} alt="Neokingdom DAO" />
+                <NkdLogo height={70} />
               </Link>
               <Box sx={{ ml: "auto" }}>
-                <AccountMenu />
+                <AccountMenu toggleTheme={toggleTheme} />
               </Box>
             </Toolbar>
           </Slide>

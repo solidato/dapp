@@ -1,3 +1,8 @@
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
+
 export default function Home() {
-  return <div>NKD home</div>;
+  const theme = useTheme();
+  console.log("theme: ", theme.palette.mode);
+  return <Typography variant="h1">NKD home</Typography>;
 }
