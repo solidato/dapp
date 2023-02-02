@@ -1,19 +1,22 @@
-import React, { useMemo, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { shallow } from "zustand/shallow";
+
+import React, { useMemo } from "react";
+
+import { Chip, Container, Divider, Slide, Stack, useScrollTrigger, useTheme } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
 import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { Chip, Stack, Divider, Container, Slide, useScrollTrigger, useTheme } from "@mui/material";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Toolbar from "@mui/material/Toolbar";
+
+import TelediskoLogo from "../images/logo-teledisko.png";
 import useAlertStore from "../store/alertStore";
-import { shallow } from "zustand/shallow";
 import AccountMenu from "./AccountMenu";
 import NkdLogo from "./svg-logos/NkdLogo";
-import TelediskoLogo from "../images/logo-teledisko.png";
-import Image from "next/image";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
