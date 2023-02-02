@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { NextApiRequest, NextApiResponse } from "next";
+import { OdooUser } from "types";
+
+import { USER_FIELDS } from "@lib/constants";
 import { getSession } from "@lib/odoo";
 import { sessionOptions } from "@lib/session";
-import { OdooUser } from "types";
-import { USER_FIELDS } from "@lib/constants";
 
 const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   const user = req.session.user;

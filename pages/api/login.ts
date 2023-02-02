@@ -1,10 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { NextApiRequest, NextApiResponse } from "next";
+import { OdooUser } from "types";
+
+import { USER_FIELDS } from "@lib/constants";
+
 import { getSession } from "../../lib/odoo";
 import { sessionOptions } from "../../lib/session";
 import userFactory from "../../lib/userFactory";
-import { OdooUser } from "types";
-import { USER_FIELDS } from "@lib/constants";
 
 // Login with Odoo
 const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {

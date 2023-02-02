@@ -1,23 +1,29 @@
+import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
+import NextLink from "next/link";
+import useSWR from "swr";
+import { DaoUser } from "types";
+import { shallow } from "zustand/shallow";
+
 import * as React from "react";
+
+import { Alert, Box, Chip, CircularProgress, Divider, Link, Stack } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import useSWR from "swr";
+
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
-import { Alert, Chip, CircularProgress, Divider, Stack, Box, Link } from "@mui/material";
-import { formatEther } from "ethers/lib/utils";
-import { BigNumber } from "ethers";
-import { DaoUser } from "types";
-import User from "@components/User";
-import useUser from "@hooks/useUser";
+
 import useLoginModalStore from "@store/loginModal";
-import { shallow } from "zustand/shallow";
-import NextLink from "next/link";
+
+import User from "@components/User";
+
+import useUser from "@hooks/useUser";
 
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 

@@ -1,5 +1,6 @@
-import { Button } from "@mui/material";
 import Link from "next/link";
+
+import { Button } from "@mui/material";
 
 Tasks.title = "Tasks List";
 Tasks.requireLogin = true;

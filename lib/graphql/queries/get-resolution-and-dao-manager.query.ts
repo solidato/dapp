@@ -1,6 +1,7 @@
 import { gql } from "graphql-request";
-import { resolutionFragment } from "./resolution.fragment";
+
 import { daoManagerFragment } from "./dao-manager.fragment";
+import { resolutionFragment } from "./resolution.fragment";
 
 export const getResolutionAndDaoManagerQuery = gql`
   query GetResolutionAndDaoManager($id: String!) {

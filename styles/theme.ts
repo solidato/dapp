@@ -1,4 +1,5 @@
 import { Red_Hat_Display } from "@next/font/google";
+
 import { createTheme } from "@mui/material/styles";
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 

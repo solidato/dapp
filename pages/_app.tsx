@@ -1,13 +1,18 @@
-import Head from "next/head";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
-import { Box, CircularProgress } from "@mui/material";
-import { newTheme } from "../styles/theme";
-import Layout from "@components/Layout";
-import useUser from "@hooks/useUser";
+import Head from "next/head";
 import { useRouter } from "next/router";
+
 import * as React from "react";
+
+import { Box, CircularProgress } from "@mui/material";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+
+import Layout from "@components/Layout";
+
+import useUser from "@hooks/useUser";
+
+import { newTheme } from "../styles/theme";
 import { META } from "./_document";
 
 interface DappProps extends AppProps {

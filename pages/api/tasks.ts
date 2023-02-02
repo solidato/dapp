@@ -1,5 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { NextApiRequest, NextApiResponse } from "next";
+
 import { getSession } from "@lib/odoo";
 import { sessionOptions } from "@lib/session";
 

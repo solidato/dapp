@@ -1,4 +1,5 @@
 import { gql } from "graphql-request";
+
 import { resolutionTypeFragment } from "./resolution-type.fragment";
 
 export const resolutionFragment = gql`
