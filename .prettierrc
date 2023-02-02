@@ -2,5 +2,13 @@
   "endOfLine": "lf",
   "printWidth": 120,
   "tabWidth": 2,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "importOrder": [
+    "^@mui/(.*)$",
+    "^@server/(.*)$",
+    "^@ui/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

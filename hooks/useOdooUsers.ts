@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import { OdooUser } from "types";
-import useUser from "@lib/useUser";
+import useUser from "@hooks/useUser";
 
 // @ts-ignore
 const fetcher = (...args) => fetch(...args).then((res) => res.json());

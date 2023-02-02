@@ -14,7 +14,7 @@ import { formatEther } from "ethers/lib/utils";
 import { BigNumber } from "ethers";
 import { DaoUser } from "types";
 import User from "@components/User";
-import useUser from "@lib/useUser";
+import useUser from "@hooks/useUser";
 import useLoginModalStore from "@store/loginModal";
 import { shallow } from "zustand/shallow";
 import NextLink from "next/link";

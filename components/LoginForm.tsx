@@ -2,7 +2,7 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import useUser from "@lib/useUser";
+import useUser from "@hooks/useUser";
 import useAlertStore from "@store/alertStore";
 import { useRouter } from "next/router";
 

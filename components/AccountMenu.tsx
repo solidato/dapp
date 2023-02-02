@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import useUser from "@lib/useUser";
+import useUser from "@hooks/useUser";
 import useAlertStore from "@store/alertStore";
 import { shallow } from "zustand/shallow";
 import Link from "next/link";
@@ -18,8 +18,8 @@ import useOdooUsers from "@hooks/useOdooUsers";
 import { Modal, Typography, useColorScheme, useTheme } from "@mui/material";
 import LoginForm from "./LoginForm";
 import useLoginModalStore from "@store/loginModal";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
 
 const style = {
   position: "absolute" as "absolute",
@@ -29,6 +29,7 @@ const style = {
   width: { md: 400, xs: "90%" },
   bgcolor: "background.paper",
   boxShadow: 24,
+
   p: 4,
 };
 
