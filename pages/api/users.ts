@@ -17,10 +17,10 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession(process.env.ODOO_ENDPOINT!, process.env.ODOO_DB_NAME!, username, password);
 
   const data: OdooUser[] = await session.search("res.users", [], {
-    fields: USER_FIELDS[process.env.PROJECT_KEY],
+    fields: USER_FIELDS[process.env.NEXT_PUBLIC_PROJECT_KEY],
   });
 
-  if (process.env.PROJECT_KEY === "neokingdom") {
+  if (process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom") {
     return res.status(200).json(data.map((user) => ({ ...user, image: user.avatar_256 })));
   }
 
