@@ -18,7 +18,7 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (session.uid) {
       const odooUserData: OdooUser[] = await session.search("res.users", [["email", "in", [username]]], {
-        fields: USER_FIELDS[process.env.PROJECT_KEY],
+        fields: USER_FIELDS[process.env.NEXT_PUBLIC_PROJECT_KEY],
       });
       const [{ image, avatar_256, ...withoutImage }] = odooUserData; // removing image/avatar as it will make the cookie too big
       const user = userFactory({ uid: session.uid, username, password, isLoggedIn: true, ...withoutImage });

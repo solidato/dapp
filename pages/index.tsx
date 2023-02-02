@@ -1,5 +1,8 @@
 import Typography from "@mui/material/Typography";
 
 export default function Home() {
-  return <Typography variant="h1">NKD home</Typography>;
+  if (process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom")
+    return <Typography variant="h3">Neokingdom dashboard</Typography>;
+  if (process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko")
+    return <Typography variant="h3">Teledisko dashboard</Typography>;
 }

@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
 import * as React from "react";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import { META } from "./_document";
 
 interface DappProps extends AppProps {
   Component: NextPage & {
@@ -18,7 +19,7 @@ interface DappProps extends AppProps {
 }
 
 export default function App({ Component, pageProps }: DappProps) {
-  const pageTitle = Component.title ? `NeokingdomDAO | ${Component.title}` : "NeokingdomDAO";
+  const pageTitle = Component.title ? `${META.title} | ${Component.title}` : META.title;
   const { asPath } = useRouter();
 
   const { isLoading, user } = useUser({

@@ -3,22 +3,31 @@ import Document, { Html, Head, Main, NextScript } from "next/document";
 import { redHatFont } from "styles/theme";
 import { getInitColorSchemeScript } from "@mui/material";
 
+export const META = {
+  teledisko: {
+    description: "Teledisko DAO description",
+    title: "Teledisko DAO",
+    keywords: "DAO, Teledisko, Blockchain",
+  },
+  neokingdom: {
+    description: "Neokingdom DAO description",
+    title: "Neokingdom DAO",
+    keywords: "DAO, NEOKINGDOM, Blockchain",
+  },
+}[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang="en" className={redHatFont.className}>
         <Head>
-          <link rel="shortcut icon" href="/favicon.ico" />
+          <link rel="shortcut icon" href={`/favicon-${process.env.NEXT_PUBLIC_PROJECT_KEY}.ico`} />
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <meta name="description" content="Description" />
-          <meta name="keywords" content="Keywords" />
+          <meta name="description" content={META.description} />
+          <meta name="keywords" content={META.keywords} />
 
-          <link rel="manifest" href="/manifest.json" />
-          <link href="/icons/favicon-16x16.png" rel="icon" type="image/png" sizes="16x16" />
-          <link href="/icons/favicon-32x32.png" rel="icon" type="image/png" sizes="32x32" />
-          <link rel="apple-touch-icon" href="/apple-icon.png"></link>
-
+          <link rel="manifest" href={`/manifest-${process.env.NEXT_PUBLIC_PROJECT_KEY}.json`} />
           <style
             dangerouslySetInnerHTML={{
               __html: `

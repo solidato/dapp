@@ -12,6 +12,8 @@ import useAlertStore from "../store/alertStore";
 import { shallow } from "zustand/shallow";
 import AccountMenu from "./AccountMenu";
 import NkdLogo from "./svg-logos/NkdLogo";
+import TelediskoLogo from "../images/logo-teledisko.png";
+import Image from "next/image";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
@@ -59,7 +61,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               }}
             >
               <Link href="/" style={{ display: "inherit" }}>
-                <NkdLogo height={70} />
+                {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" && <NkdLogo height={70} />}
+                {process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" && (
+                  <Image height={30} src={TelediskoLogo} alt="Teledisko DAO" />
+                )}
               </Link>
               <Box sx={{ ml: "auto" }}>
                 <AccountMenu />
