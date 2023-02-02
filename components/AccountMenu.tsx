@@ -1,25 +1,31 @@
+import Link from "next/link";
+import { shallow } from "zustand/shallow";
+
 import * as React from "react";
-import Box from "@mui/material/Box";
+
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import Logout from "@mui/icons-material/Logout";
+import Settings from "@mui/icons-material/Settings";
+import { Modal, Typography, useColorScheme, useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
-import useUser from "@hooks/useUser";
-import useAlertStore from "@store/alertStore";
-import { shallow } from "zustand/shallow";
-import Link from "next/link";
+
 import { getLettersFromName } from "@lib/utils";
-import useOdooUsers from "@hooks/useOdooUsers";
-import { Modal, Typography, useColorScheme, useTheme } from "@mui/material";
-import LoginForm from "./LoginForm";
+
+import useAlertStore from "@store/alertStore";
 import useLoginModalStore from "@store/loginModal";
-import Brightness7Icon from "@mui/icons-material/Brightness7";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
+
+import useOdooUsers from "@hooks/useOdooUsers";
+import useUser from "@hooks/useUser";
+
+import LoginForm from "./LoginForm";
 
 const style = {
   position: "absolute" as "absolute",
@@ -29,7 +35,6 @@ const style = {
   width: { md: 400, xs: "90%" },
   bgcolor: "background.paper",
   boxShadow: 24,
-
   p: 4,
 };
 
