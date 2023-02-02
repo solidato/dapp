@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { OdooUser } from "types";
+
 import useUser from "@hooks/useUser";
 
 // @ts-ignore
