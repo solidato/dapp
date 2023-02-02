@@ -1,7 +1,10 @@
 import React from "react";
+
 import { Avatar, Box, Skeleton, Typography } from "@mui/material";
-import useOdooUsers from "@hooks/useOdooUsers";
+
 import { getLettersFromName } from "@lib/utils";
+
+import useOdooUsers from "@hooks/useOdooUsers";
 
 export default function User({ address }: { address: string }) {
   const { users, isLoading } = useOdooUsers(address);

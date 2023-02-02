@@ -1,4 +1,5 @@
 import type { IronSessionOptions } from "iron-session";
+
 import { User } from "../lib/userFactory";
 
 // Typings of req.session.*
