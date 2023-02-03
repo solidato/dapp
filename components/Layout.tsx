@@ -85,6 +85,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 clickable
               />
               <Chip
+                label="Resolutions"
+                component={Link}
+                href="/resolutions"
+                variant={isActive("/resolutions") ? "filled" : "outlined"}
+                clickable
+              />
+              <Chip
                 label="Tasks"
                 component={Link}
                 href="/tasks"

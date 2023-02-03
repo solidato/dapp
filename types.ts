@@ -16,7 +16,6 @@ export type ResolutionsAcl = {
   canUpdate: boolean;
   canApprove: boolean;
   canVote: (voters: ResolutionVoter[]) => boolean;
-  loaded: boolean;
   isShareholder: boolean;
   isManagingBoard: boolean;
   isContributor: boolean;
@@ -94,6 +93,7 @@ export type ResolutionEntityEnhanced = ResolutionEntity & {
 };
 
 export type ResolutionState = "pre-draft" | "notice" | "voting" | "ended" | "rejected";
+
 export type ResolutionStateKeys = "PRE_DRAFT" | "NOTICE" | "VOTING" | "ENDED" | "REJECTED";
 
 export type ResolutionStates = Record<ResolutionStateKeys, ResolutionState>;

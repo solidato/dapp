@@ -1,13 +1,16 @@
+import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
+import { useAccount, useDisconnect } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
+import { useEffect } from "react";
 
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Logout from "@mui/icons-material/Logout";
 import Settings from "@mui/icons-material/Settings";
-import { Modal, Typography, useColorScheme, useTheme } from "@mui/material";
+import { Badge, Modal, Typography, useColorScheme, useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -41,7 +44,13 @@ const style = {
 export default function AccountMenu() {
   const { mode, setMode } = useColorScheme();
   const { user, mutateUser } = useUser();
+  const { address, isConnected: walletConnected } = useAccount();
+  const [mounted, setMounted] = React.useState(false);
+
+  const isConnected = mounted && walletConnected;
+
   const theme = useTheme();
+
   const {
     users: [currentOdooUser],
   } = useOdooUsers(user?.ethereum_address);
@@ -52,6 +61,10 @@ export default function AccountMenu() {
     }),
     shallow,
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { modalOpen, handleModalOpen, handleModalClose } = useLoginModalStore(
     (state) => ({
@@ -79,13 +92,22 @@ export default function AccountMenu() {
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { open: openWeb3Modal } = useWeb3Modal();
+
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleConnectWallet = async () => {
+    await openWeb3Modal();
+    setAnchorEl(null);
+  };
+
   return (
     <React.Fragment>
       <Modal
@@ -123,17 +145,19 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            {user?.isLoggedIn ? (
-              <Avatar
-                sx={{ width: 32, height: 32 }}
-                alt={user?.display_name}
-                src={`data:image/jpeg;charset=utf-8;base64,${currentOdooUser?.image || ""}`}
-              >
-                {getLettersFromName(user?.display_name)}
-              </Avatar>
-            ) : (
-              <Avatar sx={{ width: 32, height: 32 }} />
-            )}
+            <Badge color="success" variant="dot" invisible={!isConnected}>
+              {user?.isLoggedIn ? (
+                <Avatar
+                  sx={{ width: 32, height: 32 }}
+                  alt={user?.display_name}
+                  src={`data:image/jpeg;charset=utf-8;base64,${currentOdooUser?.image || ""}`}
+                >
+                  {getLettersFromName(user?.display_name)}
+                </Avatar>
+              ) : (
+                <Avatar sx={{ width: 32, height: 32 }} />
+              )}
+            </Badge>
           </IconButton>
         </Tooltip>
       </Box>
@@ -179,7 +203,11 @@ export default function AccountMenu() {
             Login via odoo
           </MenuItem>
         )}
-        <MenuItem onClick={handleClose}>Connect Wallet</MenuItem>
+        {isConnected ? (
+          <MenuItem onClick={() => openWeb3Modal()}>{`${address?.slice(0, 8)}...`}</MenuItem>
+        ) : (
+          <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
+        )}
         {user?.isLoggedIn && [
           <Divider key="divider" />,
           <MenuItem onClick={handleClose} key="settings">
