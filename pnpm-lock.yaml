@@ -4,6 +4,8 @@ specifiers:
   '@emotion/react': ^11.10.5
   '@emotion/server': ^11.10.0
   '@emotion/styled': ^11.10.5
+  '@ethersproject/abi': ^5.7.0
+  '@ethersproject/providers': ^5.7.2
   '@mui/icons-material': ^5.11.0
   '@mui/material': ^5.11.2
   '@next/font': ^13.1.5
@@ -39,6 +41,8 @@ dependencies:
   '@emotion/react': 11.10.5_wkzfvskzv7fpjlvsaogoczqc2u
   '@emotion/server': 11.10.0
   '@emotion/styled': 11.10.5_4zq75am4foc6bp3si2fbm6dugm
+  '@ethersproject/abi': 5.7.0
+  '@ethersproject/providers': 5.7.2
   '@mui/icons-material': 5.11.0_w3vavv7vfnnb6vp7gprleuqeuq
   '@mui/material': 5.11.2_uau673yxzdwoupi2pemk2c73kq
   '@next/font': 13.1.5
