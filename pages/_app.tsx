@@ -5,7 +5,7 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { evmos } from "wagmi/chains";
+import { evmos, evmosTestnet } from "wagmi/chains";
 
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ import useUser from "@hooks/useUser";
 import { newTheme } from "../styles/theme";
 import { META } from "./_document";
 
-const chains = [evmos];
+const chains = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : evmos];
 
 // Wagmi client
 const { provider } = configureChains(chains, [
@@ -53,7 +53,6 @@ export default function App({ Component, pageProps }: DappProps) {
   const pageTitle = Component.title ? `${META.title} | ${Component.title}` : META.title;
   const { asPath } = useRouter();
   const [mounted, setMounted] = useState(!!Component.renderOnServer);
-  console.log("mounted: ", mounted);
 
   const { isLoading, user } = useUser({
     redirectTo: `/login?redirectTo=${asPath}`,

@@ -23,10 +23,10 @@ Resolutions.title = "Resolutions";
 const REFRESH_EVERY_MS = 3000;
 
 export default function Resolutions() {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { open: openWeb3Modal } = useWeb3Modal();
   const { data, isLoading } = useSWR(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
-  const { acl, isLoading: isLoadingAcl } = useResolutionsAcl(address);
+  const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
 
   useEffect(() => {

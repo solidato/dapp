@@ -204,7 +204,7 @@ export default function AccountMenu() {
           </MenuItem>
         )}
         {isConnected ? (
-          <MenuItem onClick={() => openWeb3Modal()}>{`${address?.slice(0, 8)}...`}</MenuItem>
+          <MenuItem onClick={() => openWeb3Modal()}>Wallet: {`${address?.slice(0, 8)}...`}</MenuItem>
         ) : (
           <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
         )}
