@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useStore } from "zustand";
 
@@ -7,8 +8,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Alert, Button, Stack, Typography, useTheme } from "@mui/material";
+import { Alert, Button, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
+
+import { enhanceTitleWithPrefix } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 import { createResolutionFormStore } from "@store/resolutionFormStore";
@@ -109,6 +112,9 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
 
   return (
     <>
+      <Head>
+        <title>{enhanceTitleWithPrefix(`Edit Resolution: ${formProps.title}`)}</title>
+      </Head>
       <Dialog
         open={approveDialogOpen}
         handleClose={handleCloseApproveDialog}

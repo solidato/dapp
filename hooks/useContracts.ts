@@ -4,8 +4,12 @@ import { useAccount, useNetwork, useSigner } from "wagmi";
 import { useEffect, useState } from "react";
 
 import { ContractsContextType } from "../contexts/ContractsContext";
-import { ResolutionManager } from "../contracts/typechain/contracts/ResolutionManager/ResolutionManager";
-import { ResolutionManager__factory } from "../contracts/typechain/factories/contracts/ResolutionManager/ResolutionManager__factory";
+import {
+  ResolutionManager,
+  ResolutionManager__factory,
+  TelediskoToken,
+  TelediskoToken__factory,
+} from "../contracts/typechain";
 import networksNeoKingdom from "../networks/neokingdom.json";
 import networksTeledisko from "../networks/teledisko.json";
 
@@ -15,6 +19,12 @@ const networks: Record<string, any> =
 const getResolutionContract = (chainId: string, signer: Signer): ResolutionManager => {
   const address = networks[chainId]["ResolutionManager"];
   return ResolutionManager__factory.connect(address, signer);
+};
+
+const getTokenContract = (chainId: string, signer: Signer): TelediskoToken => {
+  const address =
+    networks[chainId][process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "NeokingdomToken" : "TelediskoToken"];
+  return TelediskoToken__factory.connect(address, signer);
 };
 
 export function useContracts() {
@@ -30,6 +40,7 @@ export function useContracts() {
 
       setContracts({
         resolutionContract: getResolutionContract(chainId, signer),
+        tokenContract: getTokenContract(chainId, signer),
       });
     }
   }, [address, signer, chain?.id]);

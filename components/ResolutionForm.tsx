@@ -13,18 +13,13 @@ import {
 } from "@mui/material";
 import { Grid, Typography } from "@mui/material";
 
+import { getPreviousMonth } from "@lib/resolutions/common";
+
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import useResolutionTypes from "@hooks/useResolutionTypes";
 
 import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
-
-export const getPreviousMonth = () => {
-  const currentDate = new Date();
-  currentDate.setDate(0);
-
-  return currentDate.toLocaleString("en-us", { month: "long" });
-};
 
 interface FormProps {
   isMonthlyRewards?: boolean;
@@ -94,6 +89,7 @@ export default function ResolutionForm({
         placeholder="Resolution title"
         value={title}
         onChange={onUpdateTitle}
+        disabled={isMonthlyRewards}
       />
       <textarea ref={editorRef} />
       <Grid container sx={{ mb: 4, mt: 4 }}>
@@ -113,7 +109,7 @@ export default function ResolutionForm({
                   <FormControlLabel
                     value={resolutionType.id}
                     key={resolutionType.id}
-                    control={<Radio />}
+                    control={<Radio disabled={isMonthlyRewards} />}
                     label={
                       <>
                         <Typography variant="h4">
