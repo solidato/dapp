@@ -1,23 +1,20 @@
 import { useSnackbar } from "notistack";
 import { useAccount } from "wagmi";
 
-import { addToIpfs } from "@lib/ipfs";
+import { useContext } from "react";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
-import { useContractsContext } from "../contexts/ContractsContext";
-import { ResolutionFormBase } from "../store/resolutionFormStore";
+import { ContractsContext } from "../contexts/ContractsContext";
 
 type SubmitParams = {
-  vetoTypeId: string | null;
   resolutionId: string;
-  currentResolution: ResolutionFormBase;
 };
 
-export default function useResolutionUpdate() {
+export default function useResolutionReject() {
   const { address } = useAccount();
   const { set: setBlockchainTransactionState, reset } = useBlockchainTransactionStore();
-  const { resolutionContract } = useContractsContext();
+  const { resolutionContract } = useContext(ContractsContext);
   const { enqueueSnackbar } = useSnackbar();
 
   if (!address) {
@@ -28,29 +25,20 @@ export default function useResolutionUpdate() {
   }
 
   return {
-    onSubmit: async ({ vetoTypeId, resolutionId, currentResolution }: SubmitParams) => {
+    onSubmit: async ({ resolutionId }: SubmitParams) => {
       setBlockchainTransactionState(true, false);
 
       try {
-        const ipfsId = await addToIpfs(currentResolution);
-        const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
-        const tx = await resolutionContract?.updateResolution(
-          resolutionId,
-          ipfsId,
-          resolutionTypeId,
-          !!vetoTypeId,
-          [],
-          [],
-        );
+        const tx = await resolutionContract?.rejectResolution(resolutionId);
         setBlockchainTransactionState(true, true);
         enqueueSnackbar("Transaction is being executed, hold tight", { variant: "info" });
         await tx?.wait();
         setBlockchainTransactionState(true, false);
-        enqueueSnackbar("Pre draft resolution correctly updated", { variant: "success" });
+        enqueueSnackbar("Pre draft resolution correctly rejected", { variant: "success" });
         reset();
         return true;
       } catch (err) {
-        enqueueSnackbar("Error updating pre draft resolution", { variant: "error" });
+        enqueueSnackbar("Error rejecting pre draft resolution", { variant: "error" });
         console.error(err);
         reset();
         return false;

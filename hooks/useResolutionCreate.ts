@@ -1,12 +1,12 @@
+import { useSnackbar } from "notistack";
 import { useAccount } from "wagmi";
 
 import { addToIpfs } from "@lib/ipfs";
 
-import useAlertStore from "@store/alertStore";
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
+import { useContractsContext } from "../contexts/ContractsContext";
 import { ResolutionFormBase } from "../store/resolutionFormStore";
-import { useContracts } from "./useContracts";
 
 type SubmitParams = {
   vetoTypeId: string | null;
@@ -17,12 +17,12 @@ type SubmitParams = {
 
 export default function useResolutionCreate() {
   const { address } = useAccount();
-  const { openAlert } = useAlertStore();
   const { set: setBlockchainTransactionState, reset } = useBlockchainTransactionStore();
-  const { contracts } = useContracts();
+  const { resolutionContract } = useContractsContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   if (!address) {
-    openAlert({ message: "Please connect your wallet", severity: "error" });
+    enqueueSnackbar("Please connect your wallet", { variant: "error" });
     return {
       onSubmit: () => {},
     };
@@ -35,7 +35,7 @@ export default function useResolutionCreate() {
       try {
         const ipfsId = await addToIpfs(currentResolution);
         const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
-        const tx = await contracts.resolutionContract?.createResolution(
+        const tx = await resolutionContract?.createResolution(
           ipfsId,
           resolutionTypeId,
           !!vetoTypeId,
@@ -43,14 +43,14 @@ export default function useResolutionCreate() {
           executionData,
         );
         setBlockchainTransactionState(true, true);
-        openAlert({ message: "Transaction is being executed, hold tight", severity: "info" });
+        enqueueSnackbar("Transaction is being executed, hold tight", { variant: "info" });
         await tx?.wait();
         setBlockchainTransactionState(true, false);
-        openAlert({ message: "Pre draft resolution correctly saved", severity: "success" });
+        enqueueSnackbar("Pre draft resolution correctly created", { variant: "success" });
         reset();
         return true;
       } catch (err) {
-        openAlert({ message: "Error creating pre draft resolution", severity: "error" });
+        enqueueSnackbar("Error creating pre draft resolution", { variant: "error" });
         console.error(err);
         reset();
         return false;

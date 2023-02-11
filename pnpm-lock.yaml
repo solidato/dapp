@@ -28,6 +28,7 @@ specifiers:
   lint-staged: ^13.1.0
   next: latest
   next-pwa: ^5.6.0
+  notistack: ^2.0.8
   prettier: ^2.8.1
   react: ^18.2.0
   react-cookie: ^4.1.1
@@ -58,6 +59,7 @@ dependencies:
   iron-session: 6.3.1_next@13.1.6
   next: 13.1.6_biqbaboplfbrettd7655fr4n2y
   next-pwa: 5.6.0_next@13.1.6
+  notistack: 2.0.8_je6wcyxzzodpuivmp54wfrprbm
   react: 18.2.0
   react-cookie: 4.1.1_react@18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -6885,6 +6887,29 @@ packages:
   /normalize-path/3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
     engines: {node: '>=0.10.0'}
+
+  /notistack/2.0.8_je6wcyxzzodpuivmp54wfrprbm:
+    resolution: {integrity: sha512-/IY14wkFp5qjPgKNvAdfL5Jp6q90+MjgKTPh4c81r/lW70KeuX6b9pE/4f8L4FG31cNudbN9siiFS5ql1aSLRw==}
+    peerDependencies:
+      '@emotion/react': ^11.4.1
+      '@emotion/styled': ^11.3.0
+      '@mui/material': ^5.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/react':
+        optional: true
+      '@emotion/styled':
+        optional: true
+    dependencies:
+      '@emotion/react': 11.10.5_wkzfvskzv7fpjlvsaogoczqc2u
+      '@emotion/styled': 11.10.5_4zq75am4foc6bp3si2fbm6dugm
+      '@mui/material': 5.11.2_uau673yxzdwoupi2pemk2c73kq
+      clsx: 1.2.1
+      hoist-non-react-statics: 3.3.2
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
 
   /npm-run-path/5.1.0:
     resolution: {integrity: sha512-sJOdmRGrY2sjNTRMbSvluQqg+8X7ZK61yvzBEIDhz4f8z1TZFYABsqjjCBd/0PUNE9M6QDgHJXQkGUEm7Q+l9Q==}

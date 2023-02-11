@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { SnackbarProvider } from "notistack";
 import { WagmiConfig, configureChains, createClient } from "wagmi";
 import { evmos, evmosTestnet } from "wagmi/chains";
 
@@ -17,6 +18,7 @@ import Layout from "@components/Layout";
 
 import useUser from "@hooks/useUser";
 
+import ContractsProvider from "../components/ContractsProvider";
 import { newTheme } from "../styles/theme";
 import { META } from "./_document";
 
@@ -65,18 +67,22 @@ export default function App({ Component, pageProps }: DappProps) {
 
   const appElement = (
     <CssVarsProvider theme={newTheme} defaultMode="system">
-      <Layout>
-        {(isLoading || !mounted) && (
-          <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-            <CircularProgress />
-          </Box>
-        )}
-        {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-          <WagmiConfig client={wagmiClient}>
-            <Component {...pageProps} />
-          </WagmiConfig>
-        )}
-      </Layout>
+      <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+        <Layout>
+          {(isLoading || !mounted) && (
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+              <CircularProgress />
+            </Box>
+          )}
+          {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
+            <WagmiConfig client={wagmiClient}>
+              <ContractsProvider>
+                <Component {...pageProps} />
+              </ContractsProvider>
+            </WagmiConfig>
+          )}
+        </Layout>
+      </SnackbarProvider>
     </CssVarsProvider>
   );
 

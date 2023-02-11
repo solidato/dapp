@@ -14,7 +14,6 @@ import {
 import { Grid, Typography } from "@mui/material";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
-import useResolutionFormStore from "@store/resolutionFormStore";
 
 import useResolutionTypes from "@hooks/useResolutionTypes";
 

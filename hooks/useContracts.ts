@@ -3,6 +3,7 @@ import { useAccount, useNetwork, useSigner } from "wagmi";
 
 import { useEffect, useState } from "react";
 
+import { ContractsContextType } from "../contexts/ContractsContext";
 import { ResolutionManager } from "../contracts/typechain/contracts/ResolutionManager/ResolutionManager";
 import { ResolutionManager__factory } from "../contracts/typechain/factories/contracts/ResolutionManager/ResolutionManager__factory";
 import networksNeoKingdom from "../networks/neokingdom.json";
@@ -16,16 +17,12 @@ const getResolutionContract = (chainId: string, signer: Signer): ResolutionManag
   return ResolutionManager__factory.connect(address, signer);
 };
 
-interface ContractsState {
-  resolutionContract?: ResolutionManager;
-}
-
 export function useContracts() {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
 
-  const [contracts, setContracts] = useState<ContractsState>({});
+  const [contracts, setContracts] = useState<ContractsContextType>({});
 
   useEffect(() => {
     if (address && signer) {
@@ -37,7 +34,5 @@ export function useContracts() {
     }
   }, [address, signer, chain?.id]);
 
-  return {
-    contracts,
-  };
+  return contracts;
 }
