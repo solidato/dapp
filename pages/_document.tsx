@@ -44,6 +44,7 @@ body {
 }
 
 [data-mui-color-scheme="dark"] .editor-toolbar,
+[data-mui-color-scheme="dark"] .editor-preview-full,
 [data-mui-color-scheme="dark"] .CodeMirror {
   background-color: #232323;
 }

@@ -10,12 +10,11 @@ import { useContracts } from "./useContracts";
 
 type SubmitParams = {
   vetoTypeId: string | null;
+  resolutionId: string;
   currentResolution: ResolutionFormBase;
-  executionTo?: string[];
-  executionData?: string[];
 };
 
-export default function useResolutionCreate() {
+export default function useResolutionUpdate() {
   const { address } = useAccount();
   const { openAlert } = useAlertStore();
   const { set: setBlockchainTransactionState, reset } = useBlockchainTransactionStore();
@@ -29,28 +28,29 @@ export default function useResolutionCreate() {
   }
 
   return {
-    onSubmit: async ({ vetoTypeId, currentResolution, executionTo = [], executionData = [] }: SubmitParams) => {
+    onSubmit: async ({ vetoTypeId, resolutionId, currentResolution }: SubmitParams) => {
       setBlockchainTransactionState(true, false);
 
       try {
         const ipfsId = await addToIpfs(currentResolution);
         const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
-        const tx = await contracts.resolutionContract?.createResolution(
+        const tx = await contracts.resolutionContract?.updateResolution(
+          resolutionId,
           ipfsId,
           resolutionTypeId,
           !!vetoTypeId,
-          executionTo,
-          executionData,
+          [],
+          [],
         );
         setBlockchainTransactionState(true, true);
         openAlert({ message: "Transaction is being executed, hold tight", severity: "info" });
         await tx?.wait();
         setBlockchainTransactionState(true, false);
-        openAlert({ message: "Pre draft resolution correctly saved", severity: "success" });
+        openAlert({ message: "Pre draft resolution correctly updated", severity: "success" });
         reset();
         return true;
       } catch (err) {
-        openAlert({ message: "Error creating pre draft resolution", severity: "error" });
+        openAlert({ message: "Error updating pre draft resolution", severity: "error" });
         console.error(err);
         reset();
         return false;

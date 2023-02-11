@@ -63,10 +63,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 },
               }}
             >
-              <Link href="/" style={{ display: "inherit" }}>
+              <Link href="/" style={{ display: "flex", height: 70, alignItems: "center" }}>
                 {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" && <NkdLogo height={70} />}
                 {process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" && (
-                  <Image height={30} src={TelediskoLogo} alt="Teledisko DAO" />
+                  <Image height={35} src={TelediskoLogo} alt="Teledisko DAO" />
                 )}
               </Link>
               <Box sx={{ ml: "auto" }}>

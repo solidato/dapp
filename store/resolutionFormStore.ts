@@ -7,7 +7,7 @@ const INITIAL_STATE = {
   typeId: "",
 };
 
-interface ResolutionFormBase {
+export interface ResolutionFormBase {
   title: string;
   content: string;
   typeId: string;
