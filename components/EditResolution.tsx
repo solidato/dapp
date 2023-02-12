@@ -18,7 +18,7 @@ import { createResolutionFormStore } from "@store/resolutionFormStore";
 
 import ResolutionForm from "@components/ResolutionForm";
 
-import useResolutionApprove from "@hooks/useResolutionApprove";
+import useResolutionApprove, { BLOCKCHAIN_TX_STATE_KEY } from "@hooks/useResolutionApprove";
 import useResolutionReject from "@hooks/useResolutionReject";
 import useResolutionTypes from "@hooks/useResolutionTypes";
 import useResolutionUpdate from "@hooks/useResolutionUpdate";
@@ -134,7 +134,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
       <Typography variant="h3">
         {formProps.title.trim() ? `Pre draft: ${formProps.title}` : "Pre draft Resolution"}
       </Typography>
-      <ResolutionForm {...formProps} />
+      <ResolutionForm {...formProps} isMonthlyRewards={(resolution.executionData || []).length > 0} />
       <Box sx={{ pb: 4, pt: 4 }}>
         {toUpdate ? (
           <LoadingButton
@@ -159,7 +159,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
             </Button>
             <LoadingButton
               size="large"
-              loading={loadingSubmit && type === "approve"}
+              loading={loadingSubmit && type === BLOCKCHAIN_TX_STATE_KEY}
               variant="contained"
               onClick={handlePreApprove}
               disabled={disabledSubmit}
@@ -170,7 +170,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
             </LoadingButton>
             <LoadingButton
               size="large"
-              loading={loadingSubmit && type !== "approve"}
+              loading={loadingSubmit && type !== BLOCKCHAIN_TX_STATE_KEY}
               variant="outlined"
               onClick={handlePreReject}
               disabled={disabledSubmit}

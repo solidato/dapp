@@ -42,7 +42,6 @@ export default function ResolutionForm({
 }: FormProps) {
   const { types, isLoading: isLoadingTypes } = useResolutionTypes();
   const editorRef = useRef(null);
-  const { isAwaitingConfirmation } = useBlockchainTransactionStore();
 
   useEffect(() => {
     const easyMDE = new window.EasyMDE({
@@ -132,11 +131,6 @@ export default function ResolutionForm({
           </FormControl>
         </Grid>
       </Grid>
-      {isAwaitingConfirmation && (
-        <Alert sx={{ mt: 2, mb: 2 }} severity="info">
-          Waiting for the transaction to be put on a block
-        </Alert>
-      )}
     </div>
   );
 }

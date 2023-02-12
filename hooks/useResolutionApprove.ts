@@ -1,48 +1,26 @@
-import { useSnackbar } from "notistack";
-import { useAccount } from "wagmi";
-
 import { useContext } from "react";
 
-import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
-
 import { ContractsContext } from "../contexts/ContractsContext";
+import useBlockhainTransaction from "./useBlockchainTransaction";
 
 type SubmitParams = {
   resolutionId: string;
 };
 
-export default function useResolutionApprove() {
-  const { address } = useAccount();
-  const { set: setBlockchainTransactionState, reset } = useBlockchainTransactionStore();
-  const { resolutionContract } = useContext(ContractsContext);
-  const { enqueueSnackbar } = useSnackbar();
+export const BLOCKCHAIN_TX_STATE_KEY = "approve-resolution";
 
-  if (!address) {
-    enqueueSnackbar("Please connect your wallet", { variant: "error" });
-    return {
-      onSubmit: () => {},
-    };
-  }
+export default function useResolutionApprove() {
+  const { resolutionContract } = useContext(ContractsContext);
+  const { executeTx } = useBlockhainTransaction();
 
   return {
-    onSubmit: async ({ resolutionId }: SubmitParams) => {
-      setBlockchainTransactionState(true, false, "approve");
-
-      try {
-        const tx = await resolutionContract?.approveResolution(resolutionId);
-        setBlockchainTransactionState(true, true);
-        enqueueSnackbar("Transaction is being executed, hold tight", { variant: "info" });
-        await tx?.wait();
-        setBlockchainTransactionState(true, false);
-        enqueueSnackbar("Pre draft resolution correctly approved", { variant: "success" });
-        reset();
-        return true;
-      } catch (err) {
-        enqueueSnackbar("Error approving pre draft resolution", { variant: "error" });
-        console.error(err);
-        reset();
-        return false;
-      }
-    },
+    onSubmit: async ({ resolutionId }: SubmitParams) =>
+      executeTx({
+        contractMethod: resolutionContract?.approveResolution,
+        params: [resolutionId],
+        onSuccessMessage: "Pre draft resolution correctly approved",
+        onErrorMessage: "Error approving pre draft resolution",
+        stateKey: BLOCKCHAIN_TX_STATE_KEY,
+      }),
   };
 }

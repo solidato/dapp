@@ -78,8 +78,6 @@ export default function NewResolution({
     setConfirmDialogOpen(false);
   };
 
-  // todo EDIT/APPROVE monthly
-
   return (
     <>
       <Head>
