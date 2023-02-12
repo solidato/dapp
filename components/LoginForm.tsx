@@ -38,7 +38,7 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
       mutateUser(resUser, false);
       onLoggedIn && onLoggedIn();
     } else {
-      enqueueSnackbar("Login Failed: Your email or password is incorrect");
+      enqueueSnackbar("Login Failed: Your email or password is incorrect", { variant: "error" });
     }
     setIsLoading(false);
   };

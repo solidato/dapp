@@ -1,5 +1,6 @@
 import { Signer } from "ethers";
-import { useAccount, useNetwork, useSigner } from "wagmi";
+import { useSnackbar } from "notistack";
+import { useAccount, useDisconnect, useNetwork, useSigner } from "wagmi";
 
 import { useEffect, useState } from "react";
 
@@ -31,19 +32,26 @@ export function useContracts() {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { data: signer } = useSigner();
+  const { disconnect } = useDisconnect();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [contracts, setContracts] = useState<ContractsContextType>({});
 
   useEffect(() => {
     if (address && signer) {
-      const chainId = String(chain?.id);
+      try {
+        const chainId = String(chain?.id);
 
-      setContracts({
-        resolutionContract: getResolutionContract(chainId, signer),
-        tokenContract: getTokenContract(chainId, signer),
-      });
+        setContracts({
+          resolutionContract: getResolutionContract(chainId, signer),
+          tokenContract: getTokenContract(chainId, signer),
+        });
+      } catch (error) {
+        enqueueSnackbar("Your wallet was connected to an unsupported network, please re-connect", { variant: "error" });
+        return disconnect();
+      }
     }
-  }, [address, signer, chain?.id]);
+  }, [address, signer, chain?.id, disconnect, enqueueSnackbar]);
 
   return contracts;
 }
