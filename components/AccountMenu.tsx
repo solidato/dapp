@@ -1,6 +1,7 @@
 import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
-import { useAccount, useDisconnect } from "wagmi";
+import { useSnackbar } from "notistack";
+import { useAccount } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
@@ -22,7 +23,6 @@ import Tooltip from "@mui/material/Tooltip";
 
 import { getLettersFromName } from "@lib/utils";
 
-import useAlertStore from "@store/alertStore";
 import useLoginModalStore from "@store/loginModal";
 
 import useOdooUsers from "@hooks/useOdooUsers";
@@ -46,6 +46,7 @@ export default function AccountMenu() {
   const { user, mutateUser } = useUser();
   const { address, isConnected: walletConnected } = useAccount();
   const [mounted, setMounted] = React.useState(false);
+  const { enqueueSnackbar } = useSnackbar();
 
   const isConnected = mounted && walletConnected;
 
@@ -54,13 +55,6 @@ export default function AccountMenu() {
   const {
     users: [currentOdooUser],
   } = useOdooUsers(user?.ethereum_address);
-
-  const { openAlert } = useAlertStore(
-    (state) => ({
-      openAlert: state.openAlert,
-    }),
-    shallow,
-  );
 
   useEffect(() => {
     setMounted(true);
@@ -84,10 +78,10 @@ export default function AccountMenu() {
       if (res.status === 200) {
         mutateUser(await res.json());
       } else {
-        openAlert({ message: "Logout failed" });
+        enqueueSnackbar("Logout failed");
       }
     } catch (error) {
-      openAlert({ message: "Network Error" });
+      enqueueSnackbar("Network error");
     }
   };
 
@@ -204,7 +198,7 @@ export default function AccountMenu() {
           </MenuItem>
         )}
         {isConnected ? (
-          <MenuItem onClick={() => openWeb3Modal()}>{`${address?.slice(0, 8)}...`}</MenuItem>
+          <MenuItem onClick={() => openWeb3Modal()}>Wallet: {`${address?.slice(0, 8)}...`}</MenuItem>
         ) : (
           <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
         )}
