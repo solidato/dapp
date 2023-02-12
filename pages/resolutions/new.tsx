@@ -31,7 +31,6 @@ export default function NewResolutionPage() {
     isMonthlyRewards ? process.env.NEXT_PUBLIC_LAST_MONTH_REWARDS_ENDPOINT : null,
     fetcher,
   );
-  console.log("monthlyRewardsData: ", monthlyRewardsData);
   const { tokenContract } = useContractsContext();
 
   const [executionPayload, setExecutionPayload] = useState<MonthlyRewardsUserData[] | null>(null);
