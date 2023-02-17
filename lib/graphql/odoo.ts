@@ -3,7 +3,7 @@ import { request } from "graphql-request";
 export default async function odooClient(cookie: string, query: any, variables = {}) {
   try {
     await request({
-      url: process.env.ODOO_GRAPHQL_ENPOINT,
+      url: process.env.ODOO_GRAPHQL_ENDPOINT,
       document: query,
       variables,
       requestHeaders: {

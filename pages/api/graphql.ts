@@ -9,7 +9,7 @@ async function graphql(req: NextApiRequest, res: NextApiResponse) {
     return res.status(403).json({ message: "Not Authorized" });
   }
 
-  const proxy = await fetch(process.env.ODOO_GRAPHQL_ENPOINT, {
+  const proxy = await fetch(process.env.ODOO_GRAPHQL_ENDPOINT, {
     method: "POST",
     redirect: "follow",
     headers: {
