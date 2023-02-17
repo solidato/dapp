@@ -1,3 +1,5 @@
+import Boom from "@hapi/boom";
+
 export async function getOdooCookie(username: string, password: string) {
   // Get CSRF Token and Cookie
   const csrfResponse = await fetch(process.env.ODOO_WEB_LOGIN_ENDPOINT, {
@@ -7,13 +9,13 @@ export async function getOdooCookie(username: string, password: string) {
 
   const csrfCookie = csrfResponse.headers.get("Set-Cookie");
   if (!csrfCookie) {
-    throw new Error("Cannot get cookie");
+    throw Boom.expectationFailed("Cannot get cookie");
   }
 
   const body = await csrfResponse.text();
   const match = body.match(/\s+csrf_token:\s+"([^"]+)"/);
   if (!match || !match[1]) {
-    throw new Error("Cannot get CSRF token");
+    throw Boom.expectationFailed("Cannot get CSRF token");
   }
   const csrfToken = match[1];
 
@@ -38,7 +40,7 @@ export async function getOdooCookie(username: string, password: string) {
 
   const cookie = loginResponse.headers.get("Set-Cookie");
   if (!cookie) {
-    throw new Error("Cannot get final cookie");
+    throw Boom.unauthorized("Cannot get final cookie");
   }
   return cookie;
 }

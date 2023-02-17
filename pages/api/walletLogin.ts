@@ -42,9 +42,11 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       req.session.user = user;
       await req.session.save();
       return res.status(200).json(user);
-    } catch (error) {
-      console.log("🐞 > error", error);
-      return res.status(401).json({ loggedIn: false, error });
+    } catch (error: any) {
+      if (error.isBoom) {
+        return res.status(error.output.statusCode).json(error.output.payload);
+      }
+      return res.status(500).json({ error: JSON.stringify(error) });
     }
   }
 };

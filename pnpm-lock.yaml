@@ -6,6 +6,7 @@ specifiers:
   '@emotion/styled': ^11.10.5
   '@ethersproject/abi': ^5.7.0
   '@ethersproject/providers': ^5.7.2
+  '@hapi/boom': ^10.0.1
   '@mui/icons-material': ^5.11.0
   '@mui/lab': 5.0.0-alpha.119
   '@mui/material': ^5.11.2
@@ -47,6 +48,7 @@ dependencies:
   '@emotion/styled': 11.10.5_4zq75am4foc6bp3si2fbm6dugm
   '@ethersproject/abi': 5.7.0
   '@ethersproject/providers': 5.7.2
+  '@hapi/boom': 10.0.1
   '@mui/icons-material': 5.11.0_w3vavv7vfnnb6vp7gprleuqeuq
   '@mui/lab': 5.0.0-alpha.119_wyh3r3ysco7ternhvyhzboiqmq
   '@mui/material': 5.11.2_uau673yxzdwoupi2pemk2c73kq
@@ -1879,6 +1881,16 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       graphql: 16.6.0
+    dev: false
+
+  /@hapi/boom/10.0.1:
+    resolution: {integrity: sha512-ERcCZaEjdH3OgSJlyjVk8pHIFeus91CjKP3v+MpgBNp5IvGzP2l/bRiD78nqYcKPaZdbKkK5vDBVPd2ohHBlsA==}
+    dependencies:
+      '@hapi/hoek': 11.0.2
+    dev: false
+
+  /@hapi/hoek/11.0.2:
+    resolution: {integrity: sha512-aKmlCO57XFZ26wso4rJsW4oTUnrgTFw2jh3io7CAtO9w4UltBNwRXvXIVzzyfkaaLRo3nluP/19msA8vDUUuKw==}
     dev: false
 
   /@humanwhocodes/config-array/0.11.8:
