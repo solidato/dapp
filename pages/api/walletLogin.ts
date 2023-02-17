@@ -14,7 +14,7 @@ import { OdooUser } from "../../types";
 const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
-      const response = await fetch(process.env.ODOO_JWT_TOKEN_ENPOINT, {
+      const response = await fetch(process.env.ODOO_JWT_TOKEN_ENDPOINT, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -43,6 +43,7 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       await req.session.save();
       return res.status(200).json(user);
     } catch (error) {
+      console.log("🐞 > error", error);
       return res.status(401).json({ loggedIn: false, error });
     }
   }
