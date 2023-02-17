@@ -170,7 +170,7 @@ export const getEnhancedResolutions = (
   $acl: ResolutionsAcl,
 ): ResolutionEntityEnhanced[] => {
   const mapper = getEnhancedResolutionMapper($currentTimestamp, $acl);
-  return resolutions.map(mapper);
+  return resolutions?.map(mapper) || [];
 };
 
 export const getExecutionPayload = async (

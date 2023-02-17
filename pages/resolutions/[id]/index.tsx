@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
 
+import { useEffect } from "react";
+
 import { Alert, CircularProgress, Typography } from "@mui/material";
 
 import { fetcherWithParams } from "@graphql/client";
@@ -14,11 +16,19 @@ export default function ResolutionView() {
     fetcherWithParams,
   );
 
+  const notFound = resolutionData && !resolutionData.resolution;
+
+  useEffect(() => {
+    if (router.query?.viewMode === "print" && !isLoadingResolution && !notFound) {
+      window.print();
+    }
+  }, [router.query, notFound, isLoadingResolution]);
+
   if (isLoadingResolution) {
     return <CircularProgress />;
   }
 
-  if (resolutionData && !resolutionData.resolution) {
+  if (notFound) {
     return <Alert severity="warning">Resolution not found</Alert>;
   }
 

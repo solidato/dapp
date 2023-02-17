@@ -37,6 +37,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           isolation: "isolate",
           transition: "transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           transform: trigger ? "translate3d(0, -71px, 0)" : "translate3d(0, 0, 0)",
+          "@media print": {
+            display: "none",
+            "+ main": {
+              pt: 2,
+            },
+          },
         }}
       >
         <AppBar position="relative" elevation={0} variant="outlined" color="transparent">
