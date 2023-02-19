@@ -24,7 +24,7 @@ export default function User({ address }: { address: string }) {
           {getLettersFromName(currentUser?.display_name)}
         </Avatar>
       )}
-      <Box sx={{ ml: 2, width: "100%" }}>
+      <Box sx={{ ml: 1, width: "100%" }}>
         {isLoading ? (
           <>
             <Typography sx={{ mb: -0.5 }}>

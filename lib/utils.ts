@@ -7,4 +7,5 @@ export const getLettersFromName = (name: string) =>
     .slice(0, 2)
     .join("");
 
-export const enhanceTitleWithPrefix = (title: string) => `${META.title} | ${title}`;
+export const enhanceTitleWithPrefix = (title: string, reversed?: boolean) =>
+  reversed ? `${title} | ${META.title}` : `${META.title} | ${title}`;

@@ -48,6 +48,7 @@ interface DappProps extends AppProps {
     title: string;
     requireLogin?: boolean;
     renderOnServer?: boolean;
+    fullWidth?: boolean;
   };
 }
 
@@ -68,7 +69,7 @@ export default function App({ Component, pageProps }: DappProps) {
   const appElement = (
     <CssVarsProvider theme={newTheme} defaultMode="system">
       <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-        <Layout>
+        <Layout fullWidth={!!Component.fullWidth}>
           {(isLoading || !mounted) && (
             <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
               <CircularProgress />

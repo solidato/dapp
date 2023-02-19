@@ -16,7 +16,7 @@ import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
   const router = useRouter();
   const trigger = useScrollTrigger();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
@@ -101,8 +101,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Toolbar>
         </AppBar>
       </Box>
-      <Box component="main" sx={{ p: { md: 3 }, pt: { xs: 18, md: 18 } }}>
-        <Container maxWidth="lg">{children}</Container>
+      <Box component="main" sx={{ p: { md: fullWidth ? 0 : 3 }, pt: { xs: 18, md: 18 } }}>
+        {fullWidth ? children : <Container maxWidth="lg">{children}</Container>}
       </Box>
     </>
   );

@@ -28,10 +28,6 @@ export default class MyDocument extends Document {
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="description" content={META.description} />
           <meta name="keywords" content={META.keywords} />
-
-          <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
-          <script async src="https://unpkg.com/easymde/dist/easymde.min.js" />
-          <script async src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js" />
           <link rel="manifest" href={`/manifest-${process.env.NEXT_PUBLIC_PROJECT_KEY}.json`} />
           <style
             dangerouslySetInnerHTML={{
