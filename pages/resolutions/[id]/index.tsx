@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import showdown from "showdown";
 import useSWR from "swr";
 
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 
 import {
   Alert,
@@ -12,9 +12,9 @@ import {
   Container,
   Divider,
   Paper,
-  Slide,
   Stack,
   Typography,
+  keyframes,
   useTheme,
 } from "@mui/material";
 
@@ -26,11 +26,23 @@ import { enhanceTitleWithPrefix } from "@lib/utils";
 
 import ResolutionInfo from "@components/ResolutionInfo";
 import User from "@components/User";
+import VotingWidget from "@components/VotingWidget";
 
 import useTimestamp from "@hooks/useTimestamp";
 
 const REFRESH_INTERVAL_MS = 5000;
-const VOTING_IN_APPEAR_MS = 1000;
+
+const gradient = keyframes`
+  0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+`;
 
 const converter = new showdown.Converter();
 converter.setFlavor("github");
@@ -47,7 +59,6 @@ export default function ResolutionView() {
   const router = useRouter();
   const { currentTimestamp } = useTimestamp();
   const theme = useTheme();
-  const [votingIn, setVotingIn] = useState(false);
 
   const { data: resolutionData, isLoading: isLoadingResolution } = useSWR(
     [getResolutionQuery, { id: router.query.id }],
@@ -62,12 +73,6 @@ export default function ResolutionView() {
       window.print();
     }
   }, [router.query, notFound, isLoadingResolution]);
-
-  useEffect(() => {
-    const to = setTimeout(() => setVotingIn(true), VOTING_IN_APPEAR_MS);
-
-    return () => clearTimeout(to);
-  }, []);
 
   const resolution = useMemo(() => {
     if (resolutionData?.resolution) {
@@ -85,30 +90,69 @@ export default function ResolutionView() {
   }
 
   return (
-    <Box sx={{ pb: 12 }}>
+    <Box sx={{ pb: resolution.state === RESOLUTION_STATES.VOTING ? 32 : 4 }}>
       <Head>
         <title>{enhanceTitleWithPrefix(`Resolution: ${resolution.title}`, true)}</title>
       </Head>
-      <Slide direction="up" mountOnEnter unmountOnExit in={votingIn}>
-        <Paper
+      {[RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(resolution.state) && (
+        <Section>
+          <>
+            {resolution.state === RESOLUTION_STATES.ENDED && (
+              <Alert severity={resolution.hasQuorum ? "success" : "error"}>
+                {resolution.hasQuorum ? "This resolution has been approved" : "This resolution has not been approved"}
+              </Alert>
+            )}
+            {resolution.state === RESOLUTION_STATES.REJECTED && (
+              <Alert severity="error">This resolution has been rejected</Alert>
+            )}
+          </>
+        </Section>
+      )}
+      {resolution.state === RESOLUTION_STATES.VOTING && (
+        <Box
           sx={{
             position: "fixed",
+            bottom: 0,
+            width: "100%",
+            backgroundColor: theme.palette.mode !== "dark" ? "rgba(255, 255, 255, 0.8)" : "rgba(33, 33, 33, 0.8)",
+            backdropFilter: "blur(4px)",
             isolation: "isolate",
             zIndex: 1,
-            borderRadius: 4,
-            bottom: 20,
-            width: "50%",
+            display: "flex",
+            justifyContent: "center",
             p: 4,
-            left: "50%",
-            ml: "-25%",
-            backgroundColor: theme.palette.mode !== "dark" ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)",
-            backdropFilter: "blur(4px)",
+            borderTop: theme.palette.mode !== "dark" ? "1px solid #DDD" : "1px solid #000",
           }}
-          elevation={3}
         >
-          Voting/execution widget (or connect wallet)
-        </Paper>
-      </Slide>
+          <Paper
+            sx={{
+              borderRadius: 4,
+              p: 4,
+              maxWidth: {
+                xs: "100%",
+                md: "450px",
+              },
+              width: {
+                xs: "90%",
+                md: "auto",
+              },
+              background:
+                theme.palette.mode === "dark"
+                  ? "linear-gradient(-45deg, #020024, #090979, #00d4ff)"
+                  : "linear-gradient(-45deg, rgba(255,255,255,0.8), rgba(220,220,220,0.8))",
+              backgroundSize: "400% 400%",
+              backdropFilter: "blur(4px)",
+              animation: `${gradient} 15s ease infinite`,
+              boxShadow: 20,
+              "@media print": {
+                display: "none",
+              },
+            }}
+          >
+            <VotingWidget resolution={resolution} />
+          </Paper>
+        </Box>
+      )}
       <Section>
         <Stack
           direction={{ xs: "column", md: "row-reverse" }}
@@ -169,7 +213,9 @@ export default function ResolutionView() {
             Created on {resolution.createdAt} by
           </Typography>
           <User address={resolution.createBy} />
-          <ResolutionInfo resolution={resolution} />
+          <Box sx={{ mt: 2 }}>
+            <ResolutionInfo resolution={resolution} />
+          </Box>
         </>
       </Section>
       <Section>
@@ -177,8 +223,8 @@ export default function ResolutionView() {
           <Typography variant="h5">Content of the resolution:</Typography>
           <Box
             sx={{
-              p: 4,
-              pl: 6,
+              p: { xs: 2, md: 4 },
+              pl: { xs: 4, md: 6 },
               mt: 4,
               bgcolor: "background.paper",
               borderLeft: "1px solid",

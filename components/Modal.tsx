@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ReactElement } from "react";
 
 import { useTheme } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
@@ -20,7 +21,17 @@ const style = {
   p: 4,
 };
 
-export default function Modal({ open, setOpen }: { open: boolean; setOpen: (o: boolean) => void }) {
+export default function Modal({
+  open,
+  setOpen,
+  children,
+  title,
+}: {
+  open: boolean;
+  setOpen: (o: boolean) => void;
+  children: ReactElement;
+  title: string;
+}) {
   const handleClose = () => setOpen(false);
   const theme = useTheme();
 
@@ -46,10 +57,10 @@ export default function Modal({ open, setOpen }: { open: boolean; setOpen: (o: b
       <Fade in={open}>
         <Box sx={style}>
           <Typography id="transition-modal-title" variant="h6" component="h2">
-            Text in a modal
+            {title}
           </Typography>
           <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            {children}
           </Typography>
         </Box>
       </Fade>

@@ -97,7 +97,11 @@ export default function App({ Component, pageProps }: DappProps) {
         />
       </Head>
       {appElement}
-      <Web3Modal projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID} ethereumClient={ethereumClient} />
+      <Web3Modal
+        projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
+        ethereumClient={ethereumClient}
+        themeZIndex={2000}
+      />
     </>
   );
 }

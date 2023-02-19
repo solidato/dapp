@@ -1,24 +1,35 @@
 import Link from "next/link";
 
 import * as React from "react";
+import { useState } from "react";
 
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Chip } from "@mui/material";
+import { Alert, Box, Button, Stack } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 
 import ResolutionInfo from "@components/ResolutionInfo";
 import User from "@components/User";
 
+import { RESOLUTION_STATES } from "../lib/resolutions/common";
 import { ResolutionEntityEnhanced } from "../types";
+import Modal from "./Modal";
+import VotingWidget from "./VotingWidget";
 
 export default function ResolutionCard({ resolution }: { resolution: ResolutionEntityEnhanced }) {
+  const [voteModalOpen, setVoteModalOpen] = useState(false);
+
+  const handleVote = () => {
+    setVoteModalOpen(true);
+  };
+
   return (
-    <Card variant="outlined">
+    <Card variant={resolution.state === RESOLUTION_STATES.VOTING ? "elevation" : "outlined"} elevation={12}>
+      <Modal open={voteModalOpen} setOpen={(open) => setVoteModalOpen(open)} title={resolution.title}>
+        <VotingWidget resolution={resolution} />
+      </Modal>
       <CardHeader
         title={resolution.title}
         titleTypographyProps={{
@@ -27,22 +38,51 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
         }}
         sx={{ pb: 0 }}
       />
-      <CardContent sx={{ pt: 0 }}>
+      <CardContent sx={{ pt: 0, pb: 0 }}>
         <Typography variant="body2" sx={{ pt: 1, pb: 0.5 }}>
           Created on {resolution.createdAt} by
         </Typography>
         <User address={resolution.createBy} />
+        <Box sx={{ mt: 2 }}>
+          {resolution.state === RESOLUTION_STATES.VOTING && (
+            <Alert
+              severity="info"
+              action={
+                <Button variant="contained" color="primary" size="small" onClick={handleVote}>
+                  Vote
+                </Button>
+              }
+            >
+              You can now vote for this resolution
+            </Alert>
+          )}
+          {resolution.state === RESOLUTION_STATES.ENDED && (
+            <Alert severity={resolution.hasQuorum ? "success" : "error"}>
+              {resolution.hasQuorum ? "This resolution has been approved" : "This resolution has not been approved"}
+            </Alert>
+          )}
+          {resolution.state === RESOLUTION_STATES.REJECTED && (
+            <Alert severity="error">This resolution has been rejected</Alert>
+          )}
+        </Box>
       </CardContent>
-      <CardActions disableSpacing>
-        <ResolutionInfo resolution={resolution} />
-        <IconButton
-          aria-label="share"
-          sx={{ marginLeft: "auto" }}
-          href={`/resolutions/${resolution.id}/edit`}
-          LinkComponent={Link}
-        >
-          <VisibilityIcon />
-        </IconButton>
+      <CardActions sx={{ mt: 1 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
+          <ResolutionInfo chipSize="small" resolution={resolution} hideState />
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            href={
+              resolution.state === RESOLUTION_STATES.PRE_DRAFT
+                ? `/resolutions/${resolution.id}/edit`
+                : `/resolutions/${resolution.id}`
+            }
+            LinkComponent={Link}
+          >
+            View
+          </Button>
+        </Stack>
       </CardActions>
     </Card>
   );

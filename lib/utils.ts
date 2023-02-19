@@ -9,3 +9,8 @@ export const getLettersFromName = (name: string) =>
 
 export const enhanceTitleWithPrefix = (title: string, reversed?: boolean) =>
   reversed ? `${title} | ${META.title}` : `${META.title} | ${title}`;
+
+export const isSameAddress = (addressLeft: string, addressRight: string) =>
+  typeof addressLeft === "string" && // neeeded as odoo sometimes returns false as eth address
+  typeof addressRight === "string" && // see ^
+  addressLeft.toLowerCase() === addressRight.toLowerCase();
