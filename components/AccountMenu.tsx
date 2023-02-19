@@ -1,7 +1,7 @@
 import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
 import { useSnackbar } from "notistack";
-import { useAccount } from "wagmi";
+import { useAccount, useSignMessage } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
@@ -42,15 +42,21 @@ const style = {
 };
 
 export default function AccountMenu() {
+  const theme = useTheme();
   const { mode, setMode } = useColorScheme();
   const { user, mutateUser } = useUser();
-  const { address, isConnected: walletConnected } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+
+  const { address, isConnected: isWalletConnected } = useAccount({
+    onConnect({ address, isReconnected }) {
+      console.log("Connecting", address, isReconnected);
+      if (!isReconnected && address) handleWalletLogin(address);
+    },
+  });
+
   const [mounted, setMounted] = React.useState(false);
+  const isConnected = mounted && isWalletConnected;
   const { enqueueSnackbar } = useSnackbar();
-
-  const isConnected = mounted && walletConnected;
-
-  const theme = useTheme();
 
   const {
     users: [currentOdooUser],
@@ -59,6 +65,28 @@ export default function AccountMenu() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  async function handleWalletLogin(address: `0x${string}`) {
+    const challenge = await fetch("/api/walletLogin", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const json = await challenge.json();
+    const sig = await signMessageAsync({ message: json.message });
+
+    const data = await fetch("/api/walletLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        address,
+        sig,
+        signingToken: json.signingToken,
+      }),
+    });
+    const resUser = await data.json();
+    mutateUser(resUser, false);
+  }
 
   const { modalOpen, handleModalOpen, handleModalClose } = useLoginModalStore(
     (state) => ({
@@ -123,7 +151,7 @@ export default function AccountMenu() {
             Log in
           </Typography>
           <Typography id="modal-description" sx={{ mt: 2 }}>
-            Use your odoo credentials to be able to log in
+            Use your odoo credentials to log in
           </Typography>
           <LoginForm onLoggedIn={handleModalClose} />
         </Box>
@@ -194,7 +222,7 @@ export default function AccountMenu() {
       >
         {!user?.isLoggedIn && (
           <MenuItem href="/login" onClick={handleModalOpen} component={Link}>
-            Login via odoo
+            Login
           </MenuItem>
         )}
         {isConnected ? (

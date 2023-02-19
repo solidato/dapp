@@ -68,22 +68,22 @@ export default function App({ Component, pageProps }: DappProps) {
 
   const appElement = (
     <CssVarsProvider theme={newTheme} defaultMode="system">
-      <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-        <Layout fullWidth={!!Component.fullWidth}>
-          {(isLoading || !mounted) && (
-            <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-              <CircularProgress />
-            </Box>
-          )}
-          {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-            <WagmiConfig client={wagmiClient}>
+      <WagmiConfig client={wagmiClient}>
+        <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+          <Layout fullWidth={!!Component.fullWidth}>
+            {(isLoading || !mounted) && (
+              <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                <CircularProgress />
+              </Box>
+            )}
+            {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
               <ContractsProvider>
                 <Component {...pageProps} />
               </ContractsProvider>
-            </WagmiConfig>
-          )}
-        </Layout>
-      </SnackbarProvider>
+            )}
+          </Layout>
+        </SnackbarProvider>
+      </WagmiConfig>
     </CssVarsProvider>
   );
 
