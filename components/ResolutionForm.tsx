@@ -98,7 +98,9 @@ export default function ResolutionForm({
         onChange={onUpdateTitle}
         disabled={isMonthlyRewards}
       />
-      <textarea ref={editorRef} />
+      <Box>
+        <textarea ref={editorRef} />
+      </Box>
       <Grid container sx={{ mb: 4, mt: 4 }}>
         <Grid item xs={12} lg={6}>
           <FormControl>

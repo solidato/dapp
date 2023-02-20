@@ -18,7 +18,7 @@ const STATE_TO_VARIANT: Record<ResolutionState, "outlined" | "filled"> = {
   ended: "outlined",
   notice: "filled",
   voting: "outlined",
-  "pre-draft": "filled",
+  "pre-draft": "outlined",
   rejected: "filled",
 };
 

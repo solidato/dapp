@@ -8,7 +8,7 @@ import useOdooUsers from "@hooks/useOdooUsers";
 
 export default function User({ address, isInline = false }: { address: string; isInline?: boolean }) {
   const { users, isLoading } = useOdooUsers(address);
-  const [currentUser] = users || [];
+  const [currentUser] = users.length > 0 ? users : [{ display_name: "unknown", image: "" }];
 
   if (isInline && isLoading) {
     return (

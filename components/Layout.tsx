@@ -84,6 +84,13 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                 clickable
               />
               <Chip
+                label="Delegation"
+                component={Link}
+                href="/delegation"
+                variant={isActive("/delegation") ? "filled" : "outlined"}
+                clickable
+              />
+              <Chip
                 label="Tasks"
                 component={Link}
                 href="/tasks"

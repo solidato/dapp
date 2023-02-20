@@ -1,8 +1,9 @@
 import { useWeb3Modal } from "@web3modal/react";
 import { useAccount } from "wagmi";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
+import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Button, ButtonGroup, CircularProgress, Stack, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
@@ -20,6 +21,7 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
   const { address, isConnected } = useAccount();
   const { open: openWeb3Modal } = useWeb3Modal();
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
+  const [votingYes, setVotingYes] = useState(false);
   const { onSubmit } = useResolutionVote();
   const { isLoading } = useBlockchainTransactionStore();
 
@@ -41,11 +43,13 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
     return [votingOnBehalfOf, delegatedTo];
   }, [resolution, address]);
 
-  const handleVote = (votedYes: boolean) =>
-    onSubmit({
+  const handleVote = (votedYes: boolean) => {
+    setVotingYes(votedYes);
+    return onSubmit({
       resolutionId: resolution.id,
       votedYes,
     });
+  };
 
   if (isLoadingAcl) {
     <CircularProgress />;
@@ -69,30 +73,26 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
         <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
           {votingUser ? "You have voted" : "Cast your vote"}
         </Typography>
-        {isLoading ? (
-          <Box sx={{ width: 200, display: "flex", justifyContent: "center" }}>
-            <CircularProgress size={42} />
-          </Box>
-        ) : (
-          <ButtonGroup size="large" aria-label="large button group">
-            <Button
-              sx={{ borderTopLeftRadius: 18, borderBottomLeftRadius: 18, width: 100 }}
-              color={votingUser?.hasVotedYes ? "success" : "primary"}
-              variant={votingUser?.hasVotedYes ? "contained" : "outlined"}
-              onClick={() => (!votingUser?.hasVotedYes ? handleVote(true) : null)}
-            >
-              Yes
-            </Button>
-            <Button
-              sx={{ borderTopRightRadius: 18, borderBottomRightRadius: 18, width: 100 }}
-              color={votingUser?.hasVoted && !votingUser?.hasVotedYes ? "error" : "primary"}
-              variant={votingUser?.hasVoted && !votingUser?.hasVotedYes ? "contained" : "outlined"}
-              onClick={() => (!!votingUser?.hasVotedYes ? handleVote(false) : null)}
-            >
-              No
-            </Button>
-          </ButtonGroup>
-        )}
+        <ButtonGroup size="large" aria-label="large button group">
+          <LoadingButton
+            sx={{ borderTopLeftRadius: 18, borderBottomLeftRadius: 18, width: 100 }}
+            color={votingUser?.hasVotedYes ? "success" : "primary"}
+            variant={votingUser?.hasVotedYes ? "contained" : "outlined"}
+            onClick={() => (!votingUser?.hasVotedYes ? handleVote(true) : null)}
+            loading={votingYes && isLoading}
+          >
+            Yes
+          </LoadingButton>
+          <LoadingButton
+            sx={{ borderTopRightRadius: 18, borderBottomRightRadius: 18, width: 100 }}
+            color={votingUser?.hasVoted && !votingUser?.hasVotedYes ? "error" : "primary"}
+            variant={votingUser?.hasVoted && !votingUser?.hasVotedYes ? "contained" : "outlined"}
+            onClick={() => (!votingUser?.hasVoted || votingUser?.hasVotedYes ? handleVote(false) : null)}
+            loading={!votingYes && isLoading}
+          >
+            No
+          </LoadingButton>
+        </ButtonGroup>
       </Stack>
       <Alert severity="info" sx={{ mt: 2 }}>
         <Countdown targetDate={resolution.resolutionTypeInfo.votingEnds as Date} prefixLabel="Voting ends" inline />

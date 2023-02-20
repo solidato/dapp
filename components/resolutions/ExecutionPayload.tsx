@@ -1,0 +1,50 @@
+import { ExpandMore } from "@mui/icons-material";
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Typography } from "@mui/material";
+import Divider from "@mui/material/Divider";
+
+import User from "@components/User";
+
+import { MonthlyRewardsUserData, ResolutionEntityEnhanced } from "../../types";
+
+export default function ExecutionPayload({
+  resolution,
+  executionPayload,
+}: {
+  resolution: ResolutionEntityEnhanced;
+  executionPayload: MonthlyRewardsUserData[];
+}) {
+  return (
+    <Accordion>
+      <AccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content" id="panel1a-header">
+        <Typography>Execution payload</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Alert severity="info" sx={{ mb: 2 }}>
+          {resolution.executionTimestamp ? (
+            <span>
+              {" "}
+              As this resolution has been correctly executed <b>{resolution.executedAt}</b>, these tokens have been
+              minted for the following contributors
+            </span>
+          ) : (
+            <span>
+              This payload will be used to automatically mint the tokens for the contributors, once the resolution will
+              get executed
+            </span>
+          )}
+        </Alert>
+        {executionPayload
+          .sort((a, b) => (a.tokens < b.tokens ? -1 : 1))
+          .map((userData) => (
+            <Box key={userData.address}>
+              <Typography variant="body2">
+                <b>{userData.tokens} TT</b> to
+              </Typography>
+              <User address={userData.address} />
+              <Divider sx={{ mb: 1, pt: 1 }} />
+            </Box>
+          ))}
+      </AccordionDetails>
+    </Accordion>
+  );
+}

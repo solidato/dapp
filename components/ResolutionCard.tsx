@@ -31,7 +31,16 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
   const canEdit = resolution.state === RESOLUTION_STATES.PRE_DRAFT && acl.canUpdate;
 
   return (
-    <Card variant={resolution.state === RESOLUTION_STATES.VOTING ? "elevation" : "outlined"} elevation={12}>
+    <Card
+      variant={resolution.state === RESOLUTION_STATES.VOTING ? "elevation" : "outlined"}
+      elevation={12}
+      sx={{
+        height: "100%",
+        position: "relative",
+        pb: 8,
+        opacity: resolution.state === RESOLUTION_STATES.REJECTED ? "0.5" : 1,
+      }}
+    >
       <Modal open={voteModalOpen} setOpen={(open) => setVoteModalOpen(open)} title={resolution.title}>
         <VotingWidget resolution={resolution} />
       </Modal>
@@ -74,7 +83,7 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
             <Alert severity="error">This resolution has been rejected</Alert>
           )}
           {resolution.state === RESOLUTION_STATES.PRE_DRAFT && (
-            <Alert severity="info">Resolution needs to be approved</Alert>
+            <Alert severity="info">Resolution is in draft and needs to be approved</Alert>
           )}
           {resolution.state === RESOLUTION_STATES.NOTICE && (
             <Alert severity="info">
@@ -87,7 +96,15 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
           )}
         </Box>
       </CardContent>
-      <CardActions sx={{ mt: 2, bgcolor: "grey.100", ['[data-mui-color-scheme="dark"] &']: { bgcolor: "grey.900" } }}>
+      <CardActions
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          bgcolor: "grey.100",
+          ['[data-mui-color-scheme="dark"] &']: { bgcolor: "grey.900" },
+        }}
+      >
         <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
           <ResolutionInfo chipSize="small" resolution={resolution} hideState />
           <Button

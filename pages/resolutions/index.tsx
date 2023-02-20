@@ -52,9 +52,12 @@ export default function Resolutions() {
     ? enhancedResolutions
     : enhancedResolutions.filter((resolution) => resolution.state !== RESOLUTION_STATES.REJECTED);
 
+  const hasRejected =
+    enhancedResolutions.filter((resolution) => resolution.state === RESOLUTION_STATES.REJECTED).length > 0;
+
   return (
     <>
-      <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      <Box sx={{ mb: 2, display: "flex", alignItems: "center" }}>
         {isConnected && acl.isContributor && (
           <Stack direction="row" spacing={2}>
             <Button component={Link} href="/resolutions/new" variant="outlined">
@@ -70,13 +73,16 @@ export default function Resolutions() {
             Connect Wallet
           </Button>
         )}
-        <FormControlLabel
-          control={<Switch checked={includeRejected} onChange={() => setIncludeRejected((old) => !old)} />}
-          label="Include rejected"
-        />
+        {hasRejected && (
+          <FormControlLabel
+            sx={{ ml: "auto" }}
+            control={<Switch checked={includeRejected} onChange={() => setIncludeRejected((old) => !old)} />}
+            label="Include rejected"
+          />
+        )}
       </Box>
       {(isLoading || isLoadingAcl) && <CircularProgress />}
-      <Grid container spacing={3} justifyContent="space-between">
+      <Grid container spacing={3}>
         {filteredResolutions.map((resolution) => (
           <Grid item xs={12} md={6} lg={4} key={resolution.id}>
             <ResolutionCard resolution={resolution} />
