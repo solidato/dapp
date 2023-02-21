@@ -20,6 +20,7 @@ export default function Countdown({
   disableCountdown = false,
 }: Props) {
   const [display, setDisplay] = useState<string | null>(null);
+  console.log("display: ", display);
   const [afterPrefix, setAfterPrefix] = useState<string>("");
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function Countdown({
         const minutes = Math.floor(difference / 60);
         const seconds = difference % 60;
         if (seconds <= 0 && minutes <= 0) {
-          setDisplay(null);
+          setDisplay(format(targetDate, "dd LLL yyyy, H:mm:ss"));
         } else {
           setDisplay(
             minutes > 0

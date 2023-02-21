@@ -1,17 +1,21 @@
-import { ReactElement } from "react";
+import { ReactElement, Ref } from "react";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, SxProps } from "@mui/material";
 
 const Section = ({
   children,
   inverse = false,
   pageBreak,
   noPrint = false,
+  sx = {},
+  innerRef,
 }: {
   children: ReactElement;
   inverse?: boolean;
   pageBreak?: boolean;
   noPrint?: boolean;
+  sx?: SxProps;
+  innerRef?: Ref<any>;
 }) => (
   <Box
     sx={{
@@ -28,7 +32,9 @@ const Section = ({
           display: "none",
         },
       }),
+      ...sx,
     }}
+    {...(innerRef && { ref: innerRef })}
   >
     <Container maxWidth="lg">{children}</Container>
   </Box>

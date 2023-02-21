@@ -76,7 +76,16 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
           )}
           {resolution.state === RESOLUTION_STATES.ENDED && (
             <Alert severity={resolution.hasQuorum ? "success" : "error"}>
-              {resolution.hasQuorum ? "This resolution has been approved" : "This resolution has not been approved"}
+              {resolution.hasQuorum ? (
+                <span>
+                  THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}
+                </span>
+              ) : (
+                <span>
+                  THE RESOLUTION OF SHAREHOLDERS <b>HAS NOT BEEN</b> ADOPTED. Voting ended on{" "}
+                  {resolution.resolutionTypeInfo.votingEndsAt}
+                </span>
+              )}
             </Alert>
           )}
           {resolution.state === RESOLUTION_STATES.REJECTED && (

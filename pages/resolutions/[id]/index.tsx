@@ -1,3 +1,4 @@
+import { TelediskoToken__factory } from "@contracts/typechain/factories/contracts/TelediskoToken/TelediskoToken__factory";
 import { Interface } from "@ethersproject/abi";
 import { formatEther } from "ethers/lib/utils";
 import { useRouter } from "next/router";
@@ -13,15 +14,16 @@ import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
 
-import useTimestamp from "@hooks/useTimestamp";
+import ExecutionPayload from "@components/resolutions/ExecutionPayload";
+import Header from "@components/resolutions/Header";
+import LegalInfo from "@components/resolutions/LegalInfo";
+import MainInfo from "@components/resolutions/MainInfo";
+import Section from "@components/resolutions/Section";
+import VotingBreakdown from "@components/resolutions/VotingBreakdown";
+import VotingSection from "@components/resolutions/VotingSection";
+import VotingUsers from "@components/resolutions/VotingUsers";
 
-import ExecutionPayload from "../../../components/resolutions/ExecutionPayload";
-import Header from "../../../components/resolutions/Header";
-import LegalInfo from "../../../components/resolutions/LegalInfo";
-import MainInfo from "../../../components/resolutions/MainInfo";
-import Section from "../../../components/resolutions/Section";
-import VotingSection from "../../../components/resolutions/VotingSection";
-import { TelediskoToken__factory } from "../../../contracts/typechain/factories/contracts/TelediskoToken/TelediskoToken__factory";
+import useTimestamp from "@hooks/useTimestamp";
 
 const REFRESH_INTERVAL_MS = 5000;
 
@@ -73,11 +75,19 @@ export default function ResolutionView() {
   }, [resolution]);
 
   if (isLoadingResolution) {
-    return <CircularProgress />;
+    return (
+      <Section>
+        <CircularProgress />
+      </Section>
+    );
   }
 
   if (notFound || !resolution) {
-    return <Alert severity="warning">Resolution not found</Alert>;
+    return (
+      <Section>
+        <Alert severity="warning">Resolution not found</Alert>
+      </Section>
+    );
   }
 
   return (
@@ -122,6 +132,26 @@ export default function ResolutionView() {
             )}
           </>
         </Section>
+      )}
+      {[RESOLUTION_STATES.VOTING, RESOLUTION_STATES.ENDED].includes(resolution.state) && (
+        <>
+          <Section inverse pageBreak>
+            <>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Voting Summary:
+              </Typography>
+              <VotingBreakdown resolution={resolution} />
+            </>
+          </Section>
+          <Section>
+            <>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Contributors voting:
+              </Typography>
+              <VotingUsers voters={resolution.voters} />
+            </>
+          </Section>
+        </>
       )}
       {(executionPayload || []).length > 0 && (
         <Section noPrint>
