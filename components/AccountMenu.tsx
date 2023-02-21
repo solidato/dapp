@@ -1,7 +1,7 @@
 import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
-import { useAccount, useSignMessage } from "wagmi";
 import { useSnackbar } from "notistack";
+import { useAccount, useSignMessage } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
@@ -49,7 +49,7 @@ export default function AccountMenu() {
 
   const { address, isConnected: isWalletConnected } = useAccount({
     onConnect({ address, isReconnected }) {
-      console.log('Connecting', address, isReconnected)
+      console.log("Connecting", address, isReconnected);
       if (!isReconnected && address) handleWalletLogin(address);
     },
   });
@@ -86,7 +86,7 @@ export default function AccountMenu() {
     });
     const resUser = await data.json();
     mutateUser(resUser, false);
-  };
+  }
 
   const { modalOpen, handleModalOpen, handleModalClose } = useLoginModalStore(
     (state) => ({

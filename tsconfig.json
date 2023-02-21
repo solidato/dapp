@@ -20,6 +20,7 @@
       "@graphql/*": ["lib/graphql/*"],
       "@lib/*": ["lib/*"],
       "@hooks/*": ["hooks/*"],
+      "@contracts/*": ["contracts/*"],
       "@store/*": ["store/*"]
     }
   },

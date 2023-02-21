@@ -48,6 +48,7 @@ interface DappProps extends AppProps {
     title: string;
     requireLogin?: boolean;
     renderOnServer?: boolean;
+    fullWidth?: boolean;
   };
 }
 
@@ -69,7 +70,7 @@ export default function App({ Component, pageProps }: DappProps) {
     <CssVarsProvider theme={newTheme} defaultMode="system">
       <WagmiConfig client={wagmiClient}>
         <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-          <Layout>
+          <Layout fullWidth={!!Component.fullWidth}>
             {(isLoading || !mounted) && (
               <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
                 <CircularProgress />
@@ -96,7 +97,11 @@ export default function App({ Component, pageProps }: DappProps) {
         />
       </Head>
       {appElement}
-      <Web3Modal projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID} ethereumClient={ethereumClient} />
+      <Web3Modal
+        projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
+        ethereumClient={ethereumClient}
+        themeZIndex={2000}
+      />
     </>
   );
 }

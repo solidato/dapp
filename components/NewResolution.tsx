@@ -105,15 +105,17 @@ export default function NewResolution({
             <Alert severity="info" sx={{ mb: 4 }}>
               This payload will be used to automatically mint the tokens for the contributors
             </Alert>
-            {executionPayload.map((userData) => (
-              <Box key={userData.address}>
-                <Typography variant="body2">
-                  <b>{userData.tokens} TT</b> to
-                </Typography>
-                <User address={userData.address} />
-                <Divider sx={{ mb: 1, pt: 1 }} />
-              </Box>
-            ))}
+            {executionPayload
+              .sort((a, b) => (a.tokens < b.tokens ? -1 : 1))
+              .map((userData) => (
+                <Box key={userData.address}>
+                  <Typography variant="body2">
+                    <b>{userData.tokens} TT</b> to
+                  </Typography>
+                  <User address={userData.address} />
+                  <Divider sx={{ mb: 1, pt: 1 }} />
+                </Box>
+              ))}
           </Box>
         </>
       )}

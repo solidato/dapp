@@ -1,3 +1,5 @@
+import "easymde/dist/easymde.min.css";
+
 import { useEffect, useRef } from "react";
 
 import {
@@ -14,8 +16,6 @@ import {
 import { Grid, Typography } from "@mui/material";
 
 import { getPreviousMonth } from "@lib/resolutions/common";
-
-import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import useResolutionTypes from "@hooks/useResolutionTypes";
 
@@ -44,29 +44,37 @@ export default function ResolutionForm({
   const editorRef = useRef(null);
 
   useEffect(() => {
-    const easyMDE = new window.EasyMDE({
-      element: editorRef?.current,
-      spellChecker: false,
-      minHeight: "350px",
-      maxHeight: "350px",
-      status: false,
-      ...(isMonthlyRewards && { toolbar: false }),
-    });
+    let easyMdeInstance: any = null;
 
-    easyMDE.value(content || "");
+    const initMdeInstance = async () => {
+      const EasyMDE = (await import("easymde")).default;
 
-    easyMDE.codemirror.on("change", () => {
-      onUpdateContent(easyMDE.value());
-    });
+      easyMdeInstance = new EasyMDE({
+        element: editorRef?.current || undefined,
+        spellChecker: false,
+        minHeight: "350px",
+        maxHeight: "350px",
+        status: false,
+        ...(isMonthlyRewards && { toolbar: false }),
+      });
 
-    if (isMonthlyRewards) {
-      easyMDE.codemirror.setOption("readOnly", true);
-      easyMDE.togglePreview();
-    }
+      easyMdeInstance.value(content || "");
+
+      easyMdeInstance.codemirror.on("change", () => {
+        onUpdateContent(easyMdeInstance.value());
+      });
+
+      if (isMonthlyRewards) {
+        easyMdeInstance.codemirror.setOption("readOnly", true);
+        EasyMDE.togglePreview(easyMdeInstance);
+      }
+    };
+
+    initMdeInstance();
 
     return () => {
-      easyMDE.cleanup();
-      easyMDE.toTextArea();
+      easyMdeInstance?.cleanup();
+      easyMdeInstance?.toTextArea();
     };
   }, [isMonthlyRewards]); // eslint-disable-line
 
@@ -90,7 +98,9 @@ export default function ResolutionForm({
         onChange={onUpdateTitle}
         disabled={isMonthlyRewards}
       />
-      <textarea ref={editorRef} />
+      <Box>
+        <textarea ref={editorRef} />
+      </Box>
       <Grid container sx={{ mb: 4, mt: 4 }}>
         <Grid item xs={12} lg={6}>
           <FormControl>

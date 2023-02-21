@@ -179,10 +179,3 @@ export type RewardsResponse = {
     content: string;
   };
 };
-
-declare global {
-  interface Window {
-    EasyMDE: any;
-    IpfsHttpClient: any;
-  }
-}

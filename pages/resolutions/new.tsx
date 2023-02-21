@@ -18,7 +18,7 @@ import { TelediskoToken } from "../../contracts/typechain";
 import { MonthlyRewardsUserData } from "../../types";
 
 NewResolutionPage.title = "New resolution";
-NewResolutionPage.requireLogin = true;
+NewResolutionPage.requireLogin = false;
 
 const MONTHLY_REWARDS_TEMPLATE = "monthlyRewards";
 

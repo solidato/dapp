@@ -16,7 +16,7 @@ import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
   const router = useRouter();
   const trigger = useScrollTrigger();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
@@ -37,6 +37,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           isolation: "isolate",
           transition: "transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms",
           transform: trigger ? "translate3d(0, -71px, 0)" : "translate3d(0, 0, 0)",
+          "@media print": {
+            display: "none",
+            "+ main": {
+              pt: 2,
+            },
+          },
         }}
       >
         <AppBar position="relative" elevation={0} variant="outlined" color="transparent">
@@ -78,6 +84,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 clickable
               />
               <Chip
+                label="Delegation"
+                component={Link}
+                href="/delegation"
+                variant={isActive("/delegation") ? "filled" : "outlined"}
+                clickable
+              />
+              <Chip
                 label="Tasks"
                 component={Link}
                 href="/tasks"
@@ -95,8 +108,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Toolbar>
         </AppBar>
       </Box>
-      <Box component="main" sx={{ p: { md: 3 }, pt: { xs: 18, md: 18 } }}>
-        <Container maxWidth="lg">{children}</Container>
+      <Box component="main" sx={{ p: { md: fullWidth ? 0 : 3 }, pt: { xs: 18, md: 18 } }}>
+        {fullWidth ? children : <Container maxWidth="lg">{children}</Container>}
       </Box>
     </>
   );

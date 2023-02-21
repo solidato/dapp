@@ -13,7 +13,7 @@ import EditResolution from "../../../components/EditResolution";
 import { ResolutionEntity, ResolutionEntityEnhanced } from "../../../types";
 
 EditResolutionPage.title = "Edit resolution";
-EditResolutionPage.requireLogin = true;
+EditResolutionPage.requireLogin = false;
 
 export const getServerSideProps = async ({ params, res }: any) => {
   const data = await fetcherWithParams([getResolutionQuery, params]);

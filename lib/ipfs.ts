@@ -1,21 +1,16 @@
-declare global {
-  interface Window {
-    IpfsHttpClient: any;
-  }
-}
-
 let ipfsClient: any = null;
 
-const getIpfsClient = () => {
+const getIpfsClient: any = async () => {
   if (!ipfsClient) {
-    ipfsClient = window.IpfsHttpClient.create(process.env.NEXT_PUBLIC_IPFS_ENDPOINT);
+    const create: any = (await import("ipfs-http-client")).create;
+    ipfsClient = create(process.env.NEXT_PUBLIC_IPFS_ENDPOINT);
   }
 
   return ipfsClient;
 };
 
 export async function addToIpfs(data: any) {
-  const ipfsClientInstance = getIpfsClient();
+  const ipfsClientInstance = await getIpfsClient();
   try {
     const response = await ipfsClientInstance.add(JSON.stringify(data));
     const cid = response.cid.toString();
