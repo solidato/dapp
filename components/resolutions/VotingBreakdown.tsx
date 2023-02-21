@@ -24,6 +24,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         (total, voter) => voter.votingPowerInt + total,
         0,
       ),
+      totalVoted: resolution.votingStatus.votersHaveVoted.reduce((total, voter) => voter.votingPowerInt + total, 0),
       maxVotingPower: resolution.voters.reduce((total, voter) => total + voter.votingPowerInt, 0),
       usersVotedYes: resolution.votingStatus.votersHaveVotedYes.length,
       usersVotedNo: resolution.votingStatus.votersHaveVotedNo.length,
@@ -33,9 +34,9 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
 
     return {
       ...base,
-      usersVotedPerc: Math.round((100 * base.usersVoted) / base.usersTotal),
-      usersVotedYesPerc: Math.round((100 * base.usersVotedYes) / base.usersVoted),
-      usersVotedNoPerc: Math.round((100 * base.usersVotedNo) / base.usersVoted),
+      totalVotedPerc: ((100 * base.totalVoted) / base.maxVotingPower).toFixed(2),
+      totalVotedYesPerc: ((100 * base.totalVotedYes) / base.totalVoted).toFixed(2),
+      totalVotedNoPerc: ((100 * base.totalVotedNo) / base.totalVoted).toFixed(2),
     };
   }, [resolution]);
 
@@ -72,12 +73,12 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Box sx={{ width: "20%", textAlign: "center" }}>
           <Typography variant="h6">Voters</Typography>
           <PieChart
-            data={[{ value: voting.usersVotedPerc, color: theme.palette.grey[600] }]}
+            data={[{ value: Number(voting.totalVotedPerc), color: theme.palette.grey[600] }]}
             totalValue={100}
             lineWidth={20}
             label={({ dataEntry }) => `${dataEntry.value}%`}
             labelStyle={{
-              fontSize: "22px",
+              fontSize: "16px",
               fontFamily: "sans-serif",
               fill: theme.palette.grey[800],
             }}
@@ -89,12 +90,12 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Box sx={{ width: "20%", textAlign: "center" }}>
           <Typography variant="h6">Yes</Typography>
           <PieChart
-            data={[{ value: voting.usersVotedYesPerc, color: theme.palette.success.main }]}
+            data={[{ value: Number(voting.totalVotedYesPerc), color: theme.palette.success.main }]}
             totalValue={100}
             lineWidth={20}
             label={({ dataEntry }) => `${dataEntry.value}%`}
             labelStyle={{
-              fontSize: "22px",
+              fontSize: "16px",
               fontFamily: "sans-serif",
               fill: theme.palette.success.dark,
             }}
@@ -106,12 +107,12 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Box sx={{ width: "20%", textAlign: "center" }}>
           <Typography variant="h6">No</Typography>
           <PieChart
-            data={[{ value: voting.usersVotedNoPerc, color: theme.palette.error.main }]}
+            data={[{ value: Number(voting.totalVotedNoPerc), color: theme.palette.error.main }]}
             totalValue={100}
             lineWidth={20}
             label={({ dataEntry }) => `${dataEntry.value}%`}
             labelStyle={{
-              fontSize: "22px",
+              fontSize: "16px",
               fontFamily: "sans-serif",
               fill: theme.palette.error.dark,
             }}
@@ -140,13 +141,14 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           <Typography variant="body1">In favour</Typography>
           <Typography variant="caption">
             {voting.totalVotedYes.toLocaleString()} /{" "}
-            {((100 * voting.totalVotedYes) / voting.maxVotingPower).toFixed(2)}%
+            {Number(((100 * voting.totalVotedYes) / voting.maxVotingPower).toFixed(2))}%
           </Typography>
         </Box>
         <Box>
           <Typography variant="body1">Against</Typography>
           <Typography variant="caption">
-            {voting.totalVotedNo.toLocaleString()} / {((100 * voting.totalVotedNo) / voting.maxVotingPower).toFixed(2)}%
+            {voting.totalVotedNo.toLocaleString()} /{" "}
+            {Number(((100 * voting.totalVotedNo) / voting.maxVotingPower).toFixed(2))}%
           </Typography>
         </Box>
       </Stack>
@@ -163,7 +165,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           <Typography variant="body1">Abstain</Typography>
           <Typography variant="caption">
             {voting.totalAbstained.toLocaleString()} /{" "}
-            {((100 * voting.totalAbstained) / voting.maxVotingPower).toFixed(2)}%
+            {Number(((100 * voting.totalAbstained) / voting.maxVotingPower).toFixed(2))}%
           </Typography>
         </Box>
         <Box>

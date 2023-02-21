@@ -15,10 +15,15 @@ export default function ExecutionPayload({
 }) {
   return (
     <Accordion>
-      <AccordionSummary expandIcon={<ExpandMore />} aria-controls="panel1a-content" id="panel1a-header">
+      <AccordionSummary
+        expandIcon={<ExpandMore />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+        sx={{ p: 4, pb: 2, pt: 2 }}
+      >
         <Typography>Execution payload</Typography>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails sx={{ p: 4, pt: 2 }}>
         <Alert severity="info" sx={{ mb: 2 }}>
           {resolution.executionTimestamp ? (
             <span>

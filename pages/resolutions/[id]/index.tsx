@@ -14,6 +14,7 @@ import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
 
+import Countdown from "@components/Countdown";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
 import Header from "@components/resolutions/Header";
 import LegalInfo from "@components/resolutions/LegalInfo";
@@ -153,7 +154,7 @@ export default function ResolutionView() {
           </Section>
         </>
       )}
-      {(executionPayload || []).length > 0 && (
+      {(executionPayload || []).length > 0 && resolution.state !== RESOLUTION_STATES.REJECTED && (
         <Section noPrint>
           <ExecutionPayload resolution={resolution} executionPayload={executionPayload} />
         </Section>

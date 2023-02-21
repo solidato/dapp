@@ -7,7 +7,18 @@ import { shallow } from "zustand/shallow";
 
 import * as React from "react";
 
-import { Alert, Box, Chip, CircularProgress, Divider, Link, Stack } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Chip,
+  CircularProgress,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Link,
+  Stack,
+  Switch,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,6 +36,8 @@ import User from "@components/User";
 
 import useUser from "@hooks/useUser";
 
+import UserCard from "../components/shareholders/UserCard";
+
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 Shareholders.title = "Shareholders";
@@ -32,6 +45,7 @@ Shareholders.title = "Shareholders";
 export default function Shareholders() {
   const { user } = useUser();
   const { data, isLoading } = useSWR(getShareholdersInfo, fetcher);
+  const [onlyManagingBoard, setOnlyManagingBoard] = React.useState(false);
 
   const { handleOpenLoginModalFromLink } = useLoginModalStore(
     (state) => ({
@@ -87,6 +101,13 @@ export default function Shareholders() {
 
   return (
     <>
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <FormControlLabel
+          sx={{ ml: "auto" }}
+          control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((old) => !old)} />}
+          label="Show only managing board"
+        />
+      </Box>
       {!user?.isLoggedIn && (
         <Box sx={{ mb: 2 }}>
           <Alert severity="warning">
@@ -97,36 +118,24 @@ export default function Shareholders() {
           </Alert>
         </Box>
       )}
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="shareholders table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell align="right">Tokens</TableCell>
-              <TableCell align="right">Voting Power</TableCell>
-              <TableCell align="right">Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {daoUsersAddresses?.map((address) => (
-              <TableRow key={address} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell component="th" scope="row">
-                  <User address={address} />
-                </TableCell>
-                <TableCell align="right">{daoUsers[address].balance.toLocaleString()}</TableCell>
-                <TableCell align="right">{daoUsers[address].power}</TableCell>
-                <TableCell align="right">
-                  <Stack direction="row" spacing={1} justifyContent="right">
-                    {getShareholderStatus(address).map((status) => (
-                      <Chip key={status} label={status} size="small" />
-                    ))}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Grid container spacing={2}>
+        {daoUsersAddresses
+          ?.filter(
+            (userAddress) =>
+              !onlyManagingBoard ||
+              (onlyManagingBoard && data.daoManager?.managingBoardAddresses.includes(userAddress)),
+          )
+          .map((userAddress) => (
+            <Grid item xs={12} md={6} lg={4} key={userAddress}>
+              <UserCard
+                address={userAddress}
+                balance={daoUsers[userAddress].balance.toLocaleString()}
+                power={daoUsers[userAddress].power}
+                statuses={getShareholderStatus(userAddress)}
+              />
+            </Grid>
+          ))}
+      </Grid>
     </>
   );
 }

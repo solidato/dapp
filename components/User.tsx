@@ -59,7 +59,7 @@ export default function User({
             sx={
               isSameAddress(connectedAddress as string, address)
                 ? {
-                    boxShadow: (theme) => `0 0 0 2px ${theme.palette.success.main}`,
+                    boxShadow: (theme) => `0 0 0 3px ${theme.palette.success.main}`,
                     "@media print": { boxShadow: "none" },
                   }
                 : {}

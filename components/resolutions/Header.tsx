@@ -5,6 +5,7 @@ import { Alert } from "@mui/material";
 import { RESOLUTION_STATES } from "@lib/resolutions/common";
 import { enhanceTitleWithPrefix } from "@lib/utils";
 
+import Countdown from "@components/Countdown";
 import User from "@components/User";
 
 import { ResolutionEntityEnhanced } from "../../types";
@@ -41,6 +42,17 @@ export default function Header({ resolution }: { resolution: ResolutionEntityEnh
               </Alert>
             )}
           </>
+        </Section>
+      )}
+      {resolution.state === RESOLUTION_STATES.NOTICE && (
+        <Section>
+          <Alert severity="info" sx={{ mt: 2 }}>
+            <Countdown
+              targetDate={resolution.resolutionTypeInfo.noticePeriodEnds as Date}
+              prefixLabel="Voting starts"
+              inline
+            />
+          </Alert>
         </Section>
       )}
     </>

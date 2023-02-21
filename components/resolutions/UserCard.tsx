@@ -2,14 +2,14 @@ import { useAccount } from "wagmi";
 
 import { useMemo } from "react";
 
-import { HowToVote, HowToVoteOutlined, HowToVoteRounded, ThumbDown, ThumbUpSharp } from "@mui/icons-material";
+import { HowToVote, ThumbDown, ThumbUpSharp } from "@mui/icons-material";
 import { Box, Card, CardContent, Chip, Divider, Stack, Tooltip, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
 
 import User from "@components/User";
 
-import { ResolutionVoter } from "../types";
+import { ResolutionVoter } from "../../types";
 
 export default function UserCard({
   user,
@@ -92,7 +92,7 @@ export default function UserCard({
           </Box>
           <Box>
             <Typography variant="body2">% of all votes</Typography>
-            <Typography variant="caption">{percentageOfAllVotes}</Typography>
+            <Typography variant="caption">{Number(percentageOfAllVotes)}</Typography>
           </Box>
           <Box>
             <Typography variant="body2">
