@@ -1,5 +1,7 @@
 import { useAccount } from "wagmi";
 
+import { ReactElement } from "react";
+
 import { Box, Card, CardActions, CardContent, Chip, Divider, ListItem, Paper, Stack, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
@@ -11,11 +13,13 @@ export default function UserCard({
   balance,
   power,
   statuses,
+  cta,
 }: {
   address: string;
   balance: number;
   power: number;
   statuses: string[];
+  cta?: ReactElement;
 }) {
   const { address: connectedAddress } = useAccount();
 
@@ -40,10 +44,11 @@ export default function UserCard({
           </Box>
         </Stack>
       </CardContent>
-      <CardActions sx={{ borderTop: (t) => `1px solid ${t.palette.divider}` }}>
+      <CardActions sx={{ borderTop: (t) => `1px solid ${t.palette.divider}`, display: "flex", width: "100%" }}>
         {statuses.map((status) => (
           <Chip key={status} size="small" label={status} />
         ))}
+        <Box ml="auto !important">{cta}</Box>
       </CardActions>
     </Card>
   );

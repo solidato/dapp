@@ -7,32 +7,12 @@ import { shallow } from "zustand/shallow";
 
 import * as React from "react";
 
-import {
-  Alert,
-  Box,
-  Chip,
-  CircularProgress,
-  Divider,
-  FormControlLabel,
-  Grid,
-  Link,
-  Stack,
-  Switch,
-} from "@mui/material";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import { Alert, Box, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
 
 import { fetcher } from "@graphql/client";
 import { getShareholdersInfo } from "@graphql/queries/get-shareholders-info.query";
 
 import useLoginModalStore from "@store/loginModal";
-
-import User from "@components/User";
 
 import useUser from "@hooks/useUser";
 
