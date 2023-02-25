@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 
 import { ReactElement } from "react";
 
-import { Box, Card, CardActions, CardContent, Chip, Divider, ListItem, Paper, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Chip, Divider, Stack, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
 

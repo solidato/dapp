@@ -34,9 +34,9 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
 
     return {
       ...base,
-      totalVotedPerc: ((100 * base.totalVoted) / base.maxVotingPower).toFixed(2),
-      totalVotedYesPerc: ((100 * base.totalVotedYes) / base.totalVoted).toFixed(2),
-      totalVotedNoPerc: ((100 * base.totalVotedNo) / base.totalVoted).toFixed(2),
+      totalVotedPerc: ((100 * base.totalVoted) / (base.maxVotingPower || 1)).toFixed(2),
+      totalVotedYesPerc: ((100 * base.totalVotedYes) / (base.totalVoted || 1)).toFixed(2),
+      totalVotedNoPerc: ((100 * base.totalVotedNo) / (base.totalVoted || 1)).toFixed(2),
     };
   }, [resolution]);
 
