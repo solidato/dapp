@@ -27,7 +27,7 @@ export default function User({
   if (isInline && isLoading) {
     return (
       <Typography variant="body2" component="span">
-        <Skeleton />
+        <Skeleton sx={{ width: 100, display: "inline-block" }} />
       </Typography>
     );
   }

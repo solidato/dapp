@@ -1,23 +1,29 @@
-import { useContext } from "react";
+import { useAccount } from "wagmi";
+
+import { ReactElement, useContext } from "react";
 
 import { ContractsContext } from "../contexts/ContractsContext";
 import useBlockhainTransaction from "./useBlockchainTransaction";
 
 type SubmitParams = {
   delegatingAddress: string;
+  successElement: ReactElement;
+  errorElement: ReactElement;
 };
 
 export default function useDelegate() {
+  const { address } = useAccount();
   const { votingContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
-    onSubmit: async ({ delegatingAddress }: SubmitParams) =>
-      executeTx({
+    onSubmit: async ({ delegatingAddress, successElement, errorElement }: SubmitParams) => {
+      return executeTx({
         contractMethod: votingContract?.delegate,
         params: [delegatingAddress],
-        onSuccessMessage: `Correctly delegated user ${delegatingAddress}`,
-        onErrorMessage: `Error delegating user ${delegatingAddress}`,
-      }),
+        onSuccessMessage: successElement,
+        onErrorMessage: errorElement,
+      });
+    },
   };
 }

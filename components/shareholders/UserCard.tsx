@@ -23,8 +23,15 @@ export default function UserCard({
 }) {
   const { address: connectedAddress } = useAccount();
 
+  const cardProps = isSameAddress(connectedAddress as string, address)
+    ? {
+        variant: "elevation" as "elevation",
+        elevation: 6,
+      }
+    : { variant: "outlined" as "outlined" };
+
   return (
-    <Card variant={isSameAddress(connectedAddress as string, address) ? "elevation" : "outlined"} elevation={6}>
+    <Card {...cardProps}>
       <CardContent sx={{ pt: 3, pb: 3 }}>
         <User address={address} />
         <Stack

@@ -1,6 +1,8 @@
 import { useSnackbar } from "notistack";
 import { useAccount } from "wagmi";
 
+import { ReactElement } from "react";
+
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 const MAX_TX_WAIT = 60000; // 1 minute
@@ -8,8 +10,8 @@ const MAX_TX_WAIT = 60000; // 1 minute
 type ExecuteTxParams = {
   contractMethod: any;
   params: any[];
-  onSuccessMessage: string;
-  onErrorMessage: string;
+  onSuccessMessage: string | ReactElement;
+  onErrorMessage: string | ReactElement;
   stateKey?: string;
 };
 

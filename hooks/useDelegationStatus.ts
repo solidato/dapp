@@ -8,9 +8,13 @@ import { isSameAddress } from "@lib/utils";
 
 import { DelegationUser } from "../types";
 
+const REFRESH_INTERVAL_MS = 10000;
+
 export default function useDelegationStatus() {
   const { address } = useAccount();
-  const { data, error, isLoading } = useSWR(address ? getDelegationUsers : null, fetcher);
+  const { data, error, isLoading } = useSWR(address ? getDelegationUsers : null, fetcher, {
+    refreshInterval: REFRESH_INTERVAL_MS,
+  });
 
   if (error || isLoading || !data) {
     return {
@@ -38,7 +42,13 @@ export default function useDelegationStatus() {
   return {
     data: {
       signerDelegatedBy,
-      signerDelegationStatus,
+      signerDelegationStatus: {
+        ...signerDelegationStatus,
+        isDelegating: !isSameAddress(
+          signerDelegationStatus?.address as string,
+          signerDelegationStatus?.delegated as string,
+        ),
+      },
       usersList: delegationUsers
         .filter((user) => !isSameAddress(user.address, address as string))
         .map((user) => ({
