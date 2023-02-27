@@ -40,6 +40,13 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
     };
   }, [resolution]);
 
+  const outcome = [
+    Number(voting.totalVotedYesPerc) > 0 && `${Number(voting.totalVotedYesPerc)}% Yes`,
+    Number(voting.totalVotedNoPerc) > 0 && `${Number(voting.totalVotedNoPerc)}% No`,
+  ]
+    .filter(Boolean)
+    .join(" - ");
+
   return (
     <>
       {resolution.state === RESOLUTION_STATES.ENDED && (
@@ -72,52 +79,26 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
       >
         <Box sx={{ width: "20%", textAlign: "center" }}>
           <Typography variant="h6">Voters</Typography>
+          <Typography variant="body2">{Number(voting.totalVotedPerc)}%</Typography>
           <PieChart
             data={[{ value: Number(voting.totalVotedPerc), color: theme.palette.grey[600] }]}
             totalValue={100}
             lineWidth={20}
-            label={({ dataEntry }) => `${dataEntry.value}%`}
-            labelStyle={{
-              fontSize: "16px",
-              fontFamily: "sans-serif",
-              fill: theme.palette.grey[800],
-            }}
             labelPosition={0}
             startAngle={-90}
             animate
           />
         </Box>
-        <Box sx={{ width: "20%", textAlign: "center" }}>
-          <Typography variant="h6">Yes</Typography>
+        <Box sx={{ width: "25%", textAlign: "center" }}>
+          <Typography variant="h6">Outcome</Typography>
+          <Typography variant="body2">{outcome}</Typography>
           <PieChart
-            data={[{ value: Number(voting.totalVotedYesPerc), color: theme.palette.success.main }]}
-            totalValue={100}
+            data={[
+              { title: "Yes", value: voting.totalVotedYes, color: theme.palette.success.main },
+              { title: "No", value: voting.totalVotedNo, color: theme.palette.error.main },
+            ]}
             lineWidth={20}
-            label={({ dataEntry }) => `${dataEntry.value}%`}
-            labelStyle={{
-              fontSize: "16px",
-              fontFamily: "sans-serif",
-              fill: theme.palette.success.dark,
-            }}
-            labelPosition={0}
-            startAngle={-90}
-            animate
-          />
-        </Box>
-        <Box sx={{ width: "20%", textAlign: "center" }}>
-          <Typography variant="h6">No</Typography>
-          <PieChart
-            data={[{ value: Number(voting.totalVotedNoPerc), color: theme.palette.error.main }]}
-            totalValue={100}
-            lineWidth={20}
-            label={({ dataEntry }) => `${dataEntry.value}%`}
-            labelStyle={{
-              fontSize: "16px",
-              fontFamily: "sans-serif",
-              fill: theme.palette.error.dark,
-            }}
-            labelPosition={0}
-            startAngle={-90}
+            segmentsStyle={{ transition: "stroke .3s", cursor: "pointer" }}
             animate
           />
         </Box>

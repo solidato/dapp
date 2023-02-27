@@ -12,7 +12,6 @@ type SubmitParams = {
 };
 
 export default function useDelegate() {
-  const { address } = useAccount();
   const { votingContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
