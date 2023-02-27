@@ -16,13 +16,14 @@ type ExecuteTxParams = {
 };
 
 export default function useBlockhainTransaction() {
-  const { set, reset } = useBlockchainTransactionStore();
+  const { set, reset, isLoading } = useBlockchainTransactionStore();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { address } = useAccount();
 
   return {
     set,
     reset,
+    isLoading,
     executeTx: async ({
       contractMethod,
       params,

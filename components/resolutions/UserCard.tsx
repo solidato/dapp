@@ -47,10 +47,16 @@ export default function UserCard({
     return "";
   }, [user]);
 
+  const cardProps = isSameAddress(address as string, user.address)
+    ? {
+        variant: "elevation" as "elevation",
+        elevation: 6,
+      }
+    : { variant: "outlined" as "outlined" };
+
   return (
     <Card
-      variant={isSameAddress(address as string, user.address) ? "elevation" : "outlined"}
-      elevation={6}
+      {...cardProps}
       sx={{
         "@media print": { breakInside: "avoid", boxShadow: "none", border: (t) => `1px solid ${t.palette.divider}` },
         position: "relative",
