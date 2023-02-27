@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 
 import { ReactElement } from "react";
 
-import { Box, Card, CardActions, CardContent, Chip, Divider, ListItem, Paper, Stack, Typography } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Chip, Divider, Stack, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
 
@@ -23,8 +23,15 @@ export default function UserCard({
 }) {
   const { address: connectedAddress } = useAccount();
 
+  const cardProps = isSameAddress(connectedAddress as string, address)
+    ? {
+        variant: "elevation" as "elevation",
+        elevation: 6,
+      }
+    : { variant: "outlined" as "outlined" };
+
   return (
-    <Card variant={isSameAddress(connectedAddress as string, address) ? "elevation" : "outlined"} elevation={6}>
+    <Card {...cardProps}>
       <CardContent sx={{ pt: 3, pb: 3 }}>
         <User address={address} />
         <Stack

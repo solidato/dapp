@@ -1,6 +1,7 @@
 import Typography from "@mui/material/Typography";
 
-Home.renderOnServer = true;
+Home.renderOnServer = false;
+Home.requireLogin = true;
 
 export default function Home() {
   if (process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom")

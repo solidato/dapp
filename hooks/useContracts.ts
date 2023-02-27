@@ -10,6 +10,8 @@ import {
   ResolutionManager__factory,
   TelediskoToken,
   TelediskoToken__factory,
+  Voting,
+  Voting__factory,
 } from "../contracts/typechain";
 import networksNeoKingdom from "../networks/neokingdom.json";
 import networksTeledisko from "../networks/teledisko.json";
@@ -26,6 +28,11 @@ const getTokenContract = (chainId: string, signer: Signer): TelediskoToken => {
   const address =
     networks[chainId][process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "NeokingdomToken" : "TelediskoToken"];
   return TelediskoToken__factory.connect(address, signer);
+};
+
+const getVotingContract = (chainId: string, signer: Signer): Voting => {
+  const address = networks[chainId]["Voting"];
+  return Voting__factory.connect(address, signer);
 };
 
 export function useContracts() {
@@ -45,6 +52,7 @@ export function useContracts() {
         setContracts({
           resolutionContract: getResolutionContract(chainId, signer),
           tokenContract: getTokenContract(chainId, signer),
+          votingContract: getVotingContract(chainId, signer),
         });
       } catch (error) {
         enqueueSnackbar("Your wallet was connected to an unsupported network, please re-connect", { variant: "error" });

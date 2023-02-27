@@ -2,14 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { useMemo } from "react";
+import React, { use, useMemo } from "react";
 
-import { Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
+import { Badge, Chip, Container, Divider, Slide, Stack, keyframes, useScrollTrigger } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 
+import useUser from "@hooks/useUser";
+
+import useDelegationStatus from "../hooks/useDelegationStatus";
 import TelediskoLogo from "../images/logo-teledisko.png";
 import AccountMenu from "./AccountMenu";
 import NkdLogo from "./svg-logos/NkdLogo";
@@ -17,9 +20,13 @@ import NkdLogo from "./svg-logos/NkdLogo";
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
 
 export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
+  const { user } = useUser();
   const router = useRouter();
   const trigger = useScrollTrigger();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
+  const { data, isLoading } = useDelegationStatus();
+
+  const delegationActive = data.signerDelegatedBy.length > 0 || data.signerDelegationStatus?.isDelegating;
 
   return (
     <>
@@ -69,13 +76,15 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
           <Divider />
           <Toolbar variant="dense">
             <Stack direction="row" spacing={1} sx={{ overflow: "auto" }}>
-              <Chip
-                label="Dashboard"
-                component={Link}
-                href="/"
-                variant={isActive("/") ? "filled" : "outlined"}
-                clickable
-              />
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Dashboard"
+                  component={Link}
+                  href="/"
+                  variant={isActive("/") ? "filled" : "outlined"}
+                  clickable
+                />
+              )}
               <Chip
                 label="Resolutions"
                 component={Link}
@@ -83,20 +92,41 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                 variant={isActive("/resolutions") ? "filled" : "outlined"}
                 clickable
               />
-              <Chip
-                label="Delegation"
-                component={Link}
-                href="/delegation"
-                variant={isActive("/delegation") ? "filled" : "outlined"}
-                clickable
-              />
-              <Chip
-                label="Tasks"
-                component={Link}
-                href="/tasks"
-                variant={isActive("/tasks") ? "filled" : "outlined"}
-                clickable
-              />
+              {!isLoading && typeof window !== "undefined" && user?.isLoggedIn && (
+                <Badge
+                  color="success"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      top: 10,
+                      right: 3,
+                      ...(!data.signerDelegationStatus?.isDelegating && {
+                        border: (t) => `2px solid ${t.palette.background.paper}`,
+                        padding: "0 4px",
+                      }),
+                    },
+                  }}
+                  badgeContent={data?.signerDelegatedBy?.length || "1"}
+                  invisible={!delegationActive}
+                  variant={data?.signerDelegationStatus?.isDelegating ? "dot" : "standard"}
+                >
+                  <Chip
+                    label="Delegation"
+                    component={Link}
+                    href="/delegation"
+                    variant={isActive("/delegation") ? "filled" : "outlined"}
+                    clickable
+                  />
+                </Badge>
+              )}
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Tasks"
+                  component={Link}
+                  href="/tasks"
+                  variant={isActive("/tasks") ? "filled" : "outlined"}
+                  clickable
+                />
+              )}
               <Chip
                 label="Shareholders"
                 component={Link}
