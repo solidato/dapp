@@ -36,13 +36,13 @@ export default function useBlockhainTransaction() {
         return false;
       }
       set(true, false, stateKey);
+      const txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
+        variant: "info",
+        autoHideDuration: MAX_TX_WAIT,
+      });
       try {
         const tx = await contractMethod.apply(null, params);
         set(true, true);
-        const txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
-          variant: "info",
-          autoHideDuration: MAX_TX_WAIT,
-        });
         await tx?.wait();
         set(true, false);
         closeSnackbar(txAlert);
@@ -50,6 +50,7 @@ export default function useBlockhainTransaction() {
         reset();
         return true;
       } catch (err) {
+        closeSnackbar(txAlert);
         enqueueSnackbar(onErrorMessage, { variant: "error" });
         console.error(err);
         reset();
