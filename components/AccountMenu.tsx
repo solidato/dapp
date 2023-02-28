@@ -232,12 +232,6 @@ export default function AccountMenu() {
         )}
         {user?.isLoggedIn && [
           <Divider key="divider" />,
-          <MenuItem onClick={handleClose} key="settings">
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem>,
           <MenuItem onClick={logout} key="logout">
             <ListItemIcon>
               <Logout fontSize="small" />
