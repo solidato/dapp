@@ -49,7 +49,6 @@ export default function AccountMenu() {
 
   const { address, isConnected: isWalletConnected } = useAccount({
     onConnect({ address, isReconnected }) {
-      console.log("Connecting", address, isReconnected);
       if (!isReconnected && address) handleWalletLogin(address);
     },
   });
@@ -147,12 +146,6 @@ export default function AccountMenu() {
         }}
       >
         <Box sx={style}>
-          <Typography id="modal-title" variant="h6" component="h2">
-            Log in
-          </Typography>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
-            Use your odoo credentials to log in
-          </Typography>
           <LoginForm onLoggedIn={handleModalClose} />
         </Box>
       </Modal>

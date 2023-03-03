@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 
 import { useMemo } from "react";
 
-import { Alert, Box, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Divider, Paper, Stack, Typography } from "@mui/material";
 
 import { fetcher } from "@graphql/client";
 import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
@@ -54,12 +54,14 @@ export default function Home() {
       </Section>
       <Section inverse>
         <>
-          <Paper sx={{ p: 4, width: 500 }}>
-            <Typography variant="h5" sx={{ pb: 3 }}>
-              Resolutions to vote
-            </Typography>
-            <ResolutionCard resolution={enhancedResolutions[0]} />
-          </Paper>
+          {enhancedResolutions?.length > 0 && (
+            <Paper sx={{ p: 4, width: 500 }}>
+              <Typography variant="h5" sx={{ pb: 3 }}>
+                Resolutions to vote
+              </Typography>
+              <ResolutionCard resolution={enhancedResolutions[0]} />
+            </Paper>
+          )}
           <Paper sx={{ p: 4 }}>
             <Typography variant="h5" sx={{ pb: 3 }}>
               Resolutions overview
