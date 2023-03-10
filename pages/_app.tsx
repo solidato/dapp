@@ -11,8 +11,10 @@ import { evmos, evmosTestnet } from "wagmi/chains";
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, styled } from "@mui/material";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 import Layout from "@components/Layout";
 
@@ -52,6 +54,12 @@ interface DappProps extends AppProps {
   };
 }
 
+const StyledSnackbarProvider = styled(SnackbarProvider)`
+  &.SnackbarItem-contentRoot {
+    margin-top: 53px;
+  }
+`;
+
 export default function App({ Component, pageProps }: DappProps) {
   const pageTitle = Component.title ? `${META.title} | ${Component.title}` : META.title;
   const { asPath } = useRouter();
@@ -68,22 +76,28 @@ export default function App({ Component, pageProps }: DappProps) {
 
   const appElement = (
     <CssVarsProvider theme={newTheme} defaultMode="system">
-      <WagmiConfig client={wagmiClient}>
-        <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-          <Layout fullWidth={!!Component.fullWidth}>
-            {(isLoading || !mounted) && (
-              <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                <CircularProgress />
-              </Box>
-            )}
-            {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-              <ContractsProvider>
-                <Component {...pageProps} />
-              </ContractsProvider>
-            )}
-          </Layout>
-        </SnackbarProvider>
-      </WagmiConfig>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <WagmiConfig client={wagmiClient}>
+          <StyledSnackbarProvider
+            maxSnack={3}
+            autoHideDuration={3000}
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <Layout fullWidth={!!Component.fullWidth}>
+              {(isLoading || !mounted) && (
+                <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                  <CircularProgress />
+                </Box>
+              )}
+              {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
+                <ContractsProvider>
+                  <Component {...pageProps} />
+                </ContractsProvider>
+              )}
+            </Layout>
+          </StyledSnackbarProvider>
+        </WagmiConfig>
+      </LocalizationProvider>
     </CssVarsProvider>
   );
 
