@@ -17,6 +17,7 @@ import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 
 import ResolutionCard from "../components/ResolutionCard";
+import Header from "../components/dashboard/Header";
 import { ResolutionEntityEnhanced } from "../types";
 
 Home.renderOnServer = false;
@@ -42,15 +43,7 @@ export default function Home() {
         sx={{ pt: 0 }}
         containerSx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
       >
-        <>
-          <div>
-            <Typography variant="h3" sx={{ pb: 2 }}>
-              Welcome,
-            </Typography>
-            <User address={address as string} />
-          </div>
-          <div>Hours widget</div>
-        </>
+        <Header />
       </Section>
       <Section inverse>
         <>

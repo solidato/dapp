@@ -202,3 +202,9 @@ export const getPreviousMonth = () => {
 
   return currentDate.toLocaleString("en-us", { month: "long" });
 };
+
+export const getCurrentMonth = () => {
+  const currentDate = new Date();
+
+  return currentDate.toLocaleString("en-us", { month: "long" });
+};
