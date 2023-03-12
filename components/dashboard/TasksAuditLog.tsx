@@ -1,9 +1,9 @@
 import { format } from "date-fns";
 import useSWR from "swr";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
-import { Box, Paper, Skeleton, Typography } from "@mui/material";
+import { Box, CircularProgress, Paper, Skeleton, Typography } from "@mui/material";
 
 import { fetcher } from "@lib/net";
 
@@ -21,12 +21,32 @@ export default function TasksAuditLog() {
     refreshInterval: REFRESH_EVERY_MS,
   });
 
+  const totalWorkedTime = useMemo(() => {
+    if (!data) {
+      return "";
+    }
+
+    return `${data.reduce(
+      (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
+      0,
+    )} hr`;
+  }, [data]);
+
   return (
     <>
-      <Typography variant="h4">Tasks audit log</Typography>
-      <Typography variant="h6" sx={{ mb: 2 }} ref={ref}>
-        This list is in real time and it shows the last 20 activities from the collaborators
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+        <Box sx={{ mr: 2, width: "calc(100% - 150px)" }}>
+          <Typography variant="h4">Tasks audit log</Typography>
+          <Typography variant="h6" sx={{ mb: 2 }} ref={ref}>
+            This list is in real time and it shows the last 20 activities from the collaborators
+          </Typography>
+        </Box>
+        <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
+          <Typography variant="caption">Worked in total</Typography>
+          <Typography variant="h6">{isLoading ? <CircularProgress size={16} /> : totalWorkedTime}</Typography>
+          <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
+        </Paper>
+      </Box>
       {isLoading
         ? [...Array(3)].map((index) => (
             <Paper key={index} sx={{ p: 2, mb: 1, display: "flex", alignItems: "center" }}>
@@ -64,12 +84,12 @@ export default function TasksAuditLog() {
                   {format(new Date(task.write_date), "dd LLL yyyy, H:mm:ss")}
                 </Typography>
               </Box>
-              <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
+              <Paper sx={{ ml: "auto", textAlign: "center", p: { xs: 1, sm: 2 }, width: 130 }} variant="outlined">
                 <Typography variant="caption">Worked</Typography>
                 <Typography variant="h6">
                   <b>{Number((task.subtask_effective_hours + task.effective_hours).toFixed(2))}</b> hr
                 </Typography>
-                <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
+                <Typography variant="caption">in {getCurrentMonth()}</Typography>
               </Paper>
             </Paper>
           ))}

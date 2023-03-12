@@ -19,7 +19,7 @@ export default function Header() {
 
   return (
     <>
-      <div>
+      <Box sx={{ mr: 2 }}>
         <Typography variant="h3" sx={{ pb: 2 }}>
           Welcome,
         </Typography>
@@ -29,8 +29,8 @@ export default function Header() {
             <Chip key={status} size="small" label={status} />
           ))}
         </Stack>
-      </div>
-      <Paper sx={{ textAlign: "center", p: 2 }}>
+      </Box>
+      <Paper sx={{ textAlign: "center", p: 2, ml: "auto" }}>
         {isLoading ? (
           <Box sx={{ width: 120 }}>
             <Typography variant="caption">
