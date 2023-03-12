@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import useSWR from "swr";
 
 import { useRef } from "react";
@@ -7,6 +8,7 @@ import { Box, Paper, Skeleton, Typography } from "@mui/material";
 import { fetcher } from "@lib/net";
 
 import useIsInView from "../../hooks/useIsInView";
+import { getCurrentMonth } from "../../lib/resolutions/common";
 import { Task } from "../../types";
 import User from "../User";
 
@@ -58,7 +60,8 @@ export default function TasksAuditLog() {
                   {task.name}
                 </Typography>
                 <Typography variant="caption">
-                  Project: {task.project_id.name}, Updated on: {task.write_date}
+                  Project: {task.project_id.name}, Updated on:{" "}
+                  {format(new Date(task.write_date), "dd LLL yyyy, H:mm:ss")}
                 </Typography>
               </Box>
               <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
@@ -66,7 +69,7 @@ export default function TasksAuditLog() {
                 <Typography variant="h6">
                   <b>{Number((task.subtask_effective_hours + task.effective_hours).toFixed(2))}</b> hr
                 </Typography>
-                <Typography variant="caption">so far</Typography>
+                <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
               </Paper>
             </Paper>
           ))}

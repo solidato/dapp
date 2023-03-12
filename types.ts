@@ -195,10 +195,16 @@ export type Task = {
   child_ids: {
     id: number;
     name: string;
+    timesheet_ids: {
+      name: string;
+    }[];
   }[];
   user_id: {
     id: number;
     name: string;
     ethereum_address: string;
   };
+  timesheet_ids: {
+    name: string;
+  }[];
 };
