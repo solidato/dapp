@@ -1,18 +1,21 @@
-import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import { InfoOutlined, MoneyOff } from "@mui/icons-material";
-import { IconButton, Paper, Tooltip, Typography } from "@mui/material";
+import { InfoOutlined } from "@mui/icons-material";
+import { Chip, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import { fetcher } from "@lib/net";
 import { getCurrentMonth } from "@lib/resolutions/common";
 
 import User from "@components/User";
 
+import useCurrentTasks from "@hooks/useCurrentTasks";
+import useShareholderStatus from "@hooks/useShareholderStatus";
+
 export default function Header() {
   const { address } = useAccount();
-  const { data } = useSWR("/api/tasks/not-approved-hours", fetcher);
+  const { isLoading, totalHours } = useCurrentTasks();
+
+  const { getShareholderStatus } = useShareholderStatus();
 
   return (
     <>
@@ -20,17 +23,38 @@ export default function Header() {
         <Typography variant="h3" sx={{ pb: 2 }}>
           Welcome,
         </Typography>
-        <User address={address as string} />
+        <User address={address as string} shouldMarkCurrentUser={false} shortAddress />
+        <Stack sx={{ pt: 2 }} spacing={1} direction="row">
+          {getShareholderStatus(address as string).map((status) => (
+            <Chip key={status} size="small" label={status} />
+          ))}
+        </Stack>
       </div>
       <Paper sx={{ textAlign: "center", p: 2 }}>
-        <Typography variant="caption">You worked</Typography>
-        <Typography variant="h4">{data} hr</Typography>
-        <Typography variant="caption">in {getCurrentMonth()}, so far</Typography>
-        <Tooltip title="Once approved, you will be eligible for token allocation" arrow>
-          <IconButton color="primary" aria-label="info" size="small">
-            <InfoOutlined />
-          </IconButton>
-        </Tooltip>
+        {isLoading ? (
+          <Box sx={{ width: 120 }}>
+            <Typography variant="caption">
+              <Skeleton />
+            </Typography>
+            <Typography variant="h4">
+              <Skeleton />
+            </Typography>
+            <Typography variant="caption">
+              <Skeleton />
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            <Typography variant="caption">You worked</Typography>
+            <Typography variant="h4">{totalHours} hr</Typography>
+            <Typography variant="caption">in {getCurrentMonth()}, so far</Typography>
+            <Tooltip title="Once approved, the corresponding tokens will be minted" arrow>
+              <IconButton color="primary" aria-label="info" size="small">
+                <InfoOutlined />
+              </IconButton>
+            </Tooltip>
+          </>
+        )}
       </Paper>
     </>
   );

@@ -10,14 +10,14 @@ import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
 
 import { getEnhancedResolutions } from "@lib/resolutions/common";
 
+import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
-import User from "@components/User";
+import Header from "@components/dashboard/Header";
+import TasksAuditLog from "@components/dashboard/TasksAuditLog";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 
-import ResolutionCard from "../components/ResolutionCard";
-import Header from "../components/dashboard/Header";
 import { ResolutionEntityEnhanced } from "../types";
 
 Home.renderOnServer = false;
@@ -72,15 +72,10 @@ export default function Home() {
               WIP
             </Paper>
           </Stack>
-          <Stack direction="row" spacing={4} divider={<Divider orientation="vertical" flexItem />}>
-            <Paper sx={{ p: 4 }}>
-              <Typography variant="h5" sx={{ pb: 3 }}>
-                Audit log
-              </Typography>
-              WIP
-            </Paper>
-          </Stack>
         </>
+      </Section>
+      <Section inverse>
+        <TasksAuditLog />
       </Section>
     </>
   );

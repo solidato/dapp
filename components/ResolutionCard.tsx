@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState } from "react";
 
 import { Alert, Box, Button, Stack } from "@mui/material";
-import Card from "@mui/material/Card";
+import Card, { CardProps } from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
@@ -30,10 +30,17 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
 
   const canEdit = resolution.state === RESOLUTION_STATES.PRE_DRAFT && acl.canUpdate;
 
+  const cardProps: Partial<CardProps> =
+    resolution.state === RESOLUTION_STATES.VOTING
+      ? {
+          variant: "elevation",
+          elevation: 12,
+        }
+      : { variant: "outlined" };
+
   return (
     <Card
-      variant={resolution.state === RESOLUTION_STATES.VOTING ? "elevation" : "outlined"}
-      elevation={12}
+      {...cardProps}
       sx={{
         height: "100%",
         position: "relative",

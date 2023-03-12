@@ -181,3 +181,24 @@ export type RewardsResponse = {
     content: string;
   };
 };
+
+export type Task = {
+  id: number;
+  subtask_effective_hours: number;
+  effective_hours: number;
+  name: string;
+  write_date: string;
+  project_id: {
+    id: number;
+    name: string;
+  };
+  child_ids: {
+    id: number;
+    name: string;
+  }[];
+  user_id: {
+    id: number;
+    name: string;
+    ethereum_address: string;
+  };
+};

@@ -1,7 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getNotApprovedTasks } from "@graphql/queries/get-not-approved-tasks.query";
+import { getCurrentTasks } from "@graphql/queries/get-current-tasks.query";
 
 import odooGraphQLClient from "@lib/graphql/odoo";
 import { sessionOptions } from "@lib/session";
@@ -13,16 +13,8 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).end();
   }
 
-  const data = await odooGraphQLClient(cookie, getNotApprovedTasks, { userId: user.id });
-  res
-    .status(200)
-    .json(
-      data.ProjectTask.reduce(
-        (total: number, task: { subtask_effective_hours: number; effective_hours: number }) =>
-          task.subtask_effective_hours + task.effective_hours + total,
-        0,
-      ),
-    );
+  const data = await odooGraphQLClient(cookie, getCurrentTasks, { userId: user.id });
+  res.status(200).json(data.ProjectTask);
 }
 
 export default withIronSessionApiRoute(tasksRoute, sessionOptions);
