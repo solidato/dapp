@@ -1,11 +1,28 @@
-import Typography from "@mui/material/Typography";
+import Section from "@components/Section";
+import Header from "@components/dashboard/Header";
+
+import Resolutions from "../components/dashboard/Resolutions";
+import Tasks from "../components/dashboard/Tasks";
 
 Home.renderOnServer = false;
 Home.requireLogin = true;
+Home.fullWidth = true;
 
 export default function Home() {
-  if (process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom")
-    return <Typography variant="h3">Neokingdom dashboard</Typography>;
-  if (process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko")
-    return <Typography variant="h3">Teledisko dashboard</Typography>;
+  return (
+    <>
+      <Section
+        sx={{ pt: 0 }}
+        containerSx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
+      >
+        <Header />
+      </Section>
+      <Section inverse>
+        <Resolutions />
+      </Section>
+      <Section>
+        <Tasks />
+      </Section>
+    </>
+  );
 }

@@ -15,14 +15,22 @@ export default function User({
   address,
   isInline = false,
   inlineVariant = "body2",
+  shouldMarkCurrentUser = true,
+  shortAddress = false,
+  isSkeleton = false,
 }: {
-  address: string;
+  address?: string;
   isInline?: boolean;
+  shouldMarkCurrentUser?: boolean;
+  shortAddress?: boolean;
   inlineVariant?: Variant;
+  isSkeleton?: boolean;
 }) {
   const { address: connectedAddress } = useAccount();
-  const { users, isLoading } = useOdooUsers(address);
+  const { users, isLoading: isLoadingUsers } = useOdooUsers(address);
   const [currentUser] = users.length > 0 ? users : [{ display_name: "unknown", image: "" }];
+
+  const isLoading = isLoadingUsers || isSkeleton;
 
   if (isInline && isLoading) {
     return (
@@ -40,6 +48,8 @@ export default function User({
     );
   }
 
+  const markCurrentUser = isSameAddress(connectedAddress as string, address as string) && shouldMarkCurrentUser;
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       {isLoading ? (
@@ -47,17 +57,12 @@ export default function User({
           <Avatar />
         </Skeleton>
       ) : (
-        <Tooltip
-          title={isSameAddress(connectedAddress as string, address) ? "you" : ""}
-          placement="top"
-          arrow
-          TransitionComponent={Zoom}
-        >
+        <Tooltip title={markCurrentUser ? "you" : ""} placement="top" arrow TransitionComponent={Zoom}>
           <Avatar
             alt={currentUser?.display_name}
             src={`data:image/jpeg;charset=utf-8;base64,${currentUser?.image || ""}`}
             sx={
-              isSameAddress(connectedAddress as string, address)
+              markCurrentUser
                 ? {
                     boxShadow: (theme) => `0 0 0 3px ${theme.palette.success.main}`,
                     "@media print": { boxShadow: "none" },
@@ -82,7 +87,22 @@ export default function User({
         ) : (
           <>
             {currentUser?.display_name && <Typography sx={{ mb: -1 }}>{currentUser?.display_name} </Typography>}
-            <Typography variant="caption">{address}</Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                ...(shortAddress
+                  ? {
+                      maxWidth: { xs: "100px", md: "auto" },
+                      overflow: { xs: "hidden", md: "visible" },
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }
+                  : {}),
+              }}
+            >
+              {address}
+            </Typography>
           </>
         )}
       </Box>

@@ -11,11 +11,15 @@ export default function useOdooUsers(address = ""): { users: OdooUser[]; error?:
   const { data, error, isLoading } = useSWR(user?.isLoggedIn ? "/api/users" : null, fetcher);
 
   if (!address && data) {
-    return { users: data };
+    return { users: data, isLoading: false, error: false };
   }
 
   if (address && data) {
-    return { users: data.filter((user: OdooUser) => isSameAddress(user.ethereum_address, address)) };
+    return {
+      users: data.filter((user: OdooUser) => isSameAddress(user.ethereum_address, address)),
+      isLoading: false,
+      error: false,
+    };
   }
 
   return { users: [], error, isLoading };

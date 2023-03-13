@@ -10,8 +10,7 @@ import { useEffect } from "react";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Logout from "@mui/icons-material/Logout";
-import Settings from "@mui/icons-material/Settings";
-import { Badge, Modal, Typography, useColorScheme, useTheme } from "@mui/material";
+import { Badge, Modal, useColorScheme, useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -49,7 +48,6 @@ export default function AccountMenu() {
 
   const { address, isConnected: isWalletConnected } = useAccount({
     onConnect({ address, isReconnected }) {
-      console.log("Connecting", address, isReconnected);
       if (!isReconnected && address) handleWalletLogin(address);
     },
   });
@@ -147,12 +145,6 @@ export default function AccountMenu() {
         }}
       >
         <Box sx={style}>
-          <Typography id="modal-title" variant="h6" component="h2">
-            Log in
-          </Typography>
-          <Typography id="modal-description" sx={{ mt: 2 }}>
-            Use your odoo credentials to log in
-          </Typography>
           <LoginForm onLoggedIn={handleModalClose} />
         </Box>
       </Modal>
@@ -232,12 +224,6 @@ export default function AccountMenu() {
         )}
         {user?.isLoggedIn && [
           <Divider key="divider" />,
-          <MenuItem onClick={handleClose} key="settings">
-            <ListItemIcon>
-              <Settings fontSize="small" />
-            </ListItemIcon>
-            Settings
-          </MenuItem>,
           <MenuItem onClick={logout} key="logout">
             <ListItemIcon>
               <Logout fontSize="small" />

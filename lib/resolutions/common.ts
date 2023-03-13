@@ -44,7 +44,7 @@ export const RESOLUTION_ACTIONS = {
     disabled: true,
     icon: "eye",
   }),
-  [RESOLUTION_STATES.VOTING]: ($acl?: ResolutionsAcl, resolutionVoters: ResolutionVoter[]) => ({
+  [RESOLUTION_STATES.VOTING]: ($acl: ResolutionsAcl, resolutionVoters: ResolutionVoter[]) => ({
     label: $acl?.canVote(resolutionVoters) ? "View and vote" : "View",
     disabled: false,
     icon: $acl?.canVote(resolutionVoters) ? "eye" : "eye",
@@ -153,7 +153,7 @@ export const getEnhancedResolutionMapper =
         state === RESOLUTION_STATES.PRE_DRAFT && $acl?.canUpdate
           ? `#/resolutions/${resolution.id}/edit`
           : `#/resolutions/${resolution.id}`,
-      action: RESOLUTION_ACTIONS[state]($acl, resolutionVoters),
+      action: RESOLUTION_ACTIONS[state]($acl as ResolutionsAcl, resolutionVoters),
       resolutionTypeInfo,
       votingStatus: {
         votersHaveNotVoted: resolutionVoters.filter((v) => !v.hasVoted),
@@ -199,6 +199,12 @@ export const getExecutionPayload = async (
 export const getPreviousMonth = () => {
   const currentDate = new Date();
   currentDate.setDate(0);
+
+  return currentDate.toLocaleString("en-us", { month: "long" });
+};
+
+export const getCurrentMonth = () => {
+  const currentDate = new Date();
 
   return currentDate.toLocaleString("en-us", { month: "long" });
 };

@@ -8,6 +8,7 @@ const Section = ({
   pageBreak,
   noPrint = false,
   sx = {},
+  containerSx = {},
   innerRef,
 }: {
   children: ReactElement;
@@ -15,6 +16,7 @@ const Section = ({
   pageBreak?: boolean;
   noPrint?: boolean;
   sx?: SxProps;
+  containerSx?: SxProps;
   innerRef?: Ref<any>;
 }) => (
   <Box
@@ -36,7 +38,9 @@ const Section = ({
     }}
     {...(innerRef && { ref: innerRef })}
   >
-    <Container maxWidth="lg">{children}</Container>
+    <Container maxWidth="lg" sx={{ ...containerSx }}>
+      {children}
+    </Container>
   </Box>
 );
 

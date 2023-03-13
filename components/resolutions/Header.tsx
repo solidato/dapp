@@ -11,7 +11,7 @@ import User from "@components/User";
 import useExecute from "@hooks/useExecute";
 
 import { ResolutionEntityEnhanced } from "../../types";
-import Section from "./Section";
+import Section from "../Section";
 
 export default function Header({
   resolution,

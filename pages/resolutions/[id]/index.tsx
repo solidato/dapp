@@ -15,11 +15,11 @@ import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
 
 import Countdown from "@components/Countdown";
+import Section from "@components/Section";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
 import Header from "@components/resolutions/Header";
 import LegalInfo from "@components/resolutions/LegalInfo";
 import MainInfo from "@components/resolutions/MainInfo";
-import Section from "@components/resolutions/Section";
 import VotingBreakdown from "@components/resolutions/VotingBreakdown";
 import VotingSection from "@components/resolutions/VotingSection";
 import VotingUsers from "@components/resolutions/VotingUsers";
