@@ -17,7 +17,7 @@ export default function useShareholderStatus() {
 
   const getShareholderStatus: (address: string) => ShareholderStatus[] = useCallback(
     (address: string) => {
-      if (!data) {
+      if (!data || !address) {
         return [];
       }
       return [
