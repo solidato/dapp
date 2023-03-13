@@ -59,7 +59,6 @@ export default function TasksList({
                 <Typography variant="h6">
                   <b>{Number((task.subtask_effective_hours + task.effective_hours).toFixed(2))}</b> hr
                 </Typography>
-                <Typography variant="caption">in {getCurrentMonth()}</Typography>
               </Paper>
             </Paper>
           ))}

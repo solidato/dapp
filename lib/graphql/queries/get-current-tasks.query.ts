@@ -13,7 +13,6 @@ export const getCurrentTasks = gql`
         ["effective_hours", ">", 0]
       ]
       order: "write_date DESC"
-      limit: 20
     ) {
       subtask_effective_hours
       effective_hours

@@ -1,44 +1,14 @@
-import useSWR from "swr";
-import { useAccount } from "wagmi";
-
-import { useMemo } from "react";
-
-import { Divider, Paper, Stack, Typography } from "@mui/material";
-
-import { fetcher } from "@graphql/client";
-import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
-
-import { getEnhancedResolutions } from "@lib/resolutions/common";
-
-import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
-import TasksAuditLog from "@components/dashboard/TasksList";
 
-import useResolutionsAcl from "@hooks/useResolutionsAcl";
-import useTimestamp from "@hooks/useTimestamp";
-
-import MyTasks from "../components/dashboard/MyTasks";
+import Resolutions from "../components/dashboard/Resolutions";
 import Tasks from "../components/dashboard/Tasks";
-import { ResolutionEntityEnhanced } from "../types";
 
 Home.renderOnServer = false;
 Home.requireLogin = true;
 Home.fullWidth = true;
 
 export default function Home() {
-  const { address } = useAccount();
-  const { data, isLoading } = useSWR(getResolutionsQuery, fetcher, { refreshInterval: 4000 });
-  const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
-  const { currentTimestamp } = useTimestamp();
-
-  const enhancedResolutions: ResolutionEntityEnhanced[] = useMemo(() => {
-    if (isLoading || isLoadingAcl) {
-      return [];
-    }
-    return getEnhancedResolutions(data?.resolutions, +currentTimestamp, acl);
-  }, [data?.resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
-
   return (
     <>
       <Section
@@ -48,25 +18,7 @@ export default function Home() {
         <Header />
       </Section>
       <Section inverse>
-        <>
-          {enhancedResolutions?.length > 0 && (
-            <Paper sx={{ p: 4, width: 500 }}>
-              <Typography variant="h5" sx={{ pb: 3 }}>
-                Resolutions to vote
-              </Typography>
-              <ResolutionCard resolution={enhancedResolutions[0]} />
-            </Paper>
-          )}
-          <Paper sx={{ p: 4 }}>
-            <Typography variant="h5" sx={{ pb: 3 }}>
-              Resolutions overview
-            </Typography>
-            Total resolutions: X<br />
-            Total resolutions quorum: X<br />
-            Total resolutions no quorum: X<br />
-            Total resolutions rejected: X<br />
-          </Paper>
-        </>
+        <Resolutions />
       </Section>
       <Section>
         <Tasks />

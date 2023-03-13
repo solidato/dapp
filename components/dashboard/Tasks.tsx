@@ -98,6 +98,7 @@ export default function Tasks() {
 
   return (
     <Box sx={{ width: "100%" }} ref={ref}>
+      <Typography variant="h3">Tasks</Typography>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
           <Tab label="My Tasks" {...a11yProps(0)} />
@@ -107,9 +108,8 @@ export default function Tasks() {
       <TabPanel value={value} index={0}>
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <Box sx={{ mr: 2, width: "calc(100% - 150px)" }}>
-            <Typography variant="h4">My tasks</Typography>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              This list is in real time and it shows your last tasks performed in {getCurrentMonth()}
+              This list is in real time and it shows your tasks performed in {getCurrentMonth()} so far
             </Typography>
           </Box>
           <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
@@ -122,7 +122,6 @@ export default function Tasks() {
       <TabPanel value={value} index={1}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ mr: 2, width: "calc(100% - 150px)" }}>
-            <Typography variant="h4">Tasks audit log</Typography>
             <Typography variant="h6" sx={{ mb: 2 }}>
               This list is in real time and it shows all the contributors last tasks performed in {getCurrentMonth()}
             </Typography>
