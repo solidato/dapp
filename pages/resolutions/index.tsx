@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 
 import { useEffect, useMemo, useState } from "react";
 
-import { Box, Button, CircularProgress, FormControlLabel, Grid, Stack, Switch, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, FormControlLabel, Grid, Stack, Switch } from "@mui/material";
 
 import { fetcher } from "@graphql/client";
 import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";

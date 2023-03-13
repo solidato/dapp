@@ -3,7 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 import { useState } from "react";
 
-import { Alert, Box, Button, Stack } from "@mui/material";
+import { Alert, Box, Button, Stack, SxProps } from "@mui/material";
 import Card, { CardProps } from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -20,7 +20,13 @@ import Countdown from "./Countdown";
 import Modal from "./Modal";
 import VotingWidget from "./VotingWidget";
 
-export default function ResolutionCard({ resolution }: { resolution: ResolutionEntityEnhanced }) {
+export default function ResolutionCard({
+  resolution,
+  sx = {},
+}: {
+  resolution: ResolutionEntityEnhanced;
+  sx?: SxProps;
+}) {
   const [voteModalOpen, setVoteModalOpen] = useState(false);
   const { acl } = useResolutionsAcl();
 
@@ -46,6 +52,7 @@ export default function ResolutionCard({ resolution }: { resolution: ResolutionE
         position: "relative",
         pb: 8,
         opacity: resolution.state === RESOLUTION_STATES.REJECTED ? "0.5" : 1,
+        ...sx,
       }}
     >
       <Modal open={voteModalOpen} setOpen={(open) => setVoteModalOpen(open)} title={resolution.title}>
