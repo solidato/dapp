@@ -36,12 +36,13 @@ export default function useBlockhainTransaction() {
         return false;
       }
       set(true, false, stateKey);
-      const txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
-        variant: "info",
-        autoHideDuration: MAX_TX_WAIT,
-      });
+      let txAlert;
       try {
         const tx = await contractMethod.apply(null, params);
+        txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
+          variant: "info",
+          autoHideDuration: MAX_TX_WAIT,
+        });
         set(true, true);
         await tx?.wait();
         set(true, false);
