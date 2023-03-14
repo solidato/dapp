@@ -156,7 +156,12 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
   };
 
   return (
-    <Accordion variant="outlined" expanded={expanded === task.id} onChange={handleTaskClick(task.id)}>
+    <Accordion
+      sx={{ border: 0 }}
+      variant="outlined"
+      expanded={expanded === task.id}
+      onChange={handleTaskClick(task.id)}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Box sx={{ width: "100%", pr: 1, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
@@ -170,8 +175,7 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
-          <strong>Total time:</strong>
-          <span>{totalHours ? toPrettyDuration(totalHours) : "-"}</span>
+          <strong>Total time:</strong> <span>{totalHours ? toPrettyDuration(totalHours) : "-"}</span>
         </Typography>
         <Box sx={{ mt: 1, mb: 1, display: "flex" }}>
           {task.stage_id.id === STAGE_TO_ID_MAP["done"] ? (
@@ -246,21 +250,23 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                <Collapse in={createTimeEntryOpen} timeout="auto" unmountOnExit>
-                  <Box>
-                    <TimeEntryForm
-                      onCancel={() => setCreateTimeEntryOpen(false)}
-                      onConfirm={async (payload) => {
-                        const success = await createTimeEntry(payload, task);
-                        if (success) {
-                          setCreateTimeEntryOpen(false);
-                        }
-                      }}
-                    />
-                  </Box>
-                </Collapse>
-              </TableCell>
+              <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+                  <Collapse in={createTimeEntryOpen} timeout="auto" unmountOnExit>
+                    <Box>
+                      <TimeEntryForm
+                        onCancel={() => setCreateTimeEntryOpen(false)}
+                        onConfirm={async (payload) => {
+                          const success = await createTimeEntry(payload, task);
+                          if (success) {
+                            setCreateTimeEntryOpen(false);
+                          }
+                        }}
+                      />
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
               {task.timesheet_ids.map((row) => (
                 <Fragment key={row.id}>
                   <TableRow
@@ -292,20 +298,22 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
                       </ToggleButtonGroup>
                     </TableCell>
                   </TableRow>
-                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                    <Collapse in={updateTimeEntryOpen === row.id} timeout="auto" unmountOnExit>
-                      <Box>
-                        <TimeEntryForm
-                          timeEntry={row}
-                          onCancel={() => setUpdateTimeEntryOpen(false)}
-                          onConfirm={(data) => {
-                            updateTimeEntry(data, task);
-                            setUpdateTimeEntryOpen(false);
-                          }}
-                        />
-                      </Box>
-                    </Collapse>
-                  </TableCell>
+                  <TableRow>
+                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+                      <Collapse in={updateTimeEntryOpen === row.id} timeout="auto" unmountOnExit>
+                        <Box>
+                          <TimeEntryForm
+                            timeEntry={row}
+                            onCancel={() => setUpdateTimeEntryOpen(false)}
+                            onConfirm={(data) => {
+                              updateTimeEntry(data, task);
+                              setUpdateTimeEntryOpen(false);
+                            }}
+                          />
+                        </Box>
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
                 </Fragment>
               ))}
             </TableBody>
