@@ -103,7 +103,6 @@ export default function Tasks() {
 
   return (
     <Box ref={ref}>
-      <Typography variant="h3">Tasks</Typography>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
           <Tab label="My Tasks" {...a11yProps(0)} />
