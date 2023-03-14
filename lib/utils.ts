@@ -188,3 +188,10 @@ export const stageToColor = (stage: string): any => {
   const stageName = stage.toLowerCase().split(" ").join("");
   return STAGE_TO_COLOR_MAP[stageName] || "default";
 };
+
+export const hoursToTime = (initialHours: number) => {
+  const hours = Math.floor(initialHours);
+  const minutes = Math.ceil((initialHours * 60) % 60);
+
+  return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+};

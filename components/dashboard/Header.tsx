@@ -13,7 +13,7 @@ import useShareholderStatus from "@hooks/useShareholderStatus";
 
 export default function Header() {
   const { address } = useAccount();
-  const { isLoading, totalHours } = useCurrentTasks();
+  const { isLoading, totalTime } = useCurrentTasks();
 
   const { getShareholderStatus } = useShareholderStatus();
 
@@ -46,7 +46,7 @@ export default function Header() {
         ) : (
           <>
             <Typography variant="caption">You worked</Typography>
-            <Typography variant="h4">{totalHours} hr</Typography>
+            <Typography variant="h4">{totalTime}</Typography>
             <Typography variant="caption">in {getCurrentMonth()}, so far</Typography>
             <Tooltip title="Once approved, the corresponding tokens will be minted" arrow>
               <IconButton color="primary" aria-label="info" size="small">

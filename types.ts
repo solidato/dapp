@@ -199,7 +199,7 @@ export type Task = {
       name: string;
     }[];
   }[];
-  user_id: {
+  user_id?: {
     id: number;
     name: string;
     ethereum_address: string;
@@ -207,4 +207,7 @@ export type Task = {
   timesheet_ids: {
     name: string;
   }[];
+  parent_id: {
+    name: string;
+  } | null;
 };

@@ -4,10 +4,9 @@ export const getCurrentTasks = gql`
   query GetCurrentTasks($userId: String!) {
     ProjectTask(
       domain: [
-        "&"
         ["user_id", "=", $userId]
         ["approval_date", "=", false]
-        ["parent_id", "=", false]
+        ["child_ids", "=", false]
         "|"
         ["subtask_effective_hours", ">", 0]
         ["effective_hours", ">", 0]
@@ -20,6 +19,9 @@ export const getCurrentTasks = gql`
       write_date
       project_id {
         id
+        name
+      }
+      parent_id {
         name
       }
     }
