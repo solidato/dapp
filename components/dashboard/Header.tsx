@@ -1,7 +1,5 @@
 import { useAccount } from "wagmi";
 
-import { useState } from "react";
-
 import { InfoOutlined } from "@mui/icons-material";
 import { Chip, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -12,34 +10,32 @@ import User from "@components/User";
 
 import useCurrentTasks from "@hooks/useCurrentTasks";
 import useShareholderStatus from "@hooks/useShareholderStatus";
+import useTimestamp from "@hooks/useTimestamp";
+
+const messages: [number, string][] = [
+  [22, "Working late 🦉"],
+  [18, "Good evening 🌆"],
+  [12, "Good afternoon 🌞"],
+  [6, "Good morning 🐦"],
+  [0, "Oh it's late 😴"],
+];
 
 export default function Header() {
   const { address } = useAccount();
   const { isLoading, totalHours } = useCurrentTasks();
+  const { currentTimestamp } = useTimestamp();
 
   const { getShareholderStatus } = useShareholderStatus();
 
-  let welcome = "Welcome";
-  const messages: [number, string][] = [
-    [22, "Working late 🦉"],
-    [18, "Good evening 🌆"],
-    [12, "Good afternoon 🌞"],
-    [6, "Good morning 🐦"],
-    [0, "Oh it's late 😴"],
-  ];
-  const hr = new Date().getHours();
-  for (let i = 0; i < messages.length; i++) {
-    if (hr >= messages[i][0]) {
-      welcome = messages[i][1];
-      break;
-    }
-  }
+  const hr = currentTimestamp.getHours();
+  const message = messages.find((msg) => hr >= msg[0]);
+  const welcomeMessage = message ? message[1] : "Welcome";
 
   return (
     <>
       <Box sx={{ mr: 2 }}>
         <Typography variant="h3" sx={{ pb: 2 }}>
-          {welcome}
+          {welcomeMessage}
         </Typography>
         <User address={address as string} shouldMarkCurrentUser={false} shortAddress />
         <Stack sx={{ pt: 2 }} spacing={1} direction="row">
