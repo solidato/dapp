@@ -22,7 +22,7 @@ const messages: [number, string][] = [
 
 export default function Header() {
   const { address } = useAccount();
-  const { isLoading, totalHours } = useCurrentTasks();
+  const { isLoading, totalTime } = useCurrentTasks();
   const { currentTimestamp } = useTimestamp();
 
   const { getShareholderStatus } = useShareholderStatus();
