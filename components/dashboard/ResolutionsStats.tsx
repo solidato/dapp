@@ -54,11 +54,13 @@ export default function ResolutionsStats({
           </Typography>
         </Box>
       </Stack>
-      <Stack spacing={1} direction="row" justifyContent="center" flexWrap="wrap">
-        {Object.entries(stats.typesTotals).map(([type, total]) => (
-          <Chip sx={{ mb: 1 }} variant="outlined" label={`${type} (${total})`} key={type} />
-        ))}
-      </Stack>
+      {stats?.typesTotals && (
+        <Stack spacing={1} direction="row" justifyContent="center" flexWrap="wrap">
+          {Object.entries(stats.typesTotals).map(([type, total]) => (
+            <Chip sx={{ mb: 1 }} variant="outlined" label={`${type} (${total})`} key={type} />
+          ))}
+        </Stack>
+      )}
     </>
   );
 }
