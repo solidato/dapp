@@ -86,7 +86,11 @@ export default function User({
           </>
         ) : (
           <>
-            {currentUser?.display_name && <Typography sx={{ mb: -1 }}>{currentUser?.display_name} </Typography>}
+            {currentUser?.display_name && (
+              <Typography variant="h6" sx={{ mb: -1 }}>
+                {currentUser?.display_name}{" "}
+              </Typography>
+            )}
             <Typography
               variant="caption"
               sx={{

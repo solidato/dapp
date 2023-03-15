@@ -1,8 +1,8 @@
 import { gql } from "graphql-request";
 
 export const getProjectsTasksQuery = gql`
-  query GetProjectsTasks($userId: Int!) {
-    ProjectProject(domain: [["user_id", "=", $userId]]) {
+  query GetProjectsTasks($projectIds: [Int]!, $userId: Int!) {
+    ProjectProject(domain: [["id", "in", $projectIds]]) {
       id
       name
       description
@@ -13,7 +13,7 @@ export const getProjectsTasksQuery = gql`
       }
       task_count
       task_count_with_subtasks
-      tasks {
+      tasks(domain: [["user_id", "=", $userId]]) {
         id
         name
         display_name
@@ -52,10 +52,10 @@ export const getProjectsTasksQuery = gql`
           project_id {
             id
           }
-          parent_id {
-            id
-            name
-          }
+          # parent_id {
+          #   id
+          #   name
+          # }
           stage_id {
             id
             name

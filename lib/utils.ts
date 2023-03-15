@@ -50,11 +50,11 @@ export function toPrettyDuration(time: number) {
 
 export function toPrettyRange(start: string, end?: string) {
   if (!start) return start;
-  const startDate = format(new Date(start), "MMM d, HH:mm");
+  const startDate = format(new Date(`${start}Z`), "MMM d, HH:mm");
   if (!end) return startDate;
   const sameDay = isSameDay(new Date(start), new Date(end));
   const endDateFormat = sameDay ? "HH:mm" : "MMM d, HH:mm";
-  const endDate = format(new Date(end), endDateFormat);
+  const endDate = format(new Date(`${end}Z`), endDateFormat);
   return `${startDate} - ${endDate}`;
 }
 
@@ -187,4 +187,11 @@ export const stageToColor = (stage: string): any => {
   if (!stage) return "default";
   const stageName = stage.toLowerCase().split(" ").join("");
   return STAGE_TO_COLOR_MAP[stageName] || "default";
+};
+
+export const hoursToTime = (initialHours: number) => {
+  const hours = Math.floor(initialHours);
+  const minutes = Math.ceil((initialHours * 60) % 60);
+
+  return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
 };

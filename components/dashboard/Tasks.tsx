@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 
 import { fetcher } from "@lib/net";
 import { getCurrentMonth } from "@lib/resolutions/common";
+import { hoursToTime } from "@lib/utils";
 
 import TasksList from "@components/dashboard/TasksList";
 
@@ -67,10 +68,12 @@ export default function Tasks() {
       return "";
     }
 
-    return `${dataMyTasks.reduce(
-      (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
-      0,
-    )} hr`;
+    return hoursToTime(
+      dataMyTasks.reduce(
+        (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
+        0,
+      ),
+    );
   }, [dataMyTasks]);
 
   const { data: dataAudit, isLoading: isLoadingAudit } = useSWR(value === 1 ? "/api/tasks/audit" : null, fetcher, {
@@ -82,10 +85,12 @@ export default function Tasks() {
       return "";
     }
 
-    return `${dataAudit.reduce(
-      (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
-      0,
-    )} hr`;
+    return hoursToTime(
+      dataAudit.reduce(
+        (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
+        0,
+      ),
+    );
   }, [dataAudit]);
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -98,7 +103,6 @@ export default function Tasks() {
 
   return (
     <Box ref={ref}>
-      <Typography variant="h3">Tasks</Typography>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
           <Tab label="My Tasks" {...a11yProps(0)} />
