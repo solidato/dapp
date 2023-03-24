@@ -21,6 +21,7 @@ ${"```"}
 `);
 
 const DAPP_ISSUES_URL = "https://github.com/NeokingdomDAO/dapp/issues/new";
+const COMMIT_URL = "https://github.com/NeokingdomDAO/dapp/commit";
 
 export default function Settings() {
   return (
@@ -32,7 +33,7 @@ export default function Settings() {
         <Typography variant="body1">Version: {process.env.PACKAGE_VERSION}</Typography>
         <Typography variant="body1">
           Build:{" "}
-          <Link href={process.env.GITHUB_REPO} target="_blank">
+          <Link href={`${COMMIT_URL}/process.env.LATEST_COMMIT_HASH`} target="_blank">
             {process.env.LATEST_COMMIT_HASH}
           </Link>{" "}
         </Typography>
