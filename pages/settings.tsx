@@ -33,7 +33,7 @@ export default function Settings() {
         <Typography variant="body1">Version: {process.env.PACKAGE_VERSION}</Typography>
         <Typography variant="body1">
           Build:{" "}
-          <Link href={`${COMMIT_URL}/process.env.LATEST_COMMIT_HASH`} target="_blank">
+          <Link href={`${COMMIT_URL}/${process.env.LATEST_COMMIT_HASH}`} target="_blank">
             {process.env.LATEST_COMMIT_HASH}
           </Link>{" "}
         </Typography>
