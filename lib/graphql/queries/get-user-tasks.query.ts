@@ -2,7 +2,7 @@ import { gql } from "graphql-request";
 
 export const getUserTasksQuery = gql`
   query GetUserTasks($user_id: Int!) {
-    ProjectTask(domain: [["user_id", "=", $user_id]]) {
+    ProjectTask(domain: [["user_ids", "in", [$user_id]]]) {
       id
       name
       stage_id {

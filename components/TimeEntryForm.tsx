@@ -2,6 +2,7 @@ import { format } from "date-fns";
 
 import { useState } from "react";
 
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Button, TextField } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
@@ -18,7 +19,7 @@ export default function TimeEntryForm({
 }) {
   const now = new Date();
   const dateFormat = "yyyy-MM-dd HH:mm:ss";
-
+  const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState<{ start: string; end?: string; name: string }>({
     name: "",
     ...(timeEntry || {}),
@@ -28,8 +29,10 @@ export default function TimeEntryForm({
 
   const onSubmit = async (event: any) => {
     event.preventDefault();
+    setIsLoading(true);
     const data = { ...(timeEntry || {}), ...form };
-    onConfirm(data);
+    await onConfirm(data);
+    setIsLoading(false);
   };
 
   return (
@@ -73,14 +76,15 @@ export default function TimeEntryForm({
             </Button>
           )}
 
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
+            loading={isLoading}
             sx={{ flex: "50%" }}
             disabled={!form.start || !form.end || !form.name}
           >
             {timeEntry ? "Update" : "Create"}
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
     </Box>
