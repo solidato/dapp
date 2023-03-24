@@ -4,7 +4,6 @@ import { Box, Chip, Paper, Skeleton, Typography } from "@mui/material";
 
 import { hoursToTime } from "@lib/utils";
 
-import { getCurrentMonth } from "../../lib/resolutions/common";
 import { Task } from "../../types";
 import User from "../User";
 

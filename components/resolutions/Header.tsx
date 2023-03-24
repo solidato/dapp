@@ -29,7 +29,7 @@ export default function Header({
   return (
     <>
       <Head>
-        <title>{enhanceTitleWithPrefix(`Resolution: ${resolution.title}`, true)}</title>
+        <title>{enhanceTitleWithPrefix(`Resolution #${resolution.id}: ${resolution.title}`, true)}</title>
       </Head>
       {[RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(resolution.state) && (
         <Section>

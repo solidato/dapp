@@ -1,9 +1,9 @@
-import Link from "next/link";
+import NextLink from "next/link";
 
 import * as React from "react";
 import { useState } from "react";
 
-import { Alert, Box, Button, Stack, SxProps } from "@mui/material";
+import { Alert, Box, Button, Link, Stack, SxProps } from "@mui/material";
 import Card, { CardProps } from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -59,7 +59,14 @@ export default function ResolutionCard({
         <VotingWidget resolution={resolution} />
       </Modal>
       <CardHeader
-        title={resolution.title}
+        title={
+          <Link
+            component={NextLink}
+            href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
+          >
+            #{resolution.id} {resolution.title}
+          </Link>
+        }
         titleTypographyProps={{
           variant: "h6",
           lineHeight: "1.5rem",

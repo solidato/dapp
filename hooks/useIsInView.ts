@@ -23,6 +23,8 @@ export default function useIsInView(ref: RefObject<HTMLElement>) {
       setInViewport(isInViewport(ref.current as HTMLElement));
     }, 400);
 
+    setInViewport(isInViewport(ref.current as HTMLElement));
+
     window.addEventListener("scroll", throttledFn);
 
     return () => window.removeEventListener("scroll", throttledFn);

@@ -222,6 +222,9 @@ export default function AccountMenu() {
         ) : (
           <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
         )}
+        <MenuItem href="/settings" component={Link}>
+          Settings
+        </MenuItem>
         {user?.isLoggedIn && [
           <Divider key="divider" />,
           <MenuItem onClick={logout} key="logout">
