@@ -3,7 +3,7 @@
   "short_name": "Teledisko DAO",
   "theme_color": "#ffffff",
   "background_color": "#004740",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
