@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-import { OdooUser } from "types";
 
-import { STAGE_TO_ID_MAP } from "@lib/constants";
 import odooGraphQLClient from "@lib/graphql/odoo";
 import { getProjectsTasksQuery } from "@lib/graphql/queries/get-projects-tasks.query";
 import { getUserTasksQuery } from "@lib/graphql/queries/get-user-tasks.query";
@@ -19,17 +17,16 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const getUserProjectIds = async (userId: number) => {
-    const projectIds = new Set<number>([]);
     const userTasks = await odooGraphQLClient(cookie, getUserTasksQuery, { user_id: userId });
-    userTasks.ProjectTask.forEach(
-      (task: ProjectTask) => task.stage_id.id !== STAGE_TO_ID_MAP["approved"] && projectIds.add(task.project_id.id),
-    );
-    return Array.from(projectIds);
+    return [...new Set(userTasks.ProjectTask.map((t: ProjectTask) => t.project_id.id))];
   };
 
   const userId = user.id;
   const projectIds = await getUserProjectIds(userId);
-  const data = await odooGraphQLClient(cookie, getProjectsTasksQuery, { projectIds, userId });
+  const data = await odooGraphQLClient(cookie, getProjectsTasksQuery, {
+    projectIds,
+    userId,
+  });
   res.status(200).json(data.ProjectProject);
 };
 
