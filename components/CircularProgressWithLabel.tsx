@@ -5,16 +5,17 @@ import Typography from "@mui/material/Typography";
 export default function CircularProgressWithLabel(
   props: CircularProgressProps & { value: number; isLoading?: boolean },
 ) {
+  const { isLoading, ...otherProps } = props;
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress
-        variant={props.isLoading ? "indeterminate" : "determinate"}
+        variant={isLoading ? "indeterminate" : "determinate"}
         value={100}
-        sx={props.isLoading ? {} : { position: "absolute", top: 0, left: 0, color: "divider" }}
+        sx={isLoading ? {} : { position: "absolute", top: 0, left: 0, color: "divider" }}
       />
-      {!props.isLoading && (
+      {!isLoading && (
         <>
-          <CircularProgress variant="determinate" {...props} />
+          <CircularProgress variant="determinate" {...otherProps} />
           <Box
             sx={{
               top: 0,
@@ -28,7 +29,7 @@ export default function CircularProgressWithLabel(
             }}
           >
             <Typography variant="caption" component="div" color="text.secondary">{`${Math.round(
-              props.value,
+              otherProps.value,
             )}%`}</Typography>
           </Box>
         </>

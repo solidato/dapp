@@ -3,9 +3,9 @@ import useSWR from "swr";
 
 import { useEffect } from "react";
 
-import { User } from "../lib/userFactory";
+import { fetcher } from "@lib/net";
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { User } from "../lib/userFactory";
 
 export default function useUser({ redirectTo = "", redirectIfFound = false, shouldSkip = false } = {}) {
   const { data: user, mutate: mutateUser, isLoading } = useSWR<User>(!shouldSkip ? "/api/user" : null, fetcher);

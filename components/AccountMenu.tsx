@@ -1,6 +1,6 @@
 import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
@@ -40,15 +40,25 @@ const style = {
   p: 4,
 };
 
+const WAIT_FOR_WALLET_LOGIN_MS = 200;
+
 export default function AccountMenu() {
   const theme = useTheme();
   const { mode, setMode } = useColorScheme();
   const { user, mutateUser } = useUser();
   const { signMessageAsync } = useSignMessage();
+  const { disconnect } = useDisconnect();
 
   const { address, isConnected: isWalletConnected } = useAccount({
     onConnect({ address, isReconnected }) {
-      if (!isReconnected && address) handleWalletLogin(address);
+      if (!isReconnected && address) {
+        setTimeout(() => {
+          handleWalletLogin(address);
+        }, WAIT_FOR_WALLET_LOGIN_MS);
+      }
+    },
+    onDisconnect() {
+      logout(true);
     },
   });
 
@@ -65,25 +75,29 @@ export default function AccountMenu() {
   }, []);
 
   async function handleWalletLogin(address: `0x${string}`) {
-    const challenge = await fetch("/api/walletLogin", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const challenge = await fetch("/api/walletLogin", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
 
-    const json = await challenge.json();
-    const sig = await signMessageAsync({ message: json.message });
+      const json = await challenge.json();
+      const sig = await signMessageAsync({ message: json.message });
 
-    const data = await fetch("/api/walletLogin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        address,
-        sig,
-        signingToken: json.signingToken,
-      }),
-    });
-    const resUser = await data.json();
-    mutateUser(resUser, false);
+      const data = await fetch("/api/walletLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address,
+          sig,
+          signingToken: json.signingToken,
+        }),
+      });
+      const resUser = await data.json();
+      mutateUser(resUser, false);
+    } catch (_) {
+      enqueueSnackbar("There was an error signing in", { variant: "error" });
+    }
   }
 
   const { modalOpen, handleModalOpen, handleModalClose } = useLoginModalStore(
@@ -95,8 +109,11 @@ export default function AccountMenu() {
     shallow,
   );
 
-  const logout = async () => {
+  const logout = async (fromDisconnect = false) => {
     try {
+      if (!fromDisconnect) {
+        disconnect();
+      }
       const res = await fetch("/api/logout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,10 +121,10 @@ export default function AccountMenu() {
       if (res.status === 200) {
         mutateUser(await res.json());
       } else {
-        enqueueSnackbar("Logout failed");
+        enqueueSnackbar("Logout failed", { variant: "error" });
       }
     } catch (error) {
-      enqueueSnackbar("Network error");
+      enqueueSnackbar("Network error", { variant: "error" });
     }
   };
 
@@ -227,7 +244,7 @@ export default function AccountMenu() {
         </MenuItem>
         {user?.isLoggedIn && [
           <Divider key="divider" />,
-          <MenuItem onClick={logout} key="logout">
+          <MenuItem onClick={() => logout()} key="logout">
             <ListItemIcon>
               <Logout fontSize="small" />
             </ListItemIcon>

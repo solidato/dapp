@@ -35,7 +35,7 @@ const wagmiClient = createClient({
   autoConnect: true,
   connectors: w3mConnectors({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-    version: 2,
+    version: 1,
     chains,
   }),
   provider,
@@ -110,7 +110,13 @@ export default function App({ Component, pageProps }: DappProps) {
         />
       </Head>
       {appElement}
-      <Web3Modal projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID} ethereumClient={ethereumClient} />
+      <Web3Modal
+        projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
+        ethereumClient={ethereumClient}
+        themeVariables={{
+          "--w3m-z-index": "2000",
+        }}
+      />
     </>
   );
 }

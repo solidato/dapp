@@ -75,7 +75,16 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
           </Slide>
           <Divider />
           <Toolbar variant="dense">
-            <Stack direction="row" spacing={1} sx={{ overflow: "auto" }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                overflow: "auto",
+                "&:-webkit-scrollbar": { display: "none" },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none",
+              }}
+            >
               {user?.isLoggedIn && (
                 <Chip
                   label="Dashboard"

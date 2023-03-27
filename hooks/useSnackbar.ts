@@ -9,6 +9,9 @@ export function useSnackbar() {
       ...options,
       SnackbarProps: {
         onClick: () => closeSnackbar(key),
+        style: {
+          cursor: "pointer",
+        },
       },
     });
     return key;
@@ -16,6 +19,7 @@ export function useSnackbar() {
 
   return {
     enqueueSnackbar: enhancedSnackbar,
+    closeSnackbar,
     ...snackbar,
   };
 }
