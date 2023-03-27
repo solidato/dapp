@@ -53,16 +53,23 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Alert severity={resolution.hasQuorum ? "success" : "error"} sx={{ mt: 3, mb: 3 }}>
           {resolution.hasQuorum ? (
             <span>
-              THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}
+              THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}. No
+              positions of shareholders were submitted, in a format which can be reproduced in writing, in the meaning
+              of the law, or otherwise requested to be added to the resolution.
             </span>
           ) : (
             <span>
               THE RESOLUTION OF SHAREHOLDERS <b>HAS NOT BEEN</b> ADOPTED. Voting ended on{" "}
-              {resolution.resolutionTypeInfo.votingEndsAt}
+              {resolution.resolutionTypeInfo.votingEndsAt}. No positions of shareholders were submitted, in a format
+              which can be reproduced in writing, in the meaning of the law, or otherwise requested to be added to the
+              resolution.
             </span>
           )}
         </Alert>
       )}
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Voting Summary:
+      </Typography>
       {resolution.state === RESOLUTION_STATES.VOTING && (
         <Alert severity="info" sx={{ mt: 3, mb: 3 }}>
           <AlertTitle>Heads up</AlertTitle>
@@ -78,7 +85,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         sx={{ pb: 4 }}
       >
         <Box sx={{ width: "20%", textAlign: "center" }}>
-          <Typography variant="h6">Voters</Typography>
+          <Typography variant="h6">Active votes</Typography>
           <Typography variant="body2">{Number(voting.totalVotedPerc)}%</Typography>
           <PieChart
             data={[{ value: Number(voting.totalVotedPerc), color: theme.palette.grey[600] }]}
@@ -104,7 +111,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         </Box>
       </Stack>
       <Typography variant="h6" sx={{ textAlign: "center", mb: 2, mt: 3 }}>
-        Breakdown
+        Voting breakdown
       </Typography>
       <Stack
         direction="row"

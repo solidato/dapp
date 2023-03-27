@@ -14,7 +14,6 @@ import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
 
-import Countdown from "@components/Countdown";
 import Section from "@components/Section";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
 import Header from "@components/resolutions/Header";
@@ -137,17 +136,12 @@ export default function ResolutionView() {
       {[RESOLUTION_STATES.VOTING, RESOLUTION_STATES.ENDED].includes(resolution.state) && (
         <>
           <Section inverse pageBreak>
-            <>
-              <Typography variant="h5" sx={{ mb: 2 }}>
-                Voting Summary:
-              </Typography>
-              <VotingBreakdown resolution={resolution} />
-            </>
+            <VotingBreakdown resolution={resolution} />
           </Section>
           <Section>
             <>
               <Typography variant="h5" sx={{ mb: 2 }}>
-                Contributors voting:
+                Shareholders:
               </Typography>
               <VotingUsers voters={resolution.voters} />
             </>
@@ -161,9 +155,7 @@ export default function ResolutionView() {
       )}
       <Box
         sx={{
-          display: "none",
           "@media print": {
-            display: "block",
             pageBreakBefore: "always",
           },
         }}
