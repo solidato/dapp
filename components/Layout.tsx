@@ -80,7 +80,7 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
               spacing={1}
               sx={{
                 overflow: "auto",
-                "&:-webkit-scrollbar": { display: "none" },
+                "&::-webkit-scrollbar": { display: "none" },
                 "-ms-overflow-style": "none",
                 scrollbarWidth: "none",
               }}
