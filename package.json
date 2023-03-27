@@ -20,10 +20,9 @@
     "@mui/lab": "5.0.0-alpha.119",
     "@mui/material": "^5.11.11",
     "@mui/x-date-pickers": "^6.0.0",
-    "@next/font": "^13.2.3",
     "@types/lodash.throttle": "^4.1.7",
-    "@web3modal/ethereum": "^2.1.2",
-    "@web3modal/react": "^2.1.2",
+    "@web3modal/ethereum": "^2.2.2",
+    "@web3modal/react": "^2.2.2",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
     "easymde": "^2.18.0",
@@ -48,7 +47,7 @@
     "showdown": "^2.1.0",
     "swr": "^2.0.4",
     "uuid": "^9.0.0",
-    "wagmi": "^0.11.7",
+    "wagmi": "^0.12.6",
     "zustand": "^4.3.5"
   },
   "devDependencies": {

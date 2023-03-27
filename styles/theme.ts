@@ -1,4 +1,4 @@
-import { Red_Hat_Display } from "@next/font/google";
+import { Red_Hat_Display } from "next/font/google";
 
 import { createTheme, experimental_extendTheme as extendTheme, responsiveFontSizes } from "@mui/material/styles";
 

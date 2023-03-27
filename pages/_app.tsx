@@ -1,4 +1,4 @@
-import { EthereumClient, modalConnectors, walletConnectProvider } from "@web3modal/ethereum";
+import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
@@ -28,13 +28,14 @@ const chains = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : evmos
 
 // Wagmi client
 const { provider } = configureChains(chains, [
-  walletConnectProvider({ projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID }),
+  w3mProvider({ projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID }),
 ]);
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: modalConnectors({
-    appName: "web3Modal",
+  connectors: w3mConnectors({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+    version: 2,
     chains,
   }),
   provider,
@@ -109,11 +110,7 @@ export default function App({ Component, pageProps }: DappProps) {
         />
       </Head>
       {appElement}
-      <Web3Modal
-        projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
-        ethereumClient={ethereumClient}
-        themeZIndex={2000}
-      />
+      <Web3Modal projectId={process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID} ethereumClient={ethereumClient} />
     </>
   );
 }

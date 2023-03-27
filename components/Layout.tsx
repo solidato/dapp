@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import React, { use, useMemo } from "react";
+import React, { useMemo } from "react";
 
-import { Badge, Chip, Container, Divider, Slide, Stack, keyframes, useScrollTrigger } from "@mui/material";
+import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
