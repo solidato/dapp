@@ -2,6 +2,8 @@ import { ExpandMore } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Box, Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
+import { TOKEN_SYMBOL } from "@lib/utils";
+
 import User from "@components/User";
 
 import { MonthlyRewardsUserData, ResolutionEntityEnhanced } from "../../types";
@@ -43,7 +45,10 @@ export default function ExecutionPayload({
           .map((userData) => (
             <Box key={userData.address}>
               <Typography variant="body2">
-                <b>{userData.tokens} TT</b> to
+                <b>
+                  {userData.tokens} {TOKEN_SYMBOL}
+                </b>{" "}
+                to
               </Typography>
               <User address={userData.address} />
               <Divider sx={{ mb: 1, pt: 1 }} />

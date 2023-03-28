@@ -4,7 +4,7 @@ import produce from "immer";
 import { ProjectTask, Timesheet } from "@store/projectTaskStore";
 
 import { META } from "../pages/_document";
-import { STAGE_TO_COLOR_MAP } from "./constants";
+import { STAGE_NAME, STAGE_TO_COLOR_MAP } from "./constants";
 
 export const getLettersFromName = (name: string) =>
   name
@@ -109,7 +109,7 @@ export const replaceTaskTimeEntry = (
 
 export const stageToColor = (stage: string): any => {
   if (!stage) return "default";
-  const stageName = stage.toLowerCase().split(" ").join("");
+  const stageName = stage.toLowerCase().split(" ").join("") as STAGE_NAME;
   return STAGE_TO_COLOR_MAP[stageName] || "default";
 };
 
@@ -119,3 +119,8 @@ export const hoursToTime = (initialHours: number) => {
 
   return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
 };
+
+export const TOKEN_SYMBOL = {
+  teledisko: "TT",
+  neokingdom: "NKDT",
+}[process.env.NEXT_PUBLIC_PROJECT_KEY];
