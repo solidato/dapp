@@ -3,10 +3,8 @@ import { useAccount } from "wagmi";
 import { useState } from "react";
 
 import { InfoOutlined } from "@mui/icons-material";
-import { Alert, Chip, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from "@mui/material";
+import { Alert, Chip, IconButton, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-
-import { getCurrentMonth } from "@lib/resolutions/common";
 
 import User from "@components/User";
 
@@ -40,10 +38,11 @@ export default function Header() {
     <>
       <Modal open={infoOpen} setOpen={setInfoOpen}>
         <Alert severity="info">
-          Once the completed tasks will be approved, the corresponding tokens will be minted
+          Once the completed tasks will be approved, the corresponding tokens will be minted through the monthly
+          resolution
         </Alert>
       </Modal>
-      <Box sx={{ mr: 2 }}>
+      <Box sx={{ mr: 2, width: { xs: "100%", sm: "auto" } }}>
         <Typography variant="h3" sx={{ pb: 2 }}>
           {welcomeMessage}
         </Typography>
@@ -54,7 +53,7 @@ export default function Header() {
           ))}
         </Stack>
       </Box>
-      <Paper sx={{ textAlign: "center", p: 2, ml: "auto" }}>
+      <Paper sx={{ textAlign: "center", p: 2, ml: "auto", width: { xs: "100%", sm: "auto" }, mt: { xs: 4, sm: 0 } }}>
         {isLoading ? (
           <Box sx={{ width: 120 }}>
             <Typography variant="caption">
@@ -69,8 +68,14 @@ export default function Header() {
           </Box>
         ) : (
           <>
-            <Typography variant="h4">{totalTime}</Typography>
-            <Typography variant="caption">not tokenised, yet</Typography>
+            {Number(totalTime) > 0 ? (
+              <>
+                <Typography variant="h4">{totalTime}</Typography>
+                <Typography variant="caption">not tokenised, yet</Typography>
+              </>
+            ) : (
+              <Typography variant="caption">All your tasks are approved</Typography>
+            )}
             <IconButton color="primary" aria-label="info" size="small" onClick={() => setInfoOpen(true)}>
               <InfoOutlined />
             </IconButton>

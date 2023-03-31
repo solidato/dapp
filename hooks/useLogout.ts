@@ -1,17 +1,27 @@
 import { useDisconnect } from "wagmi";
+import { shallow } from "zustand/shallow";
 
 import { useCallback } from "react";
+
+import useLoginModalStore from "@store/loginModal";
 
 import { useSnackbar } from "./useSnackbar";
 import useUser from "./useUser";
 
 export default function useLogout() {
   const { disconnect } = useDisconnect();
-  const { user, mutateUser } = useUser();
+  const { mutateUser } = useUser();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const logout = useCallback(async (fromDisconnect = false) => {
+  const { setIsReadyToSign } = useLoginModalStore(
+    (state) => ({
+      setIsReadyToSign: state.setIsReadyToSign,
+    }),
+    shallow,
+  );
+
+  const logout = useCallback(async (fromDisconnect: boolean = false) => {
     try {
       if (!fromDisconnect) {
         disconnect();
@@ -28,7 +38,8 @@ export default function useLogout() {
     } catch (error) {
       enqueueSnackbar("Network error, please try again later", { variant: "error" });
     }
-  }, []);
+    setIsReadyToSign(false);
+  }, []); // eslint-disable-line
 
-  return { logout, user };
+  return { logout };
 }

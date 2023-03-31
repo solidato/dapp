@@ -1,13 +1,16 @@
 import { useWeb3Modal } from "@web3modal/react";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
+import { shallow } from "zustand/shallow";
 
 import { useState } from "react";
 
-import { Alert, Chip, Divider, Typography } from "@mui/material";
+import { Alert, Chip, Divider } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+
+import useLoginModalStore from "@store/loginModal";
 
 import { useSnackbar } from "@hooks/useSnackbar";
 import useUser from "@hooks/useUser";
@@ -16,9 +19,9 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
   const { query } = useRouter();
   const { open: openWeb3Modal } = useWeb3Modal();
   const { enqueueSnackbar } = useSnackbar();
-  const { isConnected } = useAccount();
-
   const [openLoginForm, setOpenLoginForm] = useState(false);
+
+  const { isConnected } = useAccount();
 
   const { mutateUser, user: sessionUser } = useUser(
     !onLoggedIn
@@ -29,7 +32,15 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
       : {},
   );
 
-  console.log(sessionUser, isConnected);
+  const { setIsReadyToSign, openLoginModal } = useLoginModalStore(
+    (state) => ({
+      setIsReadyToSign: state.setIsReadyToSign,
+      openLoginModal: state.openLoginModal,
+    }),
+    shallow,
+  );
+
+  const connectedButLoggedOut = !sessionUser?.isLoggedIn && isConnected;
 
   const [user, setUser] = useState<{ username: string; password: string }>({ username: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
@@ -56,9 +67,23 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
     <>
       {!openLoginForm && (
         <>
-          <Button variant="contained" onClick={() => openWeb3Modal()} fullWidth size="large">
-            Connect wallet
-          </Button>
+          {connectedButLoggedOut ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsReadyToSign(true);
+                openLoginModal();
+              }}
+              fullWidth
+              size="large"
+            >
+              Sign in to odoo via wallet
+            </Button>
+          ) : (
+            <Button variant="contained" onClick={() => openWeb3Modal()} fullWidth size="large">
+              Connect wallet
+            </Button>
+          )}
           <Divider sx={{ pt: 4, mb: 4 }}>
             <Chip label="Or" />
           </Divider>
