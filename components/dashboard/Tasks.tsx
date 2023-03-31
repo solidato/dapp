@@ -117,9 +117,7 @@ export default function Tasks() {
             </Typography>
           </Box>
           <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-            <Typography variant="caption">Worked in total</Typography>
             <Typography variant="h6">{isLoadingMyTasks ? <Skeleton /> : totalMyTasksWorkedTime}</Typography>
-            <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
           </Paper>
         </Box>
       </TabPanel>
@@ -131,9 +129,7 @@ export default function Tasks() {
             </Typography>
           </Box>
           <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-            <Typography variant="caption">Worked in total</Typography>
             <Typography variant="h6">{isLoadingAudit ? <Skeleton /> : totalWorkedTimeAudit}</Typography>
-            <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
           </Paper>
         </Box>
       </TabPanel>

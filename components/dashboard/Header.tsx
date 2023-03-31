@@ -1,7 +1,9 @@
 import { useAccount } from "wagmi";
 
+import { useState } from "react";
+
 import { InfoOutlined } from "@mui/icons-material";
-import { Chip, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from "@mui/material";
+import { Alert, Chip, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
 import { getCurrentMonth } from "@lib/resolutions/common";
@@ -11,6 +13,8 @@ import User from "@components/User";
 import useCurrentTasks from "@hooks/useCurrentTasks";
 import useShareholderStatus from "@hooks/useShareholderStatus";
 import useTimestamp from "@hooks/useTimestamp";
+
+import Modal from "../Modal";
 
 const messages: [number, string][] = [
   [22, "Working late 🦉"],
@@ -24,6 +28,7 @@ export default function Header() {
   const { address } = useAccount();
   const { isLoading, totalTime } = useCurrentTasks();
   const { currentTimestamp } = useTimestamp();
+  const [infoOpen, setInfoOpen] = useState(false);
 
   const { getShareholderStatus } = useShareholderStatus();
 
@@ -33,6 +38,11 @@ export default function Header() {
 
   return (
     <>
+      <Modal open={infoOpen} setOpen={setInfoOpen}>
+        <Alert severity="info">
+          Once the completed tasks will be approved, the corresponding tokens will be minted
+        </Alert>
+      </Modal>
       <Box sx={{ mr: 2 }}>
         <Typography variant="h3" sx={{ pb: 2 }}>
           {welcomeMessage}
@@ -59,14 +69,11 @@ export default function Header() {
           </Box>
         ) : (
           <>
-            <Typography variant="caption">You worked</Typography>
             <Typography variant="h4">{totalTime}</Typography>
-            <Typography variant="caption">in {getCurrentMonth()}, so far</Typography>
-            <Tooltip title="Once approved, the corresponding tokens will be minted" arrow>
-              <IconButton color="primary" aria-label="info" size="small">
-                <InfoOutlined />
-              </IconButton>
-            </Tooltip>
+            <Typography variant="caption">not tokenised, yet</Typography>
+            <IconButton color="primary" aria-label="info" size="small" onClick={() => setInfoOpen(true)}>
+              <InfoOutlined />
+            </IconButton>
           </>
         )}
       </Paper>

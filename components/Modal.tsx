@@ -1,10 +1,10 @@
 import * as React from "react";
 import { ReactElement } from "react";
 
-import { useTheme } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { IconButton, useTheme } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 import MUIModal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -28,11 +28,13 @@ export default function Modal({
   title,
 }: {
   open: boolean;
-  setOpen: (o: boolean) => void;
+  setOpen?: (o: boolean) => void;
   children: ReactElement;
-  title: string;
+  title?: string;
 }) {
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    typeof setOpen === "function" && setOpen(false);
+  };
   const theme = useTheme();
 
   return (
@@ -56,12 +58,21 @@ export default function Modal({
     >
       <Fade in={open}>
         <Box sx={style}>
-          <Typography id="transition-modal-title" variant="h6" component="h2">
-            {title}
-          </Typography>
-          <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-            {children}
-          </Typography>
+          <IconButton
+            color="primary"
+            aria-label="info"
+            size="small"
+            onClick={handleClose}
+            sx={{ position: "absolute", top: 6, right: 6 }}
+          >
+            <Close />
+          </IconButton>
+          {title && (
+            <Typography id="transition-modal-title" variant="h6" component="h2">
+              {title}
+            </Typography>
+          )}
+          {children}
         </Box>
       </Fade>
     </MUIModal>

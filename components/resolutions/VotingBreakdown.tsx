@@ -163,7 +163,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body1">Quorum reached</Typography>
+          <Typography variant="body1">Threshold reached</Typography>
           <Typography variant="caption">{voting.hasQuorum ? "Yes" : "No"}</Typography>
         </Box>
       </Stack>

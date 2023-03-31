@@ -1,5 +1,6 @@
 import { useWeb3Modal } from "@web3modal/react";
 import { useAccount } from "wagmi";
+import { shallow } from "zustand/shallow";
 
 import { useMemo, useState } from "react";
 
@@ -9,6 +10,7 @@ import { Alert, Box, Button, ButtonGroup, CircularProgress, Stack, Typography } 
 import { isSameAddress } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
+import useLoginModalStore from "@store/loginModal";
 
 import useResolutionVote from "@hooks/useResolutionVote";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
@@ -19,11 +21,17 @@ import User from "./User";
 
 export default function VotingWidget({ resolution }: { resolution: ResolutionEntityEnhanced }) {
   const { address, isConnected } = useAccount();
-  const { open: openWeb3Modal } = useWeb3Modal();
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [votingYes, setVotingYes] = useState(false);
   const { onSubmit } = useResolutionVote();
   const { isLoading } = useBlockchainTransactionStore();
+
+  const { handleOpenLoginModalFromLink } = useLoginModalStore(
+    (state) => ({
+      handleOpenLoginModalFromLink: state.handleOpenLoginModalFromLink,
+    }),
+    shallow,
+  );
 
   const votingUser = address
     ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
@@ -57,8 +65,8 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
 
   if (!isConnected) {
     return (
-      <Button onClick={() => openWeb3Modal()} variant="outlined">
-        Connect Wallet to vote
+      <Button onClick={handleOpenLoginModalFromLink} variant="outlined" href="/login">
+        Login to vote
       </Button>
     );
   }

@@ -142,7 +142,7 @@ export default function ResolutionCard({
             color="primary"
             size="small"
             href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
-            LinkComponent={Link}
+            LinkComponent={NextLink}
           >
             {canEdit ? "Edit" : "View"}
           </Button>

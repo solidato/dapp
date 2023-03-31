@@ -1,15 +1,14 @@
-import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Logout from "@mui/icons-material/Logout";
-import { Badge, Modal, useColorScheme, useTheme } from "@mui/material";
+import { Alert, Badge, Button, Modal, useColorScheme, useTheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -37,10 +36,9 @@ const style = {
   width: { md: 400, xs: "90%" },
   bgcolor: "background.paper",
   boxShadow: 24,
+  textAlign: "center",
   p: 4,
 };
-
-const WAIT_FOR_WALLET_LOGIN_MS = 200;
 
 export default function AccountMenu() {
   const theme = useTheme();
@@ -49,12 +47,12 @@ export default function AccountMenu() {
   const { signMessageAsync } = useSignMessage();
   const { disconnect } = useDisconnect();
 
+  const [readyToSign, setReadyToSign] = useState(false);
+
   const { address, isConnected: isWalletConnected } = useAccount({
     onConnect({ address, isReconnected }) {
       if (!isReconnected && address) {
-        setTimeout(() => {
-          handleWalletLogin(address);
-        }, WAIT_FOR_WALLET_LOGIN_MS);
+        setReadyToSign(true);
       }
     },
     onDisconnect() {
@@ -74,7 +72,7 @@ export default function AccountMenu() {
     setMounted(true);
   }, []);
 
-  async function handleWalletLogin(address: `0x${string}`) {
+  async function handleWalletLogin() {
     try {
       const challenge = await fetch("/api/walletLogin", {
         method: "GET",
@@ -95,6 +93,7 @@ export default function AccountMenu() {
       });
       const resUser = await data.json();
       mutateUser(resUser, false);
+      handleModalClose();
     } catch (_) {
       enqueueSnackbar("There was an error signing in", { variant: "error" });
     }
@@ -130,18 +129,12 @@ export default function AccountMenu() {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const { open: openWeb3Modal } = useWeb3Modal();
-
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleConnectWallet = async () => {
-    await openWeb3Modal();
     setAnchorEl(null);
   };
 
@@ -162,7 +155,18 @@ export default function AccountMenu() {
         }}
       >
         <Box sx={style}>
-          <LoginForm onLoggedIn={handleModalClose} />
+          {readyToSign ? (
+            <>
+              <Alert severity="info" sx={{ mb: 2 }}>
+                You can now connect to odoo via wallet
+              </Alert>
+              <Button variant="outlined" onClick={handleWalletLogin}>
+                Sign in to odoo
+              </Button>
+            </>
+          ) : (
+            <LoginForm onLoggedIn={handleModalClose} />
+          )}
         </Box>
       </Modal>
 
@@ -233,11 +237,6 @@ export default function AccountMenu() {
           <MenuItem href="/login" onClick={handleModalOpen} component={Link}>
             Login
           </MenuItem>
-        )}
-        {isConnected ? (
-          <MenuItem onClick={() => openWeb3Modal()}>Wallet: {`${address?.slice(0, 8)}...`}</MenuItem>
-        ) : (
-          <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
         )}
         <MenuItem href="/settings" component={Link}>
           Settings

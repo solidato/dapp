@@ -1,7 +1,7 @@
 import { gql } from "graphql-request";
 
 export const getTasksForAuditing = gql`
-  query GetTasksForAuditing($limit: Number! = 20, $offset: Number! = 0) {
+  query GetTasksForAuditing($limit: Number! = 50, $offset: Number! = 0) {
     ProjectTask(
       domain: [
         ["approval_date", "=", false]

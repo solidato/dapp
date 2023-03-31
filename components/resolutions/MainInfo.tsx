@@ -8,7 +8,9 @@ import { ResolutionEntityEnhanced } from "../../types";
 export default function MainInfo({ resolution }: { resolution: ResolutionEntityEnhanced }) {
   return (
     <>
-      <Typography variant="h5">Topic of the resolution: {resolution.title}</Typography>
+      <Typography variant="h5">
+        Topic of the resolution: #{resolution.id} {resolution.title}
+      </Typography>
       <Typography variant="body2" sx={{ pt: 1, pb: 0.5 }}>
         Created {resolution.createdAt} by
       </Typography>
