@@ -101,7 +101,13 @@ export default function Home() {
       )}
       <Section
         sx={{ pt: 0 }}
-        containerSx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
+        containerSx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+        }}
       >
         <Header />
       </Section>

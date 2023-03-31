@@ -8,7 +8,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, Box, Divider, Typography } from "@mui/material";
 
 import { getPreviousMonth } from "@lib/resolutions/common";
-import { enhanceTitleWithPrefix } from "@lib/utils";
+import { TOKEN_SYMBOL, enhanceTitleWithPrefix } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 import { createResolutionFormStore } from "@store/resolutionFormStore";
@@ -110,7 +110,10 @@ export default function NewResolution({
               .map((userData) => (
                 <Box key={userData.address}>
                   <Typography variant="body2">
-                    <b>{userData.tokens} TT</b> to
+                    <b>
+                      {userData.tokens} {TOKEN_SYMBOL}
+                    </b>{" "}
+                    to
                   </Typography>
                   <User address={userData.address} />
                   <Divider sx={{ mb: 1, pt: 1 }} />

@@ -15,6 +15,7 @@ import useUser from "@hooks/useUser";
 import useDelegationStatus from "../hooks/useDelegationStatus";
 import TelediskoLogo from "../images/logo-teledisko.png";
 import AccountMenu from "./AccountMenu";
+import LoginModal from "./LoginModal";
 import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
@@ -30,6 +31,7 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
 
   return (
     <>
+      <LoginModal />
       <CssBaseline />
       <Box
         sx={{

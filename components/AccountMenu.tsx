@@ -1,6 +1,5 @@
-import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
-import { useAccount, useDisconnect, useSignMessage } from "wagmi";
+import { useAccount } from "wagmi";
 import { shallow } from "zustand/shallow";
 
 import * as React from "react";
@@ -9,7 +8,7 @@ import { useEffect } from "react";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Logout from "@mui/icons-material/Logout";
-import { Badge, Modal, useColorScheme, useTheme } from "@mui/material";
+import { Badge, useColorScheme } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -23,11 +22,9 @@ import { getLettersFromName } from "@lib/utils";
 
 import useLoginModalStore from "@store/loginModal";
 
+import useLogout from "@hooks/useLogout";
 import useOdooUsers from "@hooks/useOdooUsers";
-import { useSnackbar } from "@hooks/useSnackbar";
 import useUser from "@hooks/useUser";
-
-import LoginForm from "./LoginForm";
 
 const style = {
   position: "absolute" as "absolute",
@@ -37,34 +34,19 @@ const style = {
   width: { md: 400, xs: "90%" },
   bgcolor: "background.paper",
   boxShadow: 24,
+  textAlign: "center",
   p: 4,
 };
 
-const WAIT_FOR_WALLET_LOGIN_MS = 200;
-
 export default function AccountMenu() {
-  const theme = useTheme();
   const { mode, setMode } = useColorScheme();
-  const { user, mutateUser } = useUser();
-  const { signMessageAsync } = useSignMessage();
-  const { disconnect } = useDisconnect();
+  const { user } = useUser();
+  const { logout } = useLogout();
 
-  const { address, isConnected: isWalletConnected } = useAccount({
-    onConnect({ address, isReconnected }) {
-      if (!isReconnected && address) {
-        setTimeout(() => {
-          handleWalletLogin(address);
-        }, WAIT_FOR_WALLET_LOGIN_MS);
-      }
-    },
-    onDisconnect() {
-      logout(true);
-    },
-  });
+  const { isConnected: isWalletConnected } = useAccount();
 
   const [mounted, setMounted] = React.useState(false);
   const isConnected = mounted && isWalletConnected;
-  const { enqueueSnackbar } = useSnackbar();
 
   const {
     users: [currentOdooUser],
@@ -74,98 +56,27 @@ export default function AccountMenu() {
     setMounted(true);
   }, []);
 
-  async function handleWalletLogin(address: `0x${string}`) {
-    try {
-      const challenge = await fetch("/api/walletLogin", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const json = await challenge.json();
-      const sig = await signMessageAsync({ message: json.message });
-
-      const data = await fetch("/api/walletLogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          address,
-          sig,
-          signingToken: json.signingToken,
-        }),
-      });
-      const resUser = await data.json();
-      mutateUser(resUser, false);
-    } catch (_) {
-      enqueueSnackbar("There was an error signing in", { variant: "error" });
-    }
-  }
-
-  const { modalOpen, handleModalOpen, handleModalClose } = useLoginModalStore(
+  const { handleModalOpen } = useLoginModalStore(
     (state) => ({
-      modalOpen: state.isLoginModalOpen,
       handleModalOpen: state.handleOpenLoginModalFromLink,
-      handleModalClose: state.closeLoginModal,
     }),
     shallow,
   );
 
-  const logout = async (fromDisconnect = false) => {
-    try {
-      if (!fromDisconnect) {
-        disconnect();
-      }
-      const res = await fetch("/api/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res.status === 200) {
-        mutateUser(await res.json());
-      } else {
-        enqueueSnackbar("Logout failed", { variant: "error" });
-      }
-    } catch (error) {
-      enqueueSnackbar("Network error", { variant: "error" });
-    }
-  };
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const { open: openWeb3Modal } = useWeb3Modal();
 
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleConnectWallet = async () => {
-    await openWeb3Modal();
     setAnchorEl(null);
   };
 
   return (
     <React.Fragment>
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-        slotProps={{
-          backdrop: {
-            style: {
-              backgroundColor: theme.palette.mode === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(4px)",
-            },
-          },
-        }}
-      >
-        <Box sx={style}>
-          <LoginForm onLoggedIn={handleModalClose} />
-        </Box>
-      </Modal>
-
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -234,22 +145,26 @@ export default function AccountMenu() {
             Login
           </MenuItem>
         )}
-        {isConnected ? (
-          <MenuItem onClick={() => openWeb3Modal()}>Wallet: {`${address?.slice(0, 8)}...`}</MenuItem>
-        ) : (
-          <MenuItem onClick={handleConnectWallet}>Connect Wallet</MenuItem>
-        )}
         <MenuItem href="/settings" component={Link}>
           Settings
         </MenuItem>
-        {user?.isLoggedIn && [
+        {(user?.isLoggedIn || isConnected) && [
           <Divider key="divider" />,
-          <MenuItem onClick={() => logout()} key="logout">
-            <ListItemIcon>
-              <Logout fontSize="small" />
-            </ListItemIcon>
-            Logout
-          </MenuItem>,
+          user?.isLoggedIn ? (
+            <MenuItem onClick={() => logout()} key="logout">
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
+          ) : (
+            <MenuItem onClick={() => logout()} key="logout">
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Disconnect wallet
+            </MenuItem>
+          ),
         ]}
         <Divider></Divider>
         <MenuItem onClick={() => setMode(mode === "light" ? "dark" : "light")}>

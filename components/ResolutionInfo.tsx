@@ -60,10 +60,15 @@ export default function ResolutionInfo({
       )}
       {votingUser && (
         <>
-          <Typography variant="body2" sx={{ ml: 2 }}>
+          <Typography variant="body2" sx={{ ml: 2, "@media print": { display: "none" } }}>
             Voted:{" "}
           </Typography>
-          <Chip size={chipSize} sx={{ ml: 0.5 }} label={votingUser.hasVotedYes ? "Yes" : "No"} variant="outlined" />
+          <Chip
+            size={chipSize}
+            sx={{ ml: 0.5, "@media print": { display: "none" } }}
+            label={votingUser.hasVotedYes ? "Yes" : "No"}
+            variant="outlined"
+          />
         </>
       )}
     </Stack>

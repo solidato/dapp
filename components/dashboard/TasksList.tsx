@@ -58,8 +58,7 @@ export default function TasksList({
                   Updated on: {format(new Date(task.write_date), "dd LLL yyyy, H:mm:ss")}
                 </Typography>
               </Box>
-              <Paper sx={{ ml: "auto", textAlign: "center", p: { xs: 1, sm: 2 }, width: 130 }} variant="outlined">
-                <Typography variant="caption">Worked</Typography>
+              <Paper sx={{ ml: "auto", textAlign: "center", p: { xs: 1, sm: 2 }, width: 100 }} variant="outlined">
                 <Typography variant="body2">
                   <b>{hoursToTime(task.subtask_effective_hours + task.effective_hours)}</b>
                 </Typography>

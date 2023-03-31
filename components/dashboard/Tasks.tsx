@@ -101,6 +101,8 @@ export default function Tasks() {
     setValue(index);
   };
 
+  const hasPendingTasks = !isLoadingMyTasks && Number(totalMyTasksWorkedTime) > 0;
+
   return (
     <Box ref={ref}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -111,29 +113,29 @@ export default function Tasks() {
       </Box>
       <TabPanel value={value} index={0}>
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Box sx={{ mr: 2, width: "calc(100% - 150px)" }}>
+          <Box sx={{ mr: 2, width: hasPendingTasks ? "calc(100% - 150px)" : "100%" }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              This list is in real time and it shows your tasks performed in {getCurrentMonth()} so far
+              {hasPendingTasks
+                ? "This list is in real time and it shows your unapproved tasks so far"
+                : "All your tasks are approved"}
             </Typography>
           </Box>
-          <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-            <Typography variant="caption">Worked in total</Typography>
-            <Typography variant="h6">{isLoadingMyTasks ? <Skeleton /> : totalMyTasksWorkedTime}</Typography>
-            <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
-          </Paper>
+          {hasPendingTasks && (
+            <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
+              <Typography variant="h6">{isLoadingMyTasks ? <Skeleton /> : totalMyTasksWorkedTime}</Typography>
+            </Paper>
+          )}
         </Box>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box sx={{ mr: 2, width: "calc(100% - 150px)" }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-              This list is in real time and it shows all the contributors last tasks performed in {getCurrentMonth()}
+              This list is in real time and it shows all the contributors unapproved tasks so far
             </Typography>
           </Box>
           <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-            <Typography variant="caption">Worked in total</Typography>
             <Typography variant="h6">{isLoadingAudit ? <Skeleton /> : totalWorkedTimeAudit}</Typography>
-            <Typography variant="caption">in {getCurrentMonth()} so far</Typography>
           </Paper>
         </Box>
       </TabPanel>
