@@ -45,9 +45,10 @@ export default function useShareholderStatus() {
 
     const users = data?.daoUsers.reduce((computed: any, daoUser: DaoUser) => {
       const balance = Math.round(daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0);
+      const power = (balance * 100) / balancesSum;
       computed[daoUser.address] = {
         balance,
-        power: ((balance * 100) / balancesSum).toFixed(2),
+        power: power > 0 ? power.toFixed(2) : 0,
       };
       return computed;
     }, {});
