@@ -16,6 +16,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const graphQlResolutionData: any = await fetcherWithParams([getResolutionQuery, { id }]);
+
+    if (graphQlResolutionData.resolution === null) {
+      return res.status(404).send("resolution not found");
+    }
+
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
       graphQlResolutionData?.resolution as ResolutionEntity,
