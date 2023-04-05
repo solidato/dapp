@@ -6,6 +6,8 @@ import { InfoOutlined } from "@mui/icons-material";
 import { Alert, Chip, IconButton, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
+import { hoursToTime } from "@lib/utils";
+
 import User from "@components/User";
 
 import useCurrentTasks from "@hooks/useCurrentTasks";
@@ -68,9 +70,9 @@ export default function Header() {
           </Box>
         ) : (
           <>
-            {Number(totalTime) > 0 ? (
+            {totalTime > 0 ? (
               <>
-                <Typography variant="h4">{totalTime}</Typography>
+                <Typography variant="h4">{hoursToTime(totalTime)}</Typography>
                 <Typography variant="caption">not tokenised, yet</Typography>
               </>
             ) : (

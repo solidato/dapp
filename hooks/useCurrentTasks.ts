@@ -19,7 +19,7 @@ export default function useCurrentTasks() {
       0,
     );
 
-    return hoursToTime(time);
+    return time;
   }, [data]);
 
   return {

@@ -10,7 +10,6 @@ import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 
 import { fetcher } from "@lib/net";
-import { getCurrentMonth } from "@lib/resolutions/common";
 import { hoursToTime } from "@lib/utils";
 
 import TasksList from "@components/dashboard/TasksList";
@@ -65,14 +64,12 @@ export default function Tasks() {
 
   const totalMyTasksWorkedTime = React.useMemo(() => {
     if (!dataMyTasks) {
-      return "";
+      return 0;
     }
 
-    return hoursToTime(
-      dataMyTasks.reduce(
-        (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
-        0,
-      ),
+    return dataMyTasks.reduce(
+      (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
+      0,
     );
   }, [dataMyTasks]);
 
@@ -82,14 +79,12 @@ export default function Tasks() {
 
   const totalWorkedTimeAudit = React.useMemo(() => {
     if (!dataAudit) {
-      return "";
+      return 0;
     }
 
-    return hoursToTime(
-      dataAudit.reduce(
-        (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
-        0,
-      ),
+    return dataAudit.reduce(
+      (total: number, task: Task) => Number((total + task.subtask_effective_hours + task.effective_hours).toFixed(2)),
+      0,
     );
   }, [dataAudit]);
 
@@ -101,7 +96,7 @@ export default function Tasks() {
     setValue(index);
   };
 
-  const hasPendingTasks = !isLoadingMyTasks && Number(totalMyTasksWorkedTime) > 0;
+  const hasPendingTasks = !isLoadingMyTasks && totalMyTasksWorkedTime > 0;
 
   return (
     <Box ref={ref}>
@@ -122,7 +117,9 @@ export default function Tasks() {
           </Box>
           {hasPendingTasks && (
             <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-              <Typography variant="h6">{isLoadingMyTasks ? <Skeleton /> : totalMyTasksWorkedTime}</Typography>
+              <Typography variant="h6">
+                {isLoadingMyTasks ? <Skeleton /> : hoursToTime(totalMyTasksWorkedTime)}
+              </Typography>
             </Paper>
           )}
         </Box>
@@ -135,7 +132,7 @@ export default function Tasks() {
             </Typography>
           </Box>
           <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">
-            <Typography variant="h6">{isLoadingAudit ? <Skeleton /> : totalWorkedTimeAudit}</Typography>
+            <Typography variant="h6">{isLoadingAudit ? <Skeleton /> : hoursToTime(totalWorkedTimeAudit)}</Typography>
           </Paper>
         </Box>
       </TabPanel>
