@@ -1,18 +1,26 @@
 import { renderToBuffer } from "@react-pdf/renderer";
+import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ResolutionEntity, ResolutionEntityEnhanced } from "types";
+import { OdooUser, ResolutionEntity, ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
 import { fetcherWithParams } from "@graphql/client";
+import odooClient from "@graphql/odoo";
 import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
+import { getUsersQuery } from "@graphql/queries/get-users.query";
 
 import { getEnhancedResolutionMapper } from "@lib/resolutions/common";
+import { sessionOptions } from "@lib/session";
 
 import ResolutionPdf from "@components/resolutions/Pdf";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
+  const cookie = req.session.cookie;
+  if (!cookie) {
+    return res.status(401).end();
+  }
 
   try {
     const graphQlResolutionData: any = await fetcherWithParams([getResolutionQuery, { id }]);
@@ -21,13 +29,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).send("resolution not found");
     }
 
+    const usersData = await odooClient(cookie, getUsersQuery);
+    const odooUsersData = (usersData.ResUsers as OdooUser[]).map((user) => ({
+      ethereumAddress: user.ethereum_address,
+      name: user.display_name,
+      email: user.email,
+    }));
+
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
       graphQlResolutionData?.resolution as ResolutionEntity,
     );
 
-    // @ts-ignore
-    const pdf = await renderToBuffer(React.createElement(ResolutionPdf, { resolution: resolutionData }));
+    const pdf = await renderToBuffer(
+      // @ts-ignore
+      React.createElement(ResolutionPdf, { resolution: resolutionData, usersData: odooUsersData }),
+    );
 
     res.setHeader(
       "Content-Disposition",
@@ -41,3 +58,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).send("failed to generate resolution pdf, please try again later");
   }
 };
+
+export default withIronSessionApiRoute(getResolutionPdf, sessionOptions);
