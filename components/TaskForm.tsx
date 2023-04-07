@@ -17,7 +17,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { fetcher } from "@lib/net";
 import { getDateFromOdooTimestamp } from "@lib/utils";
@@ -26,6 +26,7 @@ import { Project, ProjectTask, Tier } from "@store/projectTaskStore";
 
 import useUser from "@hooks/useUser";
 
+import { toDatetime } from "../lib/utils";
 import { OdooUser } from "../types";
 
 type FormData = {
@@ -56,7 +57,7 @@ export default function TaskForm({
 
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
   const [lastTask, setLastTask] = useState<ProjectTask | undefined>();
-  const dateFormat = "yyyy-MM-dd HH:mm:ss";
+  const dateFormat = "yyyy-MM-dd";
 
   const defaultValues = useMemo(
     () => ({
@@ -66,7 +67,7 @@ export default function TaskForm({
       user_id: task ? task.user_id.id : user?.id || -1,
       approval_user_id: task ? task.approval_user_id.id : lastTask?.approval_user_id?.id || -1,
       tier_id: task ? task.tier_id.id : lastTask?.tier_id?.id || -1,
-      date_deadline: task ? task.date_deadline : format(endOfMonth(new Date()), dateFormat),
+      date_deadline: format(task ? toDatetime(task.date_deadline) : endOfMonth(new Date()), dateFormat),
     }),
     [selectedProject, lastTask, user, task],
   );
@@ -75,8 +76,9 @@ export default function TaskForm({
 
   useEffect(() => {
     if (projects?.user?.length) {
+      const taskProject = task && !selectedProject && projects.user.find((proj) => proj.id === task.project_id.id);
       const defaultProject = projectId && !selectedProject && projects.user.find((proj) => proj.id === projectId);
-      const project = defaultProject || selectedProject;
+      const project = taskProject || defaultProject || selectedProject;
       if (project) {
         if (!selectedProject) {
           setSelectedProject(project);
@@ -87,7 +89,7 @@ export default function TaskForm({
         setLastTask(lastTask);
       }
     }
-  }, [projects, selectedProject, projectId]);
+  }, [projects, selectedProject, projectId, task]);
 
   const checkValues = (values: any, defaultValues: any) => (key: string) => {
     return values[key] && values[key] !== -1 ? values[key] : defaultValues[key];
@@ -136,6 +138,7 @@ export default function TaskForm({
                   labelId="task-project"
                   id="task-project-select"
                   required
+                  disabled={Boolean(task)}
                   value={value}
                   onChange={(e) => {
                     const projectId = Number(e.target.value);
@@ -272,11 +275,10 @@ export default function TaskForm({
             name="date_deadline"
             control={control}
             render={({ field: { onChange, value, ...fields } }) => (
-              <DateTimePicker
+              <DatePicker
                 sx={{ width: "100%" }}
                 label="Deadline"
-                format="yyyy/MM/dd HH:mm"
-                ampm={false}
+                format="yyyy/MM/dd"
                 value={new Date(value)}
                 onChange={(datetime: any) => onChange(format(datetime, dateFormat))}
                 {...fields}

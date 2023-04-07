@@ -19,7 +19,7 @@ export type ProjectTask = {
   id: number;
   name: string;
   display_name: string;
-  date_deadline: string;
+  date_deadline: number;
   effective_hours: number;
   write_date: number;
   user_id: { id: number; name: string };

@@ -36,6 +36,16 @@ export function getTaskTotalHours(task: ProjectTask) {
   }
 }
 
+export function toDatetime(date: number) {
+  // format a date which is in days since year 0
+  // and return a date which actually make sense
+  const secondsInYear = 86400;
+  const daysFromJesusChristBDay = 719163;
+  const daysFromUnixTime = date - daysFromJesusChristBDay;
+  const normalizedTimestamp = daysFromUnixTime * secondsInYear * 1000;
+  return new Date(normalizedTimestamp);
+}
+
 export function toPrettyDuration(time: number) {
   const hours = Math.trunc(time);
   const mins = Math.round((time - hours) * 60);
