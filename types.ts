@@ -187,7 +187,7 @@ export type Task = {
   subtask_effective_hours: number;
   effective_hours: number;
   name: string;
-  write_date: string;
+  write_date: number;
   project_id: {
     id: number;
     name: string;

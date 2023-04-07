@@ -2,7 +2,7 @@ import { format } from "date-fns";
 
 import { Box, Chip, Paper, Skeleton, Typography } from "@mui/material";
 
-import { hoursToTime } from "@lib/utils";
+import { getDateFromOdooTimestamp, hoursToTime } from "@lib/utils";
 
 import { Task } from "../../types";
 import User from "../User";
@@ -55,7 +55,7 @@ export default function TasksList({
                 </Typography>
                 <Chip sx={{ mr: 2 }} label={task.project_id.name} size="small" />
                 <Typography variant="caption">
-                  Updated on: {format(new Date(task.write_date), "dd LLL yyyy, H:mm:ss")}
+                  Updated on: {format(getDateFromOdooTimestamp(task.write_date), "dd LLL yyyy, H:mm:ss")}
                 </Typography>
               </Box>
               <Paper sx={{ ml: "auto", textAlign: "center", p: { xs: 1, sm: 2 }, width: 100 }} variant="outlined">
