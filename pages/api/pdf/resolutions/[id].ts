@@ -1,5 +1,6 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import { withIronSessionApiRoute } from "iron-session/next";
+import kebabCase from "lodash.kebabcase";
 import { NextApiRequest, NextApiResponse } from "next";
 import { OdooUser, ResolutionEntity, ResolutionEntityEnhanced } from "types";
 
@@ -19,7 +20,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
   const cookie = req.session.cookie;
   if (!cookie) {
-    return res.status(401).end();
+    return res.status(401).end("Unauthorised");
   }
 
   try {
@@ -48,7 +49,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="#${resolutionData.id}-${resolutionData.title.split(/\s+/).join("-").toLowerCase()}.pdf"`,
+      `attachment; filename="#${resolutionData.id}-${kebabCase(resolutionData.title)}.pdf"`,
     );
     res.setHeader("Content-Type", "application/pdf");
 
