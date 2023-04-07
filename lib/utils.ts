@@ -120,6 +120,10 @@ export const hoursToTime = (initialHours: number) => {
   return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
 };
 
+export const getDateFromOdooTimestamp = (timestamp: number) => {
+  return new Date(timestamp * 1000);
+};
+
 export const TOKEN_SYMBOL = {
   teledisko: "TT",
   neokingdom: "NKDT",

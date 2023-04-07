@@ -21,7 +21,7 @@ export type ProjectTask = {
   display_name: string;
   date_deadline: string;
   effective_hours: number;
-  write_date: string;
+  write_date: number;
   user_id: { id: number; name: string };
   approval_user_id: { id: number; name: string };
   tier_id: Tier;

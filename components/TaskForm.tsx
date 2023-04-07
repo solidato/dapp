@@ -20,6 +20,7 @@ import {
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 import { fetcher } from "@lib/net";
+import { getDateFromOdooTimestamp } from "@lib/utils";
 
 import { Project, ProjectTask, Tier } from "@store/projectTaskStore";
 
@@ -81,7 +82,7 @@ export default function TaskForm({
           setSelectedProject(project);
         }
         const [lastTask] = project.tasks
-          .sort((a, b) => compareAsc(new Date(a.write_date), new Date(b.write_date)))
+          .sort((a, b) => compareAsc(getDateFromOdooTimestamp(a.write_date), getDateFromOdooTimestamp(b.write_date)))
           .slice(-1);
         setLastTask(lastTask);
       }
