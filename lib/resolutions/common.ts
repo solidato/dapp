@@ -58,8 +58,13 @@ export const RESOLUTION_ACTIONS = {
 
 export const getDateFromUnixTimestamp = (unixTs: string) => new Date(Number(unixTs) * 1000);
 
-export const getRelativeDateFromUnixTimestamp = (unixTs: string, baseDate: Date = new Date()) =>
-  formatRelative(getDateFromUnixTimestamp(unixTs), baseDate);
+export const getRelativeDateFromUnixTimestamp = (unixTs: string, forceAbsolute = false) => {
+  const date = getDateFromUnixTimestamp(unixTs);
+  if (forceAbsolute) {
+    return format(date, "dd LLL yyyy, H:mm");
+  }
+  return formatRelative(date, new Date());
+};
 
 export const getResolutionTypeInfo = (resolution: ResolutionEntity): ResolutionTypeInfo => {
   if (resolution.approveTimestamp === "0") {
@@ -79,9 +84,9 @@ export const getResolutionTypeInfo = (resolution: ResolutionEntity): ResolutionT
 
   return {
     noticePeriodEnds,
-    noticePeriodEndsAt: format(noticePeriodEnds, "dd LLL yyyy, H:mm:ss"),
+    noticePeriodEndsAt: format(noticePeriodEnds, "dd LLL yyyy, H:mm"),
     votingEnds,
-    votingEndsAt: format(votingEnds, "dd LLL yyyy, H:mm:ss"),
+    votingEndsAt: format(votingEnds, "dd LLL yyyy, H:mm"),
   };
 };
 
@@ -130,7 +135,7 @@ export const getResolutionVoters = (resolution: ResolutionEntity) => {
 
 export const getEnhancedResolutionMapper =
   ($currentTimestamp: number, $acl?: ResolutionsAcl) =>
-  (resolution: ResolutionEntity): ResolutionEntityEnhanced => {
+  (resolution: ResolutionEntity, forceAbsolute = false): ResolutionEntityEnhanced => {
     const resolutionTypeInfo = getResolutionTypeInfo(resolution);
     const state = getResolutionState(resolution, $currentTimestamp, resolutionTypeInfo);
     const resolutionVoters = getResolutionVoters(resolution);
@@ -138,16 +143,22 @@ export const getEnhancedResolutionMapper =
       ...resolution,
       voters: resolutionVoters,
       state,
-      createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp),
+      createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp, forceAbsolute),
       rejectedAt:
-        resolution.rejectTimestamp !== "0" ? getRelativeDateFromUnixTimestamp(resolution.rejectTimestamp) : null,
+        resolution.rejectTimestamp !== "0"
+          ? getRelativeDateFromUnixTimestamp(resolution.rejectTimestamp, forceAbsolute)
+          : null,
       updatedAt:
-        resolution.updateTimestamp !== "0" ? getRelativeDateFromUnixTimestamp(resolution.updateTimestamp) : null,
+        resolution.updateTimestamp !== "0"
+          ? getRelativeDateFromUnixTimestamp(resolution.updateTimestamp, forceAbsolute)
+          : null,
       approvedAt:
-        resolution.approveTimestamp !== "0" ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp) : null,
+        resolution.approveTimestamp !== "0"
+          ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp, forceAbsolute)
+          : null,
       executedAt:
         resolution.executionTimestamp && resolution.executionTimestamp !== "0"
-          ? getRelativeDateFromUnixTimestamp(resolution.executionTimestamp)
+          ? getRelativeDateFromUnixTimestamp(resolution.executionTimestamp, forceAbsolute)
           : null,
       href:
         state === RESOLUTION_STATES.PRE_DRAFT && $acl?.canUpdate

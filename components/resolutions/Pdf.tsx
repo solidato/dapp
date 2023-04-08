@@ -1,9 +1,12 @@
-import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { Document, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { format } from "date-fns";
 import Showdown from "showdown";
 import { ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 import Html from "react-pdf-html";
+
+import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
 
 const converter = new Showdown.Converter();
 converter.setFlavor("github");
@@ -13,6 +16,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingBottom: 80,
+    color: "#333",
   },
   headerTitle: {
     fontSize: "14px",
@@ -56,36 +60,87 @@ const styles = StyleSheet.create({
 const initGetUserName = (usersData: any[]) => (ethereumAddress: string) =>
   usersData.find((user) => user.ethereumAddress === ethereumAddress)?.name;
 
-// Create Document Component
-const ResolutionPdf = ({ resolution, usersData }: { resolution: ResolutionEntityEnhanced; usersData: any[] }) => {
+const Br = () => <>{"\n"}</>;
+const Bold = ({ children }: { children: any }) => (
+  <Text style={{ color: "#000", fontWeight: "heavy" }}>{children}</Text>
+);
+
+const ResolutionPdf = ({
+  resolution,
+  usersData,
+  resolutionUrl,
+}: {
+  resolution: ResolutionEntityEnhanced;
+  usersData: any[];
+  resolutionUrl: string;
+}) => {
   const getUserName = initGetUserName(usersData);
   const contentHtml = converter.makeHtml(resolution.content);
   return (
     <Document>
       <Page size="A4" style={styles.container}>
         <Text style={styles.headerTitle}>
-          MINUTES AND RESOLUTION OF THE SHAREHOLDERS (without convening a meeting of shareholders)
+          {resolution.state === RESOLUTION_STATES.ENDED ? (
+            <Text>
+              MINUTES AND RESOLUTION OF THE SHAREHOLDERS <Br />
+              (without convening a meeting of shareholders)
+            </Text>
+          ) : (
+            <>
+              <View style={{ width: "100%" }}>
+                <Text>DRAFT OF THE RESOLUTION OF THE SHAREHOLDERS</Text>
+              </View>
+              <Text>(without convening a meeting of shareholders)</Text>
+            </>
+          )}
         </Text>
         <View style={styles.headerInfo} wrap={false}>
-          <View style={{ width: "70%" }}>
-            <Text>Time of determining the voting rights and active PoAs: 02 Mar 2023</Text>
-            <Text>Notification period for voting: From 02 Mar 2023, 13:20:50 to 05 Mar 2023, 13:20:50</Text>
-            <Text>Voting period: From 05 Mar 2023, 13:20:50 to 07 Mar 2023, 13:20:50</Text>
-            <Text>Place of voting: https://dapp-neokingdom.vercel.app/resolutions/15</Text>
-            <Text>Recording secretary: Benjamin Gregor Uphues</Text>
+          <View style={{ width: "60%" }}>
+            {resolution.state === RESOLUTION_STATES.ENDED && (
+              <>
+                <Text>
+                  <Bold>Time of determining the voting rights and active PoAs:</Bold>{" "}
+                  {format(getDateFromUnixTimestamp(resolution.approveTimestamp), "dd LLL yyyy, H:mm")}
+                </Text>
+                <Text>
+                  <Bold>Notification period for voting:</Bold> From{" "}
+                  {format(getDateFromUnixTimestamp(resolution.approveTimestamp), "dd LLL yyyy, H:mm")} to{" "}
+                  {resolution.resolutionTypeInfo.noticePeriodEndsAt}
+                </Text>
+                <Text>
+                  <Bold>Voting period:</Bold> From {resolution.resolutionTypeInfo.noticePeriodEndsAt} to{" "}
+                  {resolution.resolutionTypeInfo.votingEndsAt}
+                </Text>
+                <Text>
+                  <Bold>Place of voting:</Bold> <Link src={resolutionUrl}>{resolutionUrl}</Link>
+                </Text>
+                <Text>
+                  <Bold>Recording secretary:</Bold> Benjamin Gregor Uphues
+                </Text>
+              </>
+            )}
           </View>
-          <View style={{ width: "30%", textAlign: "right" }}>
-            <Text>Business name: neokingdom DAO OÜ</Text>
-            <Text>Registry code: 16638166</Text>
-            <Text>Registered office: Laki 11/1, 12915 Tallinn, Estonia</Text>
+          <View style={{ width: "40%", textAlign: "right" }}>
+            <Text>
+              <Bold>Business name:</Bold> {process.env.NEXT_PUBLIC_PROJECT_KEY} DAO OÜ
+            </Text>
+            <Text>
+              <Bold>Registry code:</Bold>{" "}
+              {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "16638166" : "16374990"}
+            </Text>
+            <Text>
+              <Bold>Registered office:</Bold> Laki 11/1, 12915 Tallinn, Estonia
+            </Text>
           </View>
         </View>
         <Text style={styles.title}>
           Topic of the resolution: #{resolution.id} {resolution.title}
         </Text>
-        <Text style={styles.subTitle}>
-          Created on {resolution.createdAt} by {getUserName(resolution.createBy)}
+        <Text style={{ ...styles.subTitle, marginBottom: "2px" }}>
+          Created on {resolution.createdAt} by {getUserName(resolution.createBy)}{" "}
+          <Text style={{ color: "#999", fontSize: "10px" }}>{resolution.createBy}</Text>
         </Text>
+        <Text style={styles.subTitle}>Resolution type: {resolution.resolutionType.name}</Text>
         <Text style={styles.title}>Content of the resolution:</Text>
         <View style={styles.content}>
           <Html style={styles.content}>{contentHtml}</Html>

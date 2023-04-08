@@ -40,11 +40,18 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
       graphQlResolutionData?.resolution as ResolutionEntity,
+      true,
     );
 
     const pdf = await renderToBuffer(
       // @ts-ignore
-      React.createElement(ResolutionPdf, { resolution: resolutionData, usersData: odooUsersData }),
+      React.createElement(ResolutionPdf, {
+        resolution: resolutionData,
+        usersData: odooUsersData,
+        resolutionUrl: `${req.headers.host?.startsWith("localhost") ? "http" : "https"}://${
+          req.headers.host
+        }/resolutions/${resolutionData.id}`,
+      }),
     );
 
     res.setHeader(
