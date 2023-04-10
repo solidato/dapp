@@ -48,8 +48,10 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
       React.createElement(ResolutionPdf, {
         resolution: resolutionData,
         usersData: odooUsersData,
-        resolutionUrl: `${req.headers.host?.startsWith("localhost") ? "http" : "https"}://${
-          req.headers.host
+        resolutionUrl: `${
+          process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko"
+            ? "https://dao.teledisko.org"
+            : "https://dao.neokingdom.org"
         }/resolutions/${resolutionData.id}`,
       }),
     );

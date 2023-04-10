@@ -8,6 +8,9 @@ import Html from "react-pdf-html";
 
 import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
 
+import ShareholdersPdf from "./ShareholdersPdf";
+import VotingPdf from "./VotingPdf";
+
 const converter = new Showdown.Converter();
 converter.setFlavor("github");
 
@@ -16,11 +19,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     paddingBottom: 80,
-    color: "#333",
+    color: "#676767",
   },
   headerTitle: {
     fontSize: "14px",
-    marginBottom: "8px",
+    marginBottom: "12px",
   },
   title: {
     fontSize: "16px",
@@ -53,17 +56,20 @@ const styles = StyleSheet.create({
     marginBottom: "16px",
     borderBottom: "1px solid #999",
     borderTop: "1px solid #999",
-    padding: "8px",
+    padding: "16px",
+    paddingLeft: 0,
+    paddingRight: 0,
   },
 });
 
 const initGetUserName = (usersData: any[]) => (ethereumAddress: string) =>
   usersData.find((user) => user.ethereumAddress === ethereumAddress)?.name;
 
-const Br = () => <>{"\n"}</>;
-const Bold = ({ children }: { children: any }) => (
-  <Text style={{ color: "#000", fontWeight: "heavy" }}>{children}</Text>
+export const Br = () => <>{"\n"}</>;
+export const Bold = ({ children, inverse = false }: { children: any; inverse?: boolean }) => (
+  <Text style={{ color: inverse ? "#FFF" : "#000", fontWeight: "heavy" }}>{children}</Text>
 );
+export const Small = ({ children }: { children: any }) => <Text style={{ fontSize: "10px" }}>{children}</Text>;
 
 const ResolutionPdf = ({
   resolution,
@@ -78,7 +84,27 @@ const ResolutionPdf = ({
   const contentHtml = converter.makeHtml(resolution.content);
   return (
     <Document>
-      <Page size="A4" style={styles.container}>
+      <Page
+        size="A4"
+        style={{ ...styles.container, ...(resolution.state === RESOLUTION_STATES.REJECTED && { paddingTop: 60 }) }}
+      >
+        {resolution.state === RESOLUTION_STATES.REJECTED && (
+          <View
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              color: "white",
+              backgroundColor: "red",
+              padding: 10,
+              borderRadius: 3,
+            }}
+          >
+            <Text style={{ fontSize: "12px" }}>
+              REJECTED on {resolution.rejectedAt} by {getUserName(resolution.rejectBy)}
+            </Text>
+          </View>
+        )}
         <Text style={styles.headerTitle}>
           {resolution.state === RESOLUTION_STATES.ENDED ? (
             <Text>
@@ -145,6 +171,45 @@ const ResolutionPdf = ({
         <View style={styles.content}>
           <Html style={styles.content}>{contentHtml}</Html>
         </View>
+        {resolution.state === RESOLUTION_STATES.PRE_DRAFT && (
+          <View>
+            <Text>Voting conditions:</Text>
+            <Br />
+            {resolution.isNegative ? (
+              <Text>
+                <Bold>{resolution.resolutionType.quorum}% of negative votes</Bold> are needed to approve the motion
+              </Text>
+            ) : (
+              <Text>
+                <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
+              </Text>
+            )}
+          </View>
+        )}
+        {resolution.state === RESOLUTION_STATES.ENDED && (
+          <View>
+            <View style={{ padding: "12px", backgroundColor: resolution.hasQuorum ? "green" : "red", color: "white" }}>
+              {resolution.hasQuorum ? (
+                <Text style={{ fontSize: "14px" }}>
+                  The resolution of shareholders <Bold inverse>HAS BEEN ADOPTED</Bold> on{" "}
+                  {resolution.resolutionTypeInfo.votingEndsAt}.
+                </Text>
+              ) : (
+                <Text style={{ fontSize: "14px" }}>
+                  The resolution of shareholders <Bold inverse>HAS NOT BEEN ADOPTED</Bold>. Voting ended on{" "}
+                  {resolution.resolutionTypeInfo.votingEndsAt}.
+                </Text>
+              )}
+              <Br />
+              <Small>
+                No positions of shareholders were submitted, in a format which can be reproduced in writing, in the
+                meaning of the law, or otherwise requested to be added to the resolution.
+              </Small>
+            </View>
+            <VotingPdf resolution={resolution} />
+            <ShareholdersPdf resolution={resolution} getUserName={getUserName} />
+          </View>
+        )}
         <View fixed style={styles.signature}>
           <Text style={styles.note}>/signed digitally/</Text>
           <Text style={styles.note}>--------------------------------------</Text>

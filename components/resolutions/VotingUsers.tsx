@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import { ResolutionVoter } from "../../types";
 import UserCard from "./UserCard";
 
-const sortByVotingPower = ({ votingPower: a }: ResolutionVoter, { votingPower: b }: ResolutionVoter) => {
+export const sortByVotingPower = ({ votingPower: a }: ResolutionVoter, { votingPower: b }: ResolutionVoter) => {
   if (Number(a) < Number(b)) {
     return 1;
   }
