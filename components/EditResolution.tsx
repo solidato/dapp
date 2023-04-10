@@ -152,7 +152,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
               size="large"
               variant="outlined"
               startIcon={<PictureAsPdfIcon />}
-              href={`/resolutions/${resolution.id}?viewMode=print`}
+              href={`/api/pdf/resolutions/${resolution.id}`}
               target="_blank"
             >
               Export to pdf
