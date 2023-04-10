@@ -76,6 +76,7 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
               }}
               fullWidth
               size="large"
+              sx={{ mt: 8, mb: 8 }}
             >
               Sign in to odoo via wallet
             </Button>
@@ -94,7 +95,7 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
         </>
       )}
       <Button variant="outlined" onClick={() => setOpenLoginForm((old) => !old)} fullWidth>
-        {openLoginForm ? "Close form" : "Log in via odoo"}
+        {openLoginForm ? "Close form" : "Log in via username and password"}
       </Button>
       {openLoginForm && (
         <Box component="form" onSubmit={onSubmit} autoComplete="off">
