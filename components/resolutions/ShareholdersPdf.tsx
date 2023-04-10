@@ -5,14 +5,14 @@ import { Bold, Br } from "./Pdf";
 import { sortByVotingPower } from "./VotingUsers";
 
 const getPOAText = (voter: ResolutionVoter, getUserName: (address: string) => string) => {
-  if (voter.usedPoa && voter.delegating) {
+  if (!voter.usedPoa) return "No";
+  if (voter.delegating) {
     return `Yes, Delegated to ${getUserName(voter.delegating.address)}`;
   }
-  if (voter.usedPoa && voter.beingDelegatedBy.length > 0) {
+  if (voter.beingDelegatedBy.length > 0) {
     const delegatedBy = voter.beingDelegatedBy.map((u) => getUserName(u.address)).join(", ");
     return `Yes, Being delegated by ${delegatedBy}`;
   }
-  return "No";
 };
 
 export default function ShareholdersPdf({
