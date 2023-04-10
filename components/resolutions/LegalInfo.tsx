@@ -30,10 +30,10 @@ export default function LegalInfo({ resolution }: { resolution: ResolutionEntity
       >
         <Paper sx={{ p: 3 }}>
           <Typography variant="body2">
-            <b>Business name:</b> neokingdom DAO OÜ
+            <b>Business name:</b> {process.env.NEXT_PUBLIC_PROJECT_KEY} DAO OÜ
           </Typography>
           <Typography variant="body2">
-            <b>Registry code:</b> 16638166
+            <b>Registry code:</b> {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "16638166" : "16374990"}
           </Typography>
           <Typography variant="body2">
             <b>Registered office</b>: Laki 11/1, 12915 Tallinn, Estonia

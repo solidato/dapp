@@ -9,6 +9,7 @@ import Countdown from "@components/Countdown";
 import User from "@components/User";
 
 import useExecute from "@hooks/useExecute";
+import useUser from "@hooks/useUser";
 
 import { ResolutionEntityEnhanced } from "../../types";
 import Section from "../Section";
@@ -20,6 +21,7 @@ export default function Header({
   resolution: ResolutionEntityEnhanced;
   executionPayload: any;
 }) {
+  const { user } = useUser();
   const { isLoading, onSubmit } = useExecute();
 
   const handleExecute = () => {
@@ -37,6 +39,13 @@ export default function Header({
       <Head>
         <title>{enhanceTitleWithPrefix(`Resolution #${resolution.id}: ${resolution.title}`, true)}</title>
       </Head>
+      {[RESOLUTION_STATES.REJECTED, RESOLUTION_STATES.ENDED].includes(resolution.state) && user?.isLoggedIn && (
+        <Section sx={{ textAlign: "center" }}>
+          <Button href={`/api/pdf/resolutions/${resolution.id}`} target="_blank" variant="outlined" size="large">
+            Generate and download resolution PDF
+          </Button>
+        </Section>
+      )}
       {resolution.state === RESOLUTION_STATES.REJECTED ||
         (shouldBeExecuted && (
           <Section>

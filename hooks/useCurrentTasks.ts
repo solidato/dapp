@@ -3,7 +3,6 @@ import useSWR from "swr";
 import { useMemo } from "react";
 
 import { fetcher } from "@lib/net";
-import { hoursToTime } from "@lib/utils";
 
 export default function useCurrentTasks() {
   const { data, isLoading } = useSWR("/api/tasks/current", fetcher);
