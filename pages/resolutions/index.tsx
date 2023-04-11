@@ -28,7 +28,6 @@ const REFRESH_EVERY_MS = 3000;
 
 export default function Resolutions() {
   const { isConnected } = useAccount();
-  const { open: openWeb3Modal } = useWeb3Modal();
   const { data, isLoading } = useSWR(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
