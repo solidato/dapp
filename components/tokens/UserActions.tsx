@@ -30,7 +30,7 @@ export default function UserActions() {
           <TokenPaper title="Offered" total={data?.balance.currentlyOffered} />
         </Row>
       )}
-      {(data?.balance.unlocked || 0) > 0 || (
+      {(data?.balance.unlocked || 0) > 0 && (
         <Row>
           <TokenPaper title="Unlocked" total={data?.balance.unlocked} />
           <WithdrawTokens />
