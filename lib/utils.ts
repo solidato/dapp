@@ -50,7 +50,7 @@ export function toPrettyRange(start: number, end?: number) {
   if (!start) return start;
   const startDate = format(new Date(start * 1000), "MMM d, HH:mm");
   if (!end) return startDate;
-  const sameDay = isSameDay(new Date(start), new Date(end));
+  const sameDay = isSameDay(new Date(start * 1000), new Date(end * 1000));
   const endDateFormat = sameDay ? "HH:mm" : "MMM d, HH:mm";
   const endDate = format(new Date(end * 1000), endDateFormat);
   return `${startDate} - ${endDate}`;
