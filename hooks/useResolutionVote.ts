@@ -1,3 +1,5 @@
+import { ResolutionManager } from "@contracts/typechain";
+
 import { useContext } from "react";
 
 import { ContractsContext } from "../contexts/ContractsContext";
@@ -14,7 +16,7 @@ export default function useResolutionVote() {
 
   return {
     onSubmit: async ({ resolutionId, votedYes }: SubmitParams) => {
-      return executeTx({
+      return executeTx<ResolutionManager["vote"], Parameters<ResolutionManager["vote"]>>({
         contractMethod: resolutionContract?.vote,
         params: [resolutionId, votedYes],
         onSuccessMessage: `Correctly voted ${votedYes ? "Yes" : "No"}`,

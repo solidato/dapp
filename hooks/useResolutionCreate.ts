@@ -1,3 +1,5 @@
+import { ResolutionManager } from "@contracts/typechain";
+
 import { useContext } from "react";
 
 import { addToIpfs } from "@lib/ipfs";
@@ -22,7 +24,7 @@ export default function useResolutionCreate() {
     onSubmit: async ({ vetoTypeId, currentResolution, executionTo = [], executionData = [] }: SubmitParams) => {
       const ipfsId = await addToIpfs(currentResolution);
       const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
-      return executeTx({
+      return executeTx<ResolutionManager["createResolution"], Parameters<ResolutionManager["createResolution"]>>({
         contractMethod: resolutionContract?.createResolution,
         params: [ipfsId, resolutionTypeId, !!vetoTypeId, executionTo, executionData],
         onSuccessMessage: "Pre draft resolution correctly created",

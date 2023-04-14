@@ -1,4 +1,4 @@
-import { useAccount } from "wagmi";
+import { Voting } from "@contracts/typechain";
 
 import { ReactElement, useContext } from "react";
 
@@ -17,7 +17,7 @@ export default function useDelegate() {
 
   return {
     onSubmit: async ({ delegatingAddress, successElement, errorElement }: SubmitParams) => {
-      return executeTx({
+      return executeTx<Voting["delegate"], Parameters<Voting["delegate"]>>({
         contractMethod: votingContract?.delegate,
         params: [delegatingAddress],
         onSuccessMessage: successElement,

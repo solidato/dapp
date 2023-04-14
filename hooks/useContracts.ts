@@ -7,6 +7,8 @@ import { useSnackbar } from "@hooks/useSnackbar";
 
 import { ContractsContextType } from "../contexts/ContractsContext";
 import {
+  InternalMarket,
+  InternalMarket__factory,
   ResolutionManager,
   ResolutionManager__factory,
   TelediskoToken,
@@ -36,6 +38,11 @@ const getVotingContract = (chainId: string, signer: Signer): Voting => {
   return Voting__factory.connect(address, signer);
 };
 
+const getInternalMarketContract = (chainId: string, signer: Signer): InternalMarket => {
+  const address = networks[chainId]["InternalMarket"];
+  return InternalMarket__factory.connect(address, signer);
+};
+
 export function useContracts() {
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -54,6 +61,7 @@ export function useContracts() {
           resolutionContract: getResolutionContract(chainId, signer),
           tokenContract: getTokenContract(chainId, signer),
           votingContract: getVotingContract(chainId, signer),
+          internalMarketContract: getInternalMarketContract(chainId, signer),
         });
       } catch (error) {
         enqueueSnackbar("Your wallet was connected to an unsupported network, please re-connect", { variant: "error" });

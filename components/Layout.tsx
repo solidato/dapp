@@ -107,19 +107,21 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                 />
               )}
               <Chip
-                label="Tokens"
-                component={Link}
-                href="/tokens"
-                variant={isActive("/tokens") ? "filled" : "outlined"}
-                clickable
-              />
-              <Chip
                 label="Resolutions"
                 component={Link}
                 href="/resolutions"
                 variant={isActive("/resolutions") ? "filled" : "outlined"}
                 clickable
               />
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Tokens and offers"
+                  component={Link}
+                  href="/tokens-offers"
+                  variant={isActive("/tokens-offers") ? "filled" : "outlined"}
+                  clickable
+                />
+              )}
               {!isLoading && typeof window !== "undefined" && user?.isLoggedIn && (
                 <Badge
                   color="success"

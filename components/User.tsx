@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 
 import React from "react";
 
-import { Avatar, Box, Skeleton, Tooltip, Typography, Zoom } from "@mui/material";
+import { Avatar, Box, Skeleton, SxProps, Tooltip, Typography, Zoom } from "@mui/material";
 import { Variant } from "@mui/material/styles/createTypography";
 
 import { getLettersFromName } from "@lib/utils";
@@ -18,6 +18,7 @@ export default function User({
   shouldMarkCurrentUser = true,
   shortAddress = false,
   isSkeleton = false,
+  sx = {},
 }: {
   address?: string;
   isInline?: boolean;
@@ -25,6 +26,7 @@ export default function User({
   shortAddress?: boolean;
   inlineVariant?: Variant;
   isSkeleton?: boolean;
+  sx?: SxProps;
 }) {
   const { address: connectedAddress } = useAccount();
   const { users, isLoading: isLoadingUsers } = useOdooUsers(address);
@@ -51,7 +53,7 @@ export default function User({
   const markCurrentUser = isSameAddress(connectedAddress as string, address as string) && shouldMarkCurrentUser;
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", ...sx }}>
       {isLoading ? (
         <Skeleton variant="circular">
           <Avatar />

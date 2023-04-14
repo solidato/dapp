@@ -9,6 +9,10 @@ import { getTokensPageData } from "@graphql/queries/get-tokens-page-data";
 
 import { isSameAddress } from "@lib/utils";
 
+export const isNonExpired = (offer: Offer) => Number(offer.expirationTimestamp) * 1000 > Date.now();
+
+export const isExpired = (offer: Offer) => Number(offer.expirationTimestamp) * 1000 <= Date.now();
+
 export const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 export const computeBalances = (daoUser: DaoUser | null, userOffers: Offer[]): ComputedBalances => {
@@ -45,10 +49,10 @@ export const computeBalances = (daoUser: DaoUser | null, userOffers: Offer[]): C
   };
 };
 
-const REFRESH_EVERY_MS = 1000 * 60 * 10;
+const REFRESH_EVERY_MS = 1000 * 5;
 
 export default function useUserBalanceAndOffers(): {
-  data: { balance: ComputedBalances; offers: Offer[] } | null;
+  data: { balance: ComputedBalances; allOffers: Offer[]; expiredOffers: Offer[]; activeOffers: Offer[] } | null;
   isLoading: boolean;
 } {
   const { address: userId } = useAccount();
@@ -64,7 +68,9 @@ export default function useUserBalanceAndOffers(): {
     return {
       data: {
         balance: computeBalances(data.daoUser, data.offers),
-        offers: data.offers,
+        allOffers: data.offers,
+        expiredOffers: data.offers.filter(isExpired),
+        activeOffers: data.offers.filter(isNonExpired),
       },
       isLoading,
     };

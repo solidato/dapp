@@ -1,3 +1,5 @@
+import { ResolutionManager } from "@contracts/typechain";
+
 import { useContext } from "react";
 
 import { ContractsContext } from "../contexts/ContractsContext";
@@ -13,7 +15,7 @@ export default function useExecute() {
 
   return {
     onSubmit: async ({ resolutionId }: SubmitParams) => {
-      return executeTx({
+      return executeTx<ResolutionManager["executeResolution"], Parameters<ResolutionManager["executeResolution"]>>({
         contractMethod: resolutionContract?.executeResolution,
         params: [resolutionId],
         onSuccessMessage: `Resolution ${resolutionId} correctly executed`,
