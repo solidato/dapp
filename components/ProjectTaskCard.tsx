@@ -3,19 +3,20 @@ import { useState } from "react";
 import { Delete, Edit, MoreVert } from "@mui/icons-material";
 import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem } from "@mui/material";
 
-import useProjectTaskStore, { ProjectTask } from "@store/projectTaskStore";
+import { ProjectTask, useProjectTaskActions } from "@store/projectTaskStore";
 
-import { useSnackbar } from "@hooks/useSnackbar";
-
+import useErrorHandler from "../hooks/useErrorHandler";
 import { STAGE_TO_ID_MAP } from "../lib/constants";
 import ProjectSubTask from "./ProjectSubTask";
 import TaskForm from "./TaskForm";
 
 export default function ProjectTaskCard({ task, hideCompleted }: { task: ProjectTask; hideCompleted?: boolean }) {
   const [editTask, setEditTask] = useState<number | null>(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const updateTask = useProjectTaskStore(enqueueSnackbar)((state) => state.updateTask);
-  const deleteTask = useProjectTaskStore(enqueueSnackbar)((state) => state.deleteTask);
+  const { handleError } = useErrorHandler();
+
+  const actions = useProjectTaskActions();
+  const updateTask = handleError(actions.updateTask);
+  const deleteTask = handleError(actions.deleteTask);
 
   const [taskMenu, setTaskMenu] = useState<null | HTMLElement>(null);
   const openTaskMenu = Boolean(taskMenu);
