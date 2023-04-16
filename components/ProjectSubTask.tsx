@@ -44,35 +44,24 @@ import { STAGE_TO_ID_MAP } from "@lib/constants";
 import { getTaskName, getTaskTotalHours, stageToColor, toPrettyDuration, toPrettyRange } from "@lib/utils";
 
 import useDialogStore from "@store/dialogStore";
-import useProjectTaskStore, { ProjectTask, Timesheet } from "@store/projectTaskStore";
+import useProjectTaskStore, { ProjectTask, Timesheet, useProjectTaskActions } from "@store/projectTaskStore";
 
-import { useSnackbar } from "@hooks/useSnackbar";
+import useErrorHandler from "@hooks/useErrorHandler";
 
 import TimeEntryForm from "./TimeEntryForm";
 
 export default function ProjectSubTask({ task }: { task: ProjectTask }) {
   const theme = useTheme();
-  const { enqueueSnackbar } = useSnackbar();
-  const [
-    trackedTask,
-    startTrackingTask,
-    stopTrackingTask,
-    markTaskAsDone,
-    createTimeEntry,
-    updateTimeEntry,
-    deleteTimeEntry,
-  ] = useProjectTaskStore(enqueueSnackbar)(
-    (state) => [
-      state.trackedTask,
-      state.startTrackingTask,
-      state.stopTrackingTask,
-      state.markTaskAsDone,
-      state.createTimeEntry,
-      state.updateTimeEntry,
-      state.deleteTimeEntry,
-    ],
-    shallow,
-  );
+  const { handleError } = useErrorHandler();
+  const trackedTask = useProjectTaskStore((state) => state.trackedTask);
+
+  const actions = useProjectTaskActions();
+  const startTrackingTask = handleError(actions.startTrackingTask);
+  const stopTrackingTask = handleError(actions.stopTrackingTask);
+  const markTaskAsDone = handleError(actions.markTaskAsDone);
+  const createTimeEntry = handleError(actions.createTimeEntry);
+  const updateTimeEntry = handleError(actions.updateTimeEntry);
+  const deleteTimeEntry = handleError(actions.deleteTimeEntry);
 
   const [expanded, setExpanded] = useState<number | false>(false);
   const [updateTimeEntryOpen, setUpdateTimeEntryOpen] = useState<number | boolean>(false);
@@ -85,7 +74,7 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
     setExpanded(isExpanded ? taskId : false);
   };
 
-  const handleStartTask = (event: React.SyntheticEvent) => {
+  const handleStartTask = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     if (trackedTask) {
@@ -258,8 +247,8 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
                       <TimeEntryForm
                         onCancel={() => setCreateTimeEntryOpen(false)}
                         onConfirm={async (payload) => {
-                          const success = await createTimeEntry(payload, task);
-                          if (success) {
+                          const { error } = await createTimeEntry(payload, task);
+                          if (!error) {
                             setCreateTimeEntryOpen(false);
                           }
                         }}
@@ -307,7 +296,7 @@ export default function ProjectSubTask({ task }: { task: ProjectTask }) {
                             timeEntry={row}
                             onCancel={() => setUpdateTimeEntryOpen(false)}
                             onConfirm={(data) => {
-                              updateTimeEntry(data, task);
+                              updateTimeEntry(data);
                               setUpdateTimeEntryOpen(false);
                             }}
                           />

@@ -1,11 +1,9 @@
 import { formatInTimeZone } from "date-fns-tz";
-import { EnqueueSnackbar } from "notistack";
+import { v4 as uuid } from "uuid";
 import { create } from "zustand";
 
 import { ODOO_DATE_FORMAT, STAGE_TO_ID_MAP } from "@lib/constants";
-import { findActiveTimeEntry, getTaskTotalHours, replaceTaskTimeEntry } from "@lib/utils";
-
-let showAlert: EnqueueSnackbar;
+import { getTaskTotalHours } from "@lib/utils";
 
 export type Project = {
   id: number;
@@ -46,192 +44,166 @@ export type Timesheet = {
   start: number;
   end?: number;
 };
+
+export type ActionResponse = {
+  data?: any;
+  error?: any;
+  alert?: { message: string; variant: any };
+};
 export interface ProjectTaskStore {
-  projects: Project[];
+  projectKey: string;
   trackedTask: ProjectTask | null;
-  fetchProjects: () => Promise<void>;
-  startTrackingTask: (task: ProjectTask) => void;
-  stopTrackingTask: (task: ProjectTask) => Promise<ProjectTask | undefined>;
-  markTaskAsDone: (task: ProjectTask) => void;
-  createTask: (task: ProjectTask) => Promise<ProjectTask>;
-  updateTask: (task: ProjectTask) => void;
-  deleteTask: (task: ProjectTask) => void;
-  createTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => Promise<boolean>;
-  updateTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => void;
-  deleteTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => void;
+  actions: {
+    setActiveTask: (trackedTask: ProjectTask | null) => void;
+    startTrackingTask: (task: ProjectTask) => Promise<ActionResponse | undefined>;
+    stopTrackingTask: (task: ProjectTask) => Promise<ActionResponse>;
+    markTaskAsDone: (task: ProjectTask) => Promise<ActionResponse | undefined>;
+    createTask: (task: ProjectTask) => Promise<ActionResponse>;
+    updateTask: (task: ProjectTask) => Promise<ActionResponse>;
+    deleteTask: (task: ProjectTask) => Promise<ActionResponse>;
+    createTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => Promise<ActionResponse>;
+    updateTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => Promise<ActionResponse>;
+    deleteTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => Promise<ActionResponse>;
+  };
 }
 
-const findActiveProjectTask = (projects: Project[]) => {
-  let activeProjectTask = null;
-  projects.find((project) => {
-    return project.tasks.find((task) => {
-      const [activeTimeEntry, activeTask] = findActiveTimeEntry(task);
-      if (activeTimeEntry) {
-        activeProjectTask = activeTask;
-        return true;
-      }
-    });
-  });
-  return activeProjectTask;
-};
+const buildError = async (response: Response) => ({ ...(await response.json()), status: response.status });
 
 const useProjectTaskStore = create<ProjectTaskStore>((set, get) => ({
-  projects: [],
+  projectKey: uuid(),
   trackedTask: null,
-  fetchProjects: async () => {
-    const response = await fetch("/api/tasks", { method: "GET" });
-    if (response.ok) {
-      const projects = await response.json();
-      const activeTask = findActiveProjectTask(projects);
-      set({ projects, trackedTask: activeTask });
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  startTrackingTask: async (task: ProjectTask) => {
-    const response = await fetch(`/api/tasks/${task.id}/start`, {
-      method: "POST",
-      body: JSON.stringify(task),
-    });
-    if (response.ok) {
-      set({ trackedTask: task });
-      await get().fetchProjects();
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  stopTrackingTask: async (task: ProjectTask) => {
-    const response = await fetch(`/api/tasks/${task.id}/stop`, {
-      method: "POST",
-      body: JSON.stringify(task),
-    });
-    if (response.ok) {
-      const updatedTask = await response.json();
-      set({ trackedTask: null });
-      await get().fetchProjects();
-      return updatedTask;
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  markTaskAsDone: async (task: ProjectTask) => {
-    const stoppedTask = await get().stopTrackingTask(task);
-    if (stoppedTask) {
-      const totalHours = getTaskTotalHours(stoppedTask);
+  actions: {
+    setActiveTask: (trackedTask: ProjectTask | null) => set({ trackedTask }),
+    startTrackingTask: async (task: ProjectTask) => {
+      const response = await fetch(`/api/tasks/${task.id}/start`, {
+        method: "POST",
+        body: JSON.stringify(task),
+      });
+      if (response.ok) {
+        set({ projectKey: uuid(), trackedTask: task });
+      } else {
+        const error = await buildError(response);
+        return { error };
+      }
+    },
+    stopTrackingTask: async (task: ProjectTask) => {
+      const response = await fetch(`/api/tasks/${task.id}/stop`, {
+        method: "POST",
+        body: JSON.stringify(task),
+      });
+      if (response.ok) {
+        const updatedTask = await response.json();
+        set({ projectKey: uuid(), trackedTask: null });
+        return { data: updatedTask };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
+    markTaskAsDone: async (task: ProjectTask) => {
+      const { data: stoppedTask } = await get().stopTrackingTask(task);
+      if (stoppedTask) {
+        const totalHours = getTaskTotalHours(stoppedTask);
+        const response = await fetch(`/api/tasks/${task.id}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            stage_id: STAGE_TO_ID_MAP["done"],
+            effective_hours: totalHours,
+          }),
+        });
+        if (response.ok) {
+          set({ projectKey: uuid() });
+        } else {
+          return { error: await buildError(response) };
+        }
+      }
+    },
+    createTask: async (task: ProjectTask) => {
+      const response = await fetch(`/api/tasks`, {
+        method: "POST",
+        body: JSON.stringify(task),
+      });
+      if (response.ok) {
+        const newtask = await response.json();
+        set({ projectKey: uuid() });
+        return { data: newtask, alert: { message: `Task ${newtask.name} successfully created`, variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
+    updateTask: async (task: ProjectTask) => {
       const response = await fetch(`/api/tasks/${task.id}`, {
         method: "PUT",
+        body: JSON.stringify(task),
+      });
+      if (response.ok) {
+        set({ projectKey: uuid() });
+        return { alert: { message: `Task ${task.name} successfully updated`, variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
+    deleteTask: async (task: ProjectTask) => {
+      const response = await fetch(`/api/tasks/${task.id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        set({ projectKey: uuid() });
+        return { alert: { message: `Task ${task.name} successfully deleted`, variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
+    createTimeEntry: async (timeEntry: Timesheet, task: ProjectTask) => {
+      const response = await fetch(`/api/time_entries`, {
+        method: "POST",
         body: JSON.stringify({
-          stage_id: STAGE_TO_ID_MAP["done"],
-          effective_hours: totalHours,
+          task_id: task.id,
+          start: formatInTimeZone(new Date(timeEntry.start), "UTC", ODOO_DATE_FORMAT),
+          end: timeEntry.end && formatInTimeZone(new Date(timeEntry.end), "UTC", ODOO_DATE_FORMAT),
+          name: timeEntry.name,
         }),
       });
-      if (!response.ok) {
-        const error = await response.json();
-        showAlert(error.message, { variant: "error" });
+      if (response.ok) {
+        set({ projectKey: uuid() });
+        return { alert: { message: "Time Entry successfully created!", variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
       }
-      await get().fetchProjects();
-    }
-  },
-  createTask: async (task: ProjectTask) => {
-    const response = await fetch(`/api/tasks`, {
-      method: "POST",
-      body: JSON.stringify(task),
-    });
-    if (response.ok) {
-      const newtask = await response.json();
-      await get().fetchProjects();
-      showAlert(`Task ${newtask.name} successfully created`, { variant: "success" });
-      return newtask;
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  updateTask: async (task: ProjectTask) => {
-    const response = await fetch(`/api/tasks/${task.id}`, {
-      method: "PUT",
-      body: JSON.stringify(task),
-    });
-    if (response.ok) {
-      await get().fetchProjects();
-      showAlert(`Task ${task.name} successfully updated`, { variant: "success" });
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  deleteTask: async (task: ProjectTask) => {
-    const response = await fetch(`/api/tasks/${task.id}`, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      get().fetchProjects();
-      showAlert(`Task ${task.name} successfully deleted`, { variant: "success" });
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  createTimeEntry: async (timeEntry: Timesheet, task: ProjectTask): Promise<boolean> => {
-    const response = await fetch(`/api/time_entries`, {
-      method: "POST",
-      body: JSON.stringify({
-        task_id: task.id,
-        start: formatInTimeZone(new Date(timeEntry.start), "UTC", ODOO_DATE_FORMAT),
-        end: timeEntry.end && formatInTimeZone(new Date(timeEntry.end), "UTC", ODOO_DATE_FORMAT),
-        name: timeEntry.name,
-      }),
-    });
-    if (response.ok) {
-      await get().fetchProjects();
-      showAlert("Time Entry successfully created!", { variant: "success" });
-      return true;
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-      return false;
-    }
-  },
-  updateTimeEntry: async (timeEntry: Timesheet, task: ProjectTask) => {
-    const response = await fetch(`/api/time_entries/${timeEntry.id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        start: formatInTimeZone(new Date(timeEntry.start), "UTC", ODOO_DATE_FORMAT),
-        end: timeEntry.end && formatInTimeZone(new Date(timeEntry.end), "UTC", ODOO_DATE_FORMAT),
-        name: timeEntry.name,
-      }),
-    });
-    if (response.ok) {
-      await get().fetchProjects();
-      showAlert("Time Entry successfully updated!", { variant: "success" });
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
-  },
-  deleteTimeEntry: async (timeEntry: Timesheet, task: ProjectTask) => {
-    let newTask = replaceTaskTimeEntry(task, timeEntry, { delete: true });
-    if (!newTask.timesheet_ids.length) {
-      fetch(`/api/tasks/${task.id}`, {
+    },
+    updateTimeEntry: async (timeEntry: Timesheet) => {
+      const response = await fetch(`/api/time_entries/${timeEntry.id}`, {
         method: "PUT",
-        body: JSON.stringify({ stage_id: STAGE_TO_ID_MAP["created"] }),
+        body: JSON.stringify({
+          start: formatInTimeZone(new Date(timeEntry.start), "UTC", ODOO_DATE_FORMAT),
+          end: timeEntry.end && formatInTimeZone(new Date(timeEntry.end), "UTC", ODOO_DATE_FORMAT),
+          name: timeEntry.name,
+        }),
       });
-    }
-    const response = await fetch(`/api/time_entries/${timeEntry.id}`, { method: "DELETE" });
-    if (response.ok) {
-      await get().fetchProjects();
-      showAlert("Time Entry successfully deleted!", { variant: "success" });
-    } else {
-      const error = await response.json();
-      showAlert(error.message, { variant: "error" });
-    }
+      if (response.ok) {
+        set({ projectKey: uuid() });
+        return { alert: { message: "Time Entry successfully updated!", variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
+    deleteTimeEntry: async (timeEntry: Timesheet, task: ProjectTask) => {
+      if (task.timesheet_ids.length === 1) {
+        fetch(`/api/tasks/${task.id}`, {
+          method: "PUT",
+          body: JSON.stringify({ stage_id: STAGE_TO_ID_MAP["created"] }),
+        });
+      }
+      const response = await fetch(`/api/time_entries/${timeEntry.id}`, { method: "DELETE" });
+      if (response.ok) {
+        set({ projectKey: uuid() });
+        return { alert: { message: "Time Entry successfully deleted!", variant: "success" } };
+      } else {
+        return { error: await buildError(response) };
+      }
+    },
   },
 }));
 
-export default function useCustomProjectTaskStore(enqueueSnackbar: EnqueueSnackbar) {
-  showAlert = enqueueSnackbar;
-  return useProjectTaskStore;
-}
+export default useProjectTaskStore;
+
+export const useProjectTaskActions = () => useProjectTaskStore((state) => state.actions);

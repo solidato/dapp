@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 
 import { Grid, Typography } from "@mui/material";
 
-import useProjectTaskStore from "@store/projectTaskStore";
+import { useProjectTaskActions } from "@store/projectTaskStore";
 
 import TaskForm from "@components/TaskForm";
 
-import { useSnackbar } from "@hooks/useSnackbar";
+import useErrorHandler from "../../hooks/useErrorHandler";
 
 NewTask.title = "New task";
 NewTask.requireLogin = true;
@@ -16,8 +16,9 @@ export default function NewTask() {
   const {
     query: { projectId },
   } = router;
-  const { enqueueSnackbar } = useSnackbar();
-  const createTask = useProjectTaskStore(enqueueSnackbar)((state) => state.createTask);
+  const { handleError } = useErrorHandler();
+  const actions = useProjectTaskActions();
+  const createTask = handleError(actions.createTask);
 
   return (
     <>
@@ -29,8 +30,8 @@ export default function NewTask() {
           <TaskForm
             projectId={Number(projectId)}
             onConfirm={async (data) => {
-              const task = await createTask(data);
-              if (task) router.push("/tasks");
+              const { error } = await createTask(data);
+              if (!error) router.push("/tasks");
             }}
           />
         </Grid>

@@ -1,7 +1,7 @@
 import { format, isSameDay } from "date-fns";
 import produce from "immer";
 
-import { ProjectTask, Timesheet } from "@store/projectTaskStore";
+import { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 
 import { META } from "../pages/_document";
 import { STAGE_NAME, STAGE_TO_COLOR_MAP } from "./constants";
@@ -37,13 +37,7 @@ export function getTaskTotalHours(task: ProjectTask) {
 }
 
 export function toDatetime(date: number) {
-  // format a date which is in days since year 0
-  // and return a date which actually make sense
-  const secondsInYear = 86400;
-  const daysFromJesusChristBDay = 719163;
-  const daysFromUnixTime = date - daysFromJesusChristBDay;
-  const normalizedTimestamp = daysFromUnixTime * secondsInYear * 1000;
-  return new Date(normalizedTimestamp);
+  return new Date(Math.trunc(date) * 1000);
 }
 
 export function toPrettyDuration(time: number) {
@@ -56,7 +50,7 @@ export function toPrettyRange(start: number, end?: number) {
   if (!start) return start;
   const startDate = format(new Date(start * 1000), "MMM d, HH:mm");
   if (!end) return startDate;
-  const sameDay = isSameDay(new Date(start), new Date(end));
+  const sameDay = isSameDay(new Date(start * 1000), new Date(end * 1000));
   const endDateFormat = sameDay ? "HH:mm" : "MMM d, HH:mm";
   const endDate = format(new Date(end * 1000), endDateFormat);
   return `${startDate} - ${endDate}`;
@@ -82,6 +76,20 @@ export const findActiveTimeEntry = (task: ProjectTask): [Timesheet | null, Proje
   });
   if (childTimeEntry && childTask) return [childTimeEntry, childTask];
   return [null, null];
+};
+
+export const findActiveProjectTask = (projects: Project[]): ProjectTask | null => {
+  let activeProjectTask = null;
+  projects.find((project) => {
+    return project.tasks.find((task: ProjectTask) => {
+      const [activeTimeEntry, activeTask] = findActiveTimeEntry(task);
+      if (activeTimeEntry) {
+        activeProjectTask = activeTask;
+        return true;
+      }
+    });
+  });
+  return activeProjectTask;
 };
 
 export const replaceTaskTimeEntry = (
