@@ -17,7 +17,7 @@ const DEFAULT_ACL = {
 
 export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: boolean; isLoading?: boolean } {
   const { address } = useAccount();
-  const { data, error, isLoading } = useSWR(address ? getDaoManagerQuery : null, fetcher);
+  const { data, error, isLoading } = useSWR<any>(address ? getDaoManagerQuery : null, fetcher);
 
   if (!data || error || !address || isLoading) {
     return { acl: DEFAULT_ACL, error, isLoading };
