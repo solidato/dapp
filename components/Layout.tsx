@@ -83,7 +83,7 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
               sx={{
                 overflow: "auto",
                 "&::-webkit-scrollbar": { display: "none" },
-                "-ms-overflow-style": "none",
+                msOverflowStyle: "none",
                 scrollbarWidth: "none",
               }}
             >
@@ -149,7 +149,7 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
           </Toolbar>
         </AppBar>
       </Box>
-      <Box component="main" sx={{ p: { md: fullWidth ? 0 : 3 }, pt: { xs: 18, md: 18 } }}>
+      <Box component="main" sx={{ p: { md: fullWidth ? 0 : 3 }, pt: { xs: fullWidth ? 15 : 18, md: 18 } }}>
         {fullWidth ? children : <Container maxWidth="lg">{children}</Container>}
       </Box>
     </>

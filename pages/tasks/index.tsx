@@ -1,5 +1,4 @@
 import useSWR from "swr";
-import { shallow } from "zustand/shallow";
 
 import { useEffect } from "react";
 
@@ -10,11 +9,12 @@ import { findActiveProjectTask } from "@lib/utils";
 
 import useProjectTaskStore, { Project, useProjectTaskActions } from "@store/projectTaskStore";
 
-import ProjectCard from "@components/ProjectCard";
-import TrackingDialog from "@components/TrackingDialog";
+import ProjectCard from "@components/tasks/ProjectCard";
+import TaskDialog from "@components/tasks/TaskDialog";
 
 Tasks.title = "Tasks List";
 Tasks.requireLogin = true;
+Tasks.fullWidth = true;
 
 export default function Tasks() {
   const { data: projects, mutate, isLoading } = useSWR<Project[]>("/api/tasks", fetcher);
@@ -34,7 +34,7 @@ export default function Tasks() {
 
   return (
     <>
-      <Grid container spacing={2} justifyContent="center">
+      <Grid sx={{ pl: 0, pr: 0 }} container spacing={2} justifyContent="center">
         {isLoading ? (
           <Grid item xs={12} md={9}>
             <Skeleton sx={{ minHeight: "500px", transform: "none" }} />
@@ -49,7 +49,7 @@ export default function Tasks() {
             ))
         )}
       </Grid>
-      <TrackingDialog />
+      <TaskDialog />
     </>
   );
 }
