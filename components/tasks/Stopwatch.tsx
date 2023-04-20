@@ -1,7 +1,7 @@
 import { ReactEventHandler, SyntheticEvent, useEffect, useState } from "react";
 
 import { AccessAlarm, CheckCircleRounded, PlayArrow, Stop } from "@mui/icons-material";
-import { Box, Chip, keyframes, useTheme } from "@mui/material";
+import { Box, Chip, IconButton, keyframes, useTheme } from "@mui/material";
 
 import { STAGE_TO_ID_MAP } from "@lib/constants";
 import { getTaskName, toPrettyDuration } from "@lib/utils";
@@ -95,34 +95,61 @@ export default function StopwatchSlim({
 
   const renderTaskAction = () => {
     if (isDone) {
-      return <CheckCircleRounded color="success" />;
+      return (
+        <IconButton sx={{ padding: 0 }}>
+          <CheckCircleRounded color="success" sx={{ fontSize: 30 }} />
+        </IconButton>
+      );
     }
     if (isPlaying) {
-      return <Stop color="primary" onClick={handleStopTask} />;
+      return (
+        <IconButton sx={{ padding: 0 }} onClick={handleStopTask}>
+          <Stop color="primary" sx={{ fontSize: 30 }} />
+        </IconButton>
+      );
     }
-    return <PlayArrow onClick={handleStartTask} />;
+    return (
+      <IconButton sx={{ padding: 0 }} onClick={handleStartTask}>
+        <PlayArrow sx={{ fontSize: 30 }} />
+      </IconButton>
+    );
   };
 
   return (
-    <Chip
-      className={className}
-      icon={renderTaskAction()}
-      color={isDone ? "success" : undefined}
-      variant="outlined"
-      onClick={(e: SyntheticEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onClick && onClick(e);
-      }}
-      sx={{
-        "& .MuiChip-deleteIcon": {
-          color: theme.palette.error.main,
-          animation: `${blink} 1.5s linear infinite`,
-        },
-      }}
-      onDelete={isPlaying ? () => null : undefined}
-      deleteIcon={isPlaying ? <AccessAlarm /> : undefined}
-      label={isPlaying ? stopwatchCounter() : toPrettyDuration(task.effective_hours)}
-    />
+    <Box sx={{ position: "relative" }}>
+      <Box
+        sx={{
+          position: "absolute",
+          left: "-2px",
+          top: "4px",
+          zIndex: 1,
+          background: theme.palette.background.paper,
+          border: `1px solid ${isDone ? theme.palette.success.main : theme.palette.grey[300]}`,
+          borderRadius: "50%",
+        }}
+      >
+        {renderTaskAction()}
+      </Box>
+      <Chip
+        className={className}
+        icon={<PlayArrow />}
+        color={isDone ? "success" : undefined}
+        variant="outlined"
+        onClick={(e: SyntheticEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClick && onClick(e);
+        }}
+        sx={{
+          "& .MuiChip-deleteIcon": {
+            color: theme.palette.error.main,
+            animation: `${blink} 1.5s linear infinite`,
+          },
+        }}
+        onDelete={isPlaying ? () => null : undefined}
+        deleteIcon={isPlaying ? <AccessAlarm /> : undefined}
+        label={isPlaying ? stopwatchCounter() : toPrettyDuration(task.effective_hours)}
+      />
+    </Box>
   );
 }
