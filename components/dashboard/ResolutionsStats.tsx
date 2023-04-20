@@ -28,6 +28,17 @@ export default function ResolutionsStats({
           <Typography variant="h3">{isLoading ? <Skeleton /> : totalResolutions}</Typography>
         </Box>
         <Box sx={{ ml: "auto", p: { xs: 1, sm: 4, textAlign: "left" } }}>
+          {stats.inProgressTot > 0 && (
+            <Typography
+              variant="body2"
+              sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
+            >
+              <Box component="span" sx={{ mr: 2, width: 130 }}>
+                In progress ({stats.inProgressTot})
+              </Box>
+              <CircularProgressWithLabel isLoading={isLoading} value={stats.inProgress} color="primary" />
+            </Typography>
+          )}
           <Typography
             variant="body2"
             sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
