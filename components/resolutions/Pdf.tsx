@@ -7,6 +7,7 @@ import React from "react";
 import Html from "react-pdf-html";
 
 import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
+import { PDF_SIGNER } from "@lib/utils";
 
 import ShareholdersPdf from "./ShareholdersPdf";
 import VotingPdf from "./VotingPdf";
@@ -109,14 +110,14 @@ const ResolutionPdf = ({
           {resolution.state === RESOLUTION_STATES.ENDED ? (
             <Text>
               MINUTES AND RESOLUTION OF THE SHAREHOLDERS <Br />
-              (without convening a meeting of shareholders)
+              (without calling a meeting of shareholders)
             </Text>
           ) : (
             <>
               <View style={{ width: "100%" }}>
                 <Text>DRAFT OF THE RESOLUTION OF THE SHAREHOLDERS</Text>
               </View>
-              <Text>(without convening a meeting of shareholders)</Text>
+              <Text>(without calling a meeting of shareholders)</Text>
             </>
           )}
         </Text>
@@ -166,7 +167,9 @@ const ResolutionPdf = ({
           Created on {resolution.createdAt} by {getUserName(resolution.createBy)}{" "}
           <Text style={{ color: "#999", fontSize: "10px" }}>{resolution.createBy}</Text>
         </Text>
-        <Text style={styles.subTitle}>Resolution type: {resolution.resolutionType.name}</Text>
+        <Text style={styles.subTitle}>
+          Resolution type: {resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}
+        </Text>
         <Text style={styles.title}>Content of the resolution:</Text>
         <View style={styles.content}>
           <Html style={styles.content}>{contentHtml}</Html>
@@ -213,7 +216,7 @@ const ResolutionPdf = ({
         <View fixed style={styles.signature}>
           <Text style={styles.note}>/signed digitally/</Text>
           <Text style={styles.note}>--------------------------------------</Text>
-          <Text style={styles.note}>Benjamin Gregor Uphues</Text>
+          <Text style={styles.note}>{PDF_SIGNER}</Text>
           <Text style={styles.note}>Member of management board</Text>
         </View>
       </Page>
