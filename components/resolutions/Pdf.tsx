@@ -109,14 +109,14 @@ const ResolutionPdf = ({
           {resolution.state === RESOLUTION_STATES.ENDED ? (
             <Text>
               MINUTES AND RESOLUTION OF THE SHAREHOLDERS <Br />
-              (without convening a meeting of shareholders)
+              (without calling a meeting of shareholders)
             </Text>
           ) : (
             <>
               <View style={{ width: "100%" }}>
                 <Text>DRAFT OF THE RESOLUTION OF THE SHAREHOLDERS</Text>
               </View>
-              <Text>(without convening a meeting of shareholders)</Text>
+              <Text>(without calling a meeting of shareholders)</Text>
             </>
           )}
         </Text>
@@ -175,15 +175,9 @@ const ResolutionPdf = ({
           <View>
             <Text>Voting conditions:</Text>
             <Br />
-            {resolution.isNegative ? (
-              <Text>
-                <Bold>{resolution.resolutionType.quorum}% of negative votes</Bold> are needed to approve the motion
-              </Text>
-            ) : (
-              <Text>
-                <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
-              </Text>
-            )}
+            <Text>
+              <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
+            </Text>
           </View>
         )}
         {resolution.state === RESOLUTION_STATES.ENDED && (
@@ -201,10 +195,7 @@ const ResolutionPdf = ({
                 </Text>
               )}
               <Br />
-              <Small>
-                No positions of shareholders were submitted, in a format which can be reproduced in writing, in the
-                meaning of the law, or otherwise requested to be added to the resolution.
-              </Small>
+              <Small>Shareholders did not submit dissenting options</Small>
             </View>
             <VotingPdf resolution={resolution} />
             <ShareholdersPdf resolution={resolution} getUserName={getUserName} />
