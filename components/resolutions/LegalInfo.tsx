@@ -13,9 +13,9 @@ export default function LegalInfo({ resolution }: { resolution: ResolutionEntity
         <>
           <Typography variant="h6">
             {resolution.state !== RESOLUTION_STATES.ENDED ? (
-              <span>DRAFT RESOLUTION OF THE SHAREHOLDERS (without convening a meeting of shareholders)</span>
+              <span>DRAFT RESOLUTION OF THE SHAREHOLDERS (without calling a meeting of shareholders)</span>
             ) : (
-              <span>MINUTES AND RESOLUTION OF THE SHAREHOLDERS (without convening a meeting of shareholders)</span>
+              <span>MINUTES AND RESOLUTION OF THE SHAREHOLDERS (without calling a meeting of shareholders)</span>
             )}
           </Typography>
           <Divider sx={{ pt: 2, mb: 2 }} />
@@ -42,7 +42,7 @@ export default function LegalInfo({ resolution }: { resolution: ResolutionEntity
         {[RESOLUTION_STATES.REJECTED, RESOLUTION_STATES.PRE_DRAFT].includes(resolution.state) && (
           <Typography variant="h6">
             <span>
-              DRAFT RESOLUTION OF THE SHAREHOLDERS <br /> (without convening a meeting of shareholders)
+              DRAFT RESOLUTION OF THE SHAREHOLDERS <br /> (without calling a meeting of shareholders)
             </span>
           </Typography>
         )}
