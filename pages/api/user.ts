@@ -4,6 +4,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { sessionOptions } from "@lib/session";
 import userFactory, { User } from "@lib/userFactory";
 
+export const config = {
+  runtime: "edge",
+};
+
 async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
   if (!req.session.user) {
     return res.json(userFactory());

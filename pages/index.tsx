@@ -14,7 +14,6 @@ import { RESOLUTION_STATES, getEnhancedResolutions } from "@lib/resolutions/comm
 import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
-import Resolutions from "@components/dashboard/ResolutionsStats";
 import Tasks from "@components/dashboard/Tasks";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
