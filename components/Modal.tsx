@@ -68,7 +68,7 @@ export default function Modal({
             <Close />
           </IconButton>
           {title && (
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+            <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
               {title}
             </Typography>
           )}
