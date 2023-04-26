@@ -166,7 +166,9 @@ const ResolutionPdf = ({
           Created on {resolution.createdAt} by {getUserName(resolution.createBy)}{" "}
           <Text style={{ color: "#999", fontSize: "10px" }}>{resolution.createBy}</Text>
         </Text>
-        <Text style={styles.subTitle}>Resolution type: {resolution.resolutionType.name}</Text>
+        <Text style={styles.subTitle}>
+          Resolution type: {`${resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}`}
+        </Text>
         <Text style={styles.title}>Content of the resolution:</Text>
         <View style={styles.content}>
           <Html style={styles.content}>{contentHtml}</Html>
