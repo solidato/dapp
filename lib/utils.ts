@@ -147,5 +147,5 @@ export const getDateFromOdooTimestamp = (timestamp: number) => {
 
 export const TOKEN_SYMBOL = {
   teledisko: "TT",
-  neokingdom: "NKDT",
+  neokingdom: "NEOK",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
