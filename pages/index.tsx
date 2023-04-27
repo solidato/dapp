@@ -14,7 +14,6 @@ import { RESOLUTION_STATES, getEnhancedResolutions } from "@lib/resolutions/comm
 import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
-import Resolutions from "@components/dashboard/ResolutionsStats";
 import Tasks from "@components/dashboard/Tasks";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
@@ -58,6 +57,9 @@ export default function Home() {
 
     const allResolutions = getEnhancedResolutions(data?.resolutions, +currentTimestamp, acl);
 
+    const inProgress = allResolutions.filter(
+      (res) => ![RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(res.state),
+    );
     const resolutionsToVote = allResolutions.filter((res) => res.state === RESOLUTION_STATES.VOTING);
     const withQuorum = allResolutions.filter((res) => res.state === RESOLUTION_STATES.ENDED && res.hasQuorum);
     const withoutQuorum = allResolutions.filter((res) => res.state === RESOLUTION_STATES.ENDED && !res.hasQuorum);
@@ -75,6 +77,8 @@ export default function Home() {
       withQuorumTot: withQuorum.length,
       withoutQuorumTot: withoutQuorum.length,
       rejectedTot: rejected.length,
+      inProgress: (100 * inProgress.length) / allResolutions.length,
+      inProgressTot: inProgress.length,
       typesTotals,
     };
 

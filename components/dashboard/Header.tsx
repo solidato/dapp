@@ -44,11 +44,11 @@ export default function Header() {
           resolution
         </Alert>
       </Modal>
-      <Box sx={{ mr: 2, width: { xs: "100%", sm: "auto" } }}>
+      <Box sx={{ mr: 2, width: { xs: "100%", sm: "auto" }, mt: { xs: 4, md: 0 } }}>
         <Typography variant="h3" sx={{ pb: 2 }}>
           {welcomeMessage}
         </Typography>
-        <User address={address as string} shouldMarkCurrentUser={false} shortAddress />
+        <User address={address as string} shouldMarkCurrentUser={false} />
         <Stack sx={{ pt: 2 }} spacing={1} direction="row">
           {getShareholderStatus(address as string).map((status) => (
             <Chip key={status} size="small" label={status} />

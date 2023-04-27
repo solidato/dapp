@@ -24,7 +24,9 @@ export default function ShareholdersPdf({
 }) {
   return (
     <>
-      <Text style={{ fontSize: "18px", marginBottom: "4px", marginTop: "8px" }}>Shareholders:</Text>
+      <Text style={{ fontSize: "18px", marginBottom: "4px", marginTop: "8px" }}>
+        List of shareholders and their positions:
+      </Text>
       {resolution.voters.sort(sortByVotingPower).map((voter) => {
         const percOfAll = (
           (100 * voter.votingPowerInt) /

@@ -19,7 +19,7 @@ export default function TasksList({
   return (
     <>
       {isLoading
-        ? [...Array(3)].map((index) => (
+        ? [...new Array(3).keys()].map((index) => (
             <Paper key={index} sx={{ p: 2, mb: 1, display: "flex", alignItems: "center" }}>
               <Box sx={{ mr: 2, width: "80%" }}>
                 {showUser && <User isSkeleton />}

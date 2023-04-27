@@ -168,7 +168,7 @@ const ResolutionPdf = ({
           <Text style={{ color: "#999", fontSize: "10px" }}>{resolution.createBy}</Text>
         </Text>
         <Text style={styles.subTitle}>
-          Resolution type: {resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}
+          Resolution type: {`${resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}`}
         </Text>
         <Text style={styles.title}>Content of the resolution:</Text>
         <View style={styles.content}>
@@ -178,15 +178,9 @@ const ResolutionPdf = ({
           <View>
             <Text>Voting conditions:</Text>
             <Br />
-            {resolution.isNegative ? (
-              <Text>
-                <Bold>{resolution.resolutionType.quorum}% of negative votes</Bold> are needed to approve the motion
-              </Text>
-            ) : (
-              <Text>
-                <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
-              </Text>
-            )}
+            <Text>
+              <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
+            </Text>
           </View>
         )}
         {resolution.state === RESOLUTION_STATES.ENDED && (
@@ -204,10 +198,7 @@ const ResolutionPdf = ({
                 </Text>
               )}
               <Br />
-              <Small>
-                No positions of shareholders were submitted, in a format which can be reproduced in writing, in the
-                meaning of the law, or otherwise requested to be added to the resolution.
-              </Small>
+              <Small>Shareholders did not submit dissenting options</Small>
             </View>
             <VotingPdf resolution={resolution} />
             <ShareholdersPdf resolution={resolution} getUserName={getUserName} />
