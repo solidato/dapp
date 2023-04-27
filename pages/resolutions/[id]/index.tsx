@@ -121,15 +121,9 @@ export default function ResolutionView() {
         <Section inverse>
           <>
             <Typography variant="h5">Voting conditions:</Typography>
-            {resolution.isNegative ? (
-              <span>
-                <b>{resolution.resolutionType.quorum}% of negative votes</b> are needed to approve the motion
-              </span>
-            ) : (
-              <span>
-                <b>{resolution.resolutionType.quorum}% of votes</b> are needed to approve the motion
-              </span>
-            )}
+            <span>
+              <b>{resolution.resolutionType.quorum}% of votes</b> are needed to approve the motion
+            </span>
           </>
         </Section>
       )}
@@ -141,7 +135,7 @@ export default function ResolutionView() {
           <Section>
             <>
               <Typography variant="h5" sx={{ mb: 2 }}>
-                Shareholders:
+                List of shareholders and their positions:
               </Typography>
               <VotingUsers voters={resolution.voters} />
             </>

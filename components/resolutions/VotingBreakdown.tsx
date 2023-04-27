@@ -19,16 +19,13 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Alert severity={resolution.hasQuorum ? "success" : "error"} sx={{ mt: 3, mb: 3 }}>
           {resolution.hasQuorum ? (
             <span>
-              THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}. No
-              positions of shareholders were submitted, in a format which can be reproduced in writing, in the meaning
-              of the law, or otherwise requested to be added to the resolution.
+              THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}.
+              Shareholders did not submit dissenting options
             </span>
           ) : (
             <span>
               THE RESOLUTION OF SHAREHOLDERS <b>HAS NOT BEEN</b> ADOPTED. Voting ended on{" "}
-              {resolution.resolutionTypeInfo.votingEndsAt}. No positions of shareholders were submitted, in a format
-              which can be reproduced in writing, in the meaning of the law, or otherwise requested to be added to the
-              resolution.
+              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit dissenting options
             </span>
           )}
         </Alert>
@@ -123,7 +120,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           </Typography>
         </Box>
         <Box>
-          <Typography variant="body1">{voting.isNegative ? "Negative" : ""} Votes needed to approve</Typography>
+          <Typography variant="body1">Votes needed to approve</Typography>
           <Typography variant="caption">
             {Math.round((voting.maxVotingPower * Number(voting.quorum)) / 100).toLocaleString()} /{voting.quorum}%
           </Typography>

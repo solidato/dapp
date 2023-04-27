@@ -12,7 +12,7 @@ const REFRESH_INTERVAL_MS = 10000;
 
 export default function useDelegationStatus() {
   const { address } = useAccount();
-  const { data, error, isLoading } = useSWR(address ? getDelegationUsers : null, fetcher, {
+  const { data, error, isLoading } = useSWR<any>(address ? getDelegationUsers : null, fetcher, {
     refreshInterval: REFRESH_INTERVAL_MS,
   });
 

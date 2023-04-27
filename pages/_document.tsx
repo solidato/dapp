@@ -42,24 +42,24 @@ body {
 [data-mui-color-scheme="dark"] .editor-toolbar,
 [data-mui-color-scheme="dark"] .editor-preview-full,
 [data-mui-color-scheme="dark"] .CodeMirror {
-  background-color: #232323;
+  background-color: #232323 !important;
 }
 
 [data-mui-color-scheme="dark"] .editor-toolbar button:hover,
 [data-mui-color-scheme="dark"] .editor-toolbar button.active {
-  background-color: #000000;
+  background-color: #000000 !important;
 }
 
 [data-mui-color-scheme="dark"] .editor-toolbar .fa:before {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 [data-mui-color-scheme="dark"] .CodeMirror {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 [data-mui-color-scheme="dark"] .CodeMirror .CodeMirror-cursor {
-  border-color: #FFFFFF;
+  border-color: #FFFFFF !important;
 }
 `,
             }}

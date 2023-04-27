@@ -105,11 +105,18 @@ export default function Tasks() {
       <TabPanel value={value} index={0}>
         <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
           <Box sx={{ mr: 2, width: hasPendingTasks ? "calc(100% - 150px)" : "100%" }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              {hasPendingTasks
-                ? "This list is in real time and it shows your unapproved tasks so far"
-                : "All your tasks are approved"}
-            </Typography>
+            {(isLoadingMyTasks || !dataMyTasks) && (
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                <Skeleton />
+              </Typography>
+            )}
+            {!isLoadingMyTasks && !!dataMyTasks && (
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                {hasPendingTasks
+                  ? "This list is in real time and it shows your unapproved tasks so far"
+                  : "All your tasks are approved"}
+              </Typography>
+            )}
           </Box>
           {hasPendingTasks && (
             <Paper sx={{ ml: "auto", textAlign: "center", p: 2, width: 130 }} variant="outlined">

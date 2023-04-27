@@ -9,7 +9,7 @@ import { STAGE_TO_ID_MAP } from "@lib/constants";
 
 import { Project } from "@store/projectTaskStore";
 
-import ProjectTaskCard from "./ProjectTaskCard";
+import TaskCard from "./TaskCard";
 
 export default function ProjectCard({ project }: { project: Project }) {
   const [hideCompleted, setHideCompleted] = useState(true);
@@ -59,9 +59,9 @@ export default function ProjectCard({ project }: { project: Project }) {
         </Button>
       </Box>
       <CardContent sx={{ pt: 0, pb: 0 }}>
-        {!hideCompleted && completedTasks.map((task) => <ProjectTaskCard key={task.id} task={task} />)}
+        {!hideCompleted && completedTasks.map((task) => <TaskCard key={task.id} task={task} />)}
         {tasks.map((task) => (
-          <ProjectTaskCard hideCompleted={hideCompleted} key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} />
         ))}
       </CardContent>
     </Card>
