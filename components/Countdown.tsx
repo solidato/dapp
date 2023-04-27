@@ -20,7 +20,6 @@ export default function Countdown({
   disableCountdown = false,
 }: Props) {
   const [display, setDisplay] = useState<string | null>(null);
-  console.log("display: ", display);
   const [afterPrefix, setAfterPrefix] = useState<string>("");
 
   useEffect(() => {
