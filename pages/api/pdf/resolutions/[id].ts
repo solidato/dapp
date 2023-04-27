@@ -58,7 +58,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="#${resolutionData.id}-${kebabCase(resolutionData.title)}.pdf"`,
+      `inline; filename="#${resolutionData.id}-${kebabCase(resolutionData.title)}.pdf"`,
     );
     res.setHeader("Content-Type", "application/pdf");
 
