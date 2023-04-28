@@ -12,18 +12,27 @@ import useProjectTaskStore, { Project, useProjectTaskActions } from "@store/proj
 import ProjectCard from "@components/tasks/ProjectCard";
 import TaskDialog from "@components/tasks/TaskDialog";
 
+import useUser from "@hooks/useUser";
+
 Tasks.title = "Tasks List";
 Tasks.requireLogin = true;
 Tasks.fullWidth = true;
 
 export default function Tasks() {
-  const { data: projects, mutate, isLoading } = useSWR<Project[]>("/api/tasks", fetcher);
+  const { mutateUser } = useUser();
+  const { data: projects, error, mutate, isLoading } = useSWR<Project[]>("/api/tasks", fetcher);
   const projectKey = useProjectTaskStore((state) => state.projectKey);
   const { setActiveTask } = useProjectTaskActions();
 
   useEffect(() => {
-    mutate();
+    mutate(); // force revalidate
   }, [projectKey, mutate]);
+
+  useEffect(() => {
+    if (error) {
+      mutateUser();
+    }
+  }, [error, mutateUser]);
 
   useEffect(() => {
     if (projects) {
@@ -39,15 +48,15 @@ export default function Tasks() {
           <Grid item xs={12} md={9}>
             <Skeleton sx={{ minHeight: "500px", transform: "none" }} />
           </Grid>
-        ) : (
+        ) : !error && projects ? (
           projects
             ?.filter((project) => project.tasks.length)
-            .map((project) => (
+            ?.map((project) => (
               <Grid item xs={12} md={9} key={project.id}>
                 <ProjectCard project={project} />
               </Grid>
             ))
-        )}
+        ) : null}
       </Grid>
       <TaskDialog />
     </>
