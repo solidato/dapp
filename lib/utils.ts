@@ -149,3 +149,8 @@ export const TOKEN_SYMBOL = {
   teledisko: "TT",
   neokingdom: "NEOK",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
+export const PDF_SIGNER = {
+  teledisko: "Benjamin Gregor Uphues",
+  neokingdom: "Benjamin Gregor Uphues",
+}[process.env.NEXT_PUBLIC_PROJECT_KEY];

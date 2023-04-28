@@ -7,12 +7,13 @@ import useSWR from "swr";
 
 import { useEffect, useMemo } from "react";
 
-import { Alert, Box, CircularProgress, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 
 import { fetcherWithParams } from "@graphql/client";
 import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
+import { PDF_SIGNER } from "@lib/utils";
 
 import Section from "@components/Section";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
@@ -24,6 +25,7 @@ import VotingSection from "@components/resolutions/VotingSection";
 import VotingUsers from "@components/resolutions/VotingUsers";
 
 import useTimestamp from "@hooks/useTimestamp";
+import useUser from "@hooks/useUser";
 
 const REFRESH_INTERVAL_MS = 5000;
 
@@ -35,8 +37,9 @@ ResolutionView.fullWidth = true;
 export default function ResolutionView() {
   const router = useRouter();
   const { currentTimestamp } = useTimestamp();
+  const { user } = useUser();
 
-  const { data: resolutionData, isLoading: isLoadingResolution } = useSWR(
+  const { data: resolutionData, isLoading: isLoadingResolution } = useSWR<any>(
     [getResolutionQuery, { id: router.query.id }],
     fetcherWithParams,
     { refreshInterval: REFRESH_INTERVAL_MS },
@@ -147,22 +150,21 @@ export default function ResolutionView() {
           <ExecutionPayload resolution={resolution} executionPayload={executionPayload} />
         </Section>
       )}
-      <Box
-        sx={{
-          "@media print": {
-            pageBreakBefore: "always",
-          },
-        }}
-      >
-        <Section>
-          <>
-            <Typography variant="body2">/signed digitally/</Typography>
-            <Typography variant="body2">--------------------------------------</Typography>
-            <Typography variant="body2">Benjamin Gregor Uphues</Typography>
-            <Typography variant="body2">Member of management board</Typography>
-          </>
+      {[RESOLUTION_STATES.REJECTED, RESOLUTION_STATES.ENDED].includes(resolution.state) && user?.isLoggedIn && (
+        <Section sx={{ textAlign: "center" }}>
+          <Button href={`/api/pdf/resolutions/${resolution.id}`} target="_blank" variant="outlined" size="large">
+            Generate and download resolution PDF
+          </Button>
         </Section>
-      </Box>
+      )}
+      <Section>
+        <>
+          <Typography variant="body2">/signed digitally/</Typography>
+          <Typography variant="body2">--------------------------------------</Typography>
+          <Typography variant="body2">{PDF_SIGNER}</Typography>
+          <Typography variant="body2">Member of management board</Typography>
+        </>
+      </Section>
     </Box>
   );
 }
