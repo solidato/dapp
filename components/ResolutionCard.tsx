@@ -55,7 +55,7 @@ export default function ResolutionCard({
         ...sx,
       }}
     >
-      <Modal open={voteModalOpen} setOpen={(open) => setVoteModalOpen(open)} title={resolution.title}>
+      <Modal open={voteModalOpen} onClose={() => setVoteModalOpen(false)} title={resolution.title}>
         <VotingWidget resolution={resolution} />
       </Modal>
       <CardHeader

@@ -3,6 +3,8 @@ import { parseEther } from "ethers/lib/utils.js";
 
 import { useContext } from "react";
 
+import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
+
 import { ContractsContext } from "../contexts/ContractsContext";
 import useBlockhainTransaction from "./useBlockchainTransaction";
 
@@ -21,6 +23,7 @@ export default function useOfferTokens() {
         params: [parseEther(String(amount))],
         onSuccessMessage: "Offer correctly created",
         onErrorMessage: "Error creating offer",
+        stateKey: BLOCKCHAIN_TRANSACTION_KEYS.OFFER_TOKENS,
       });
     },
   };

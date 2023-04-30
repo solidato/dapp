@@ -1,9 +1,8 @@
+import type { NeokingdomToken } from "@contracts/typechain";
 import { addSeconds, format, formatRelative, isBefore } from "date-fns";
-// import { mdiEye, mdiBookEditOutline, mdiVoteOutline } from "@mdi/js";
 import { BigNumber } from "ethers";
 import { parseEther } from "ethers/lib/utils";
 
-import type { TelediskoToken } from "../../contracts/typechain";
 import type {
   MonthlyRewardsUserData,
   ResolutionEntity,
@@ -185,7 +184,7 @@ export const getEnhancedResolutions = (
 };
 
 export const getExecutionPayload = async (
-  $tokenContract: TelediskoToken,
+  $tokenContract: NeokingdomToken,
   rewardsInfo: RewardsResponse,
 ): Promise<MonthlyRewardsUserData[]> => {
   const {

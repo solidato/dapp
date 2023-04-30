@@ -7,7 +7,7 @@ import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import { useSnackbar } from "@hooks/useSnackbar";
 
-const NOTIFY_CONTRACT_ERROR_TIMEOUT = 20000;
+const NOTIFY_CONTRACT_ERROR_TIMEOUT = 30000;
 const NOTIFY_TX_STUCK_TIMEOUT = 40000;
 
 type ExecuteTxParams<TC, TP> = {
@@ -52,24 +52,28 @@ export default function useBlockhainTransaction() {
     }
     set(true, false, stateKey);
     let txAlert: any;
+    let timeoutTx: any;
+    let timeoutTxStuck: any;
     try {
-      const timeout = setTimeout(notifyContractError, NOTIFY_CONTRACT_ERROR_TIMEOUT);
+      timeoutTx = setTimeout(notifyContractError, NOTIFY_CONTRACT_ERROR_TIMEOUT);
       const tx = await contractMethod.apply(null, params);
-      clearTimeout(timeout);
+      clearTimeout(timeoutTx);
       txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
         variant: "info",
         autoHideDuration: NOTIFY_TX_STUCK_TIMEOUT,
       });
-      const timeoutTx = setTimeout(() => notifyTxStuckError(txAlert), NOTIFY_TX_STUCK_TIMEOUT);
+      timeoutTxStuck = setTimeout(() => notifyTxStuckError(txAlert), NOTIFY_TX_STUCK_TIMEOUT);
       set(true, true);
       await tx?.wait();
-      clearTimeout(timeoutTx);
+      clearTimeout(timeoutTxStuck);
       set(true, false);
       closeSnackbar(txAlert);
       enqueueSnackbar(onSuccessMessage, { variant: "success" });
       reset();
       return true;
     } catch (err) {
+      if (timeoutTx) clearTimeout(timeoutTx);
+      if (timeoutTxStuck) clearTimeout(timeoutTxStuck);
       closeSnackbar(txAlert);
       enqueueSnackbar(onErrorMessage, { variant: "error" });
       console.error(err);

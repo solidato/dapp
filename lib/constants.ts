@@ -54,3 +54,10 @@ export const TAGS_COLORS: Record<number, string> = {
   29: "#F0D43A",
   30: "#CC0066",
 };
+
+export const BLOCKCHAIN_TRANSACTION_KEYS = {
+  APPROVE_TO_OFFER: "approveToOffer",
+  APPROVE_TO_MATCH_OFFER: "approveToMatchOffer",
+  OFFER_TOKENS: "offerTokens",
+  MATCH_TOKENS: "matchTokens",
+};

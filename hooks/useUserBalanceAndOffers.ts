@@ -11,32 +11,39 @@ export const isNonExpired = (offer: Offer) => Number(offer.expirationTimestamp) 
 
 export const isExpired = (offer: Offer) => Number(offer.expirationTimestamp) * 1000 <= Date.now();
 
+export const bigIntToBigNum = (bigIntNum: BigInt) => BigNumber.from(bigIntNum);
 export const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 export const computeBalances = (daoUser: DaoUser | null): ComputedBalances => {
-  const governanceTokens =
-    bigIntToNum(daoUser?.governanceVaultedBalance || BigInt(0)) + bigIntToNum(daoUser?.governanceBalance || BigInt(0));
-  const neokTokens = bigIntToNum(daoUser?.neokigdomTokenBalance || BigInt(0));
+  const governanceTokens = bigIntToBigNum(daoUser?.governanceVaultedBalance || BigInt(0)).add(
+    bigIntToBigNum(daoUser?.governanceBalance || BigInt(0)),
+  );
 
-  const lockedTokens =
-    bigIntToNum(daoUser?.governanceBalance || BigInt(0)) - bigIntToNum(daoUser?.governanceVestingBalance || BigInt(0));
+  const neokTokens = bigIntToBigNum(daoUser?.neokigdomTokenBalance || BigInt(0));
+
+  const lockedTokens = bigIntToBigNum(daoUser?.governanceBalance || BigInt(0)).sub(
+    bigIntToBigNum(daoUser?.governanceVestingBalance || BigInt(0)),
+  );
+
   const offeredTokens = (daoUser?.activeOffers || []).reduce((sum, activeOffer) => {
-    return sum + (isNonExpired(activeOffer) ? bigIntToNum(activeOffer.amount) : 0);
-  }, 0);
-  const unlockedTokens =
-    bigIntToNum(daoUser?.governanceWithdrawableTempBalance || BigInt(0)) +
+    return sum.add(isNonExpired(activeOffer) ? bigIntToBigNum(activeOffer.amount) : BigNumber.from(0));
+  }, BigNumber.from(0));
+
+  const unlockedTokens = bigIntToBigNum(daoUser?.governanceWithdrawableTempBalance || BigInt(0)).add(
     (daoUser?.activeOffers || []).reduce((sum, activeOffer) => {
-      return sum + (isExpired(activeOffer) ? bigIntToNum(activeOffer.amount) : 0);
-    }, 0);
-  const vestingTokens = bigIntToNum(daoUser?.governanceVestingBalance || BigInt(0));
+      return sum.add(isExpired(activeOffer) ? bigIntToBigNum(activeOffer.amount) : BigNumber.from(0));
+    }, BigNumber.from(0)),
+  );
+
+  const vestingTokens = bigIntToBigNum(daoUser?.governanceVestingBalance || BigInt(0));
 
   return {
-    governanceTokens,
-    neokTokens,
-    lockedTokens,
-    offeredTokens,
-    unlockedTokens,
-    vestingTokens,
+    governanceTokens: Number(formatEther(governanceTokens)),
+    neokTokens: Number(formatEther(neokTokens)),
+    lockedTokens: Number(formatEther(lockedTokens)),
+    offeredTokens: Number(formatEther(offeredTokens)),
+    unlockedTokens: Number(formatEther(unlockedTokens)),
+    vestingTokens: Number(formatEther(vestingTokens)),
   };
 };
 

@@ -37,7 +37,6 @@ export interface ShareholderRegistrySnapshotInterface extends utils.Interface {
     "getStatus(address)": FunctionFragment;
     "getStatusAt(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string)": FunctionFragment;
     "isAtLeast(bytes32,address)": FunctionFragment;
     "isAtLeastAt(bytes32,address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
@@ -66,7 +65,6 @@ export interface ShareholderRegistrySnapshotInterface extends utils.Interface {
       | "getStatus"
       | "getStatusAt"
       | "increaseAllowance"
-      | "initialize"
       | "isAtLeast"
       | "isAtLeastAt"
       | "name"
@@ -111,7 +109,6 @@ export interface ShareholderRegistrySnapshotInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>, PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "isAtLeast",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
@@ -149,7 +146,6 @@ export interface ShareholderRegistrySnapshotInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getStatus", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getStatusAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increaseAllowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAtLeast", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAtLeastAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -297,12 +293,6 @@ export interface ShareholderRegistrySnapshot extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
       account: PromiseOrValue<string>,
@@ -395,12 +385,6 @@ export interface ShareholderRegistrySnapshot extends BaseContract {
   increaseAllowance(
     spender: PromiseOrValue<string>,
     addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  initialize(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -498,8 +482,6 @@ export interface ShareholderRegistrySnapshot extends BaseContract {
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
-
-    initialize(name: PromiseOrValue<string>, symbol: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
@@ -634,12 +616,6 @@ export interface ShareholderRegistrySnapshot extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
       account: PromiseOrValue<string>,
@@ -733,12 +709,6 @@ export interface ShareholderRegistrySnapshot extends BaseContract {
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 

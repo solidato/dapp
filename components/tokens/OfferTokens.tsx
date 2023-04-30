@@ -1,19 +1,35 @@
 import { useState } from "react";
 
+import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Button, Slider, TextField, Typography } from "@mui/material";
+
+import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
+import { calculateSteps } from "@lib/utils";
+
+import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import Modal from "@components/Modal";
 
+import useApproveToOffer from "@hooks/useApproveToOffer";
+import useCheckAllowance from "@hooks/useCheckAllowance";
+import { useContracts } from "@hooks/useContracts";
 import useOfferTokens from "@hooks/useOfferTokens";
 import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
 
 export default function OfferTokens() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [approved, setApproved] = useState(false); // todo get this from the contract
   const [offered, setOffered] = useState(0);
+  const { governanceTokenContract, internalMarketContractAddress } = useContracts();
+  const { allowance, refreshAllowanceFromContract } = useCheckAllowance(
+    governanceTokenContract,
+    internalMarketContractAddress,
+  );
+  const { isAwaitingConfirmation, isLoading, type } = useBlockchainTransactionStore();
 
   const { data } = useUserBalanceAndOffers();
   const { onSubmit } = useOfferTokens();
+
+  const { onSubmit: onSubmitApproveNeok } = useApproveToOffer();
 
   const handlePlaceOffer = async () => {
     const submitted = await onSubmit({ amount: offered });
@@ -22,17 +38,46 @@ export default function OfferTokens() {
     }
   };
 
-  const maxToOffer = data?.balance.maxToOffer || 0;
+  const handleApproval = async () => {
+    const submitted = await onSubmitApproveNeok();
+    if (submitted) {
+      await refreshAllowanceFromContract();
+    }
+  };
+
+  const maxToOffer = allowance;
+  const isLoadingAllowance =
+    (isAwaitingConfirmation || isLoading) && type === BLOCKCHAIN_TRANSACTION_KEYS.APPROVE_TO_OFFER;
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} disabled={maxToOffer === 0}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        disabled={(data?.balance.lockedTokens || 0) === 0}
+      >
         I want to offer my tokens
       </Button>
-      <Modal open={modalOpen} setOpen={setModalOpen} size="medium">
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="medium">
         <>
           <Typography variant="h5">Token offer</Typography>
-          {approved ? (
+          {allowance < (data?.balance.lockedTokens || 0) && (
+            <Alert
+              severity="warning"
+              action={
+                <LoadingButton variant="contained" onClick={handleApproval} loading={isLoadingAllowance}>
+                  {allowance === 0 ? "Add allowance" : "Edit allowance"}
+                </LoadingButton>
+              }
+              sx={{ mt: 2 }}
+            >
+              {allowance === 0
+                ? "Before offering, you need to add allowance to offer your tokens."
+                : `You can offer max ${allowance} tokens.`}
+            </Alert>
+          )}
+          {allowance > 0 && (
             <>
               <Box sx={{ p: 4 }}>
                 <Slider
@@ -41,7 +86,7 @@ export default function OfferTokens() {
                   max={maxToOffer}
                   aria-label="Small"
                   valueLabelDisplay="auto"
-                  step={100}
+                  step={calculateSteps(maxToOffer)}
                   marks={[
                     {
                       value: maxToOffer,
@@ -67,8 +112,9 @@ export default function OfferTokens() {
                 />
               </Box>
               <Box sx={{ textAlign: "center", pt: 4 }}>
-                <Button
+                <LoadingButton
                   fullWidth
+                  loading={(isAwaitingConfirmation || isLoading) && type === BLOCKCHAIN_TRANSACTION_KEYS.OFFER_TOKENS}
                   variant="contained"
                   color="primary"
                   sx={{ mt: 2 }}
@@ -76,22 +122,9 @@ export default function OfferTokens() {
                   onClick={handlePlaceOffer}
                 >
                   Place offer
-                </Button>
+                </LoadingButton>
               </Box>
             </>
-          ) : (
-            <Alert
-              severity="warning"
-              action={
-                <Button variant="contained" onClick={() => setApproved(true)}>
-                  Approve
-                </Button>
-              }
-              sx={{ mt: 2 }}
-            >
-              Before offering, you need to approve the contract to spend your *NEOK INTERNAL*. You have to do this only
-              once, forever. TODO define terminology here
-            </Alert>
           )}
         </>
       </Modal>

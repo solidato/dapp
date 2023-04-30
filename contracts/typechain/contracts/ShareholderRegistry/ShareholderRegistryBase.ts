@@ -33,7 +33,6 @@ export interface ShareholderRegistryBaseInterface extends utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getStatus(address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string)": FunctionFragment;
     "isAtLeast(bytes32,address)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -55,7 +54,6 @@ export interface ShareholderRegistryBaseInterface extends utils.Interface {
       | "decreaseAllowance"
       | "getStatus"
       | "increaseAllowance"
-      | "initialize"
       | "isAtLeast"
       | "name"
       | "symbol"
@@ -84,7 +82,6 @@ export interface ShareholderRegistryBaseInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>, PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "isAtLeast",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
@@ -112,7 +109,6 @@ export interface ShareholderRegistryBaseInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "decreaseAllowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getStatus", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increaseAllowance", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAtLeast", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
@@ -228,12 +224,6 @@ export interface ShareholderRegistryBase extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
       account: PromiseOrValue<string>,
@@ -295,12 +285,6 @@ export interface ShareholderRegistryBase extends BaseContract {
   increaseAllowance(
     spender: PromiseOrValue<string>,
     addedValue: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  initialize(
-    name: PromiseOrValue<string>,
-    symbol: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -367,8 +351,6 @@ export interface ShareholderRegistryBase extends BaseContract {
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
-
-    initialize(name: PromiseOrValue<string>, symbol: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
@@ -469,12 +451,6 @@ export interface ShareholderRegistryBase extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
       account: PromiseOrValue<string>,
@@ -537,12 +513,6 @@ export interface ShareholderRegistryBase extends BaseContract {
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    initialize(
-      name: PromiseOrValue<string>,
-      symbol: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 

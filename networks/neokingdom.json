@@ -12,6 +12,7 @@
     "NeokingdomToken": "0x1F7111c43dec6e32Ef3B643C9e3d7bA823C92940",
     "ShareholderRegistry": "0xd114ec88EDF928D703E0b379BF45c1B6e877C3cC",
     "ResolutionManager": "0x39a5d460E799Ebb8F6613c836Db8bC28c6bF6827",
-    "InternalMarket": "0x3D76AaF1E34Fcb191018Cf8FC76Dcc2547c4A59d"
+    "InternalMarket": "0x3D76AaF1E34Fcb191018Cf8FC76Dcc2547c4A59d",
+    "TokenMock": "0x5ac205f3B2108019D5D2645b944032927f4EDe7d"
   }
 }

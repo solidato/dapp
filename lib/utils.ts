@@ -154,3 +154,5 @@ export const PDF_SIGNER = {
   teledisko: "Benjamin Gregor Uphues",
   neokingdom: "Benjamin Gregor Uphues",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
+export const calculateSteps = (value: number) => Math.ceil(value / 10);

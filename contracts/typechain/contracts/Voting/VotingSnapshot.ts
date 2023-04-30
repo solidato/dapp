@@ -22,10 +22,13 @@ import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListen
 
 export interface VotingSnapshotInterface extends utils.Interface {
   functions: {
+    "afterAddContributor(address)": FunctionFragment;
     "afterTokenTransfer(address,address,uint256)": FunctionFragment;
+    "beforeRemoveContributor(address)": FunctionFragment;
     "canVote(address)": FunctionFragment;
     "canVoteAt(address,uint256)": FunctionFragment;
     "delegate(address)": FunctionFragment;
+    "delegateFrom(address,address)": FunctionFragment;
     "getCurrentSnapshotId()": FunctionFragment;
     "getDelegate(address)": FunctionFragment;
     "getDelegateAt(address,uint256)": FunctionFragment;
@@ -33,15 +36,20 @@ export interface VotingSnapshotInterface extends utils.Interface {
     "getTotalVotingPowerAt(uint256)": FunctionFragment;
     "getVotingPower(address)": FunctionFragment;
     "getVotingPowerAt(address,uint256)": FunctionFragment;
+    "setShareholderRegistry(address)": FunctionFragment;
+    "setToken(address)": FunctionFragment;
     "snapshot()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "afterAddContributor"
       | "afterTokenTransfer"
+      | "beforeRemoveContributor"
       | "canVote"
       | "canVoteAt"
       | "delegate"
+      | "delegateFrom"
       | "getCurrentSnapshotId"
       | "getDelegate"
       | "getDelegateAt"
@@ -49,19 +57,27 @@ export interface VotingSnapshotInterface extends utils.Interface {
       | "getTotalVotingPowerAt"
       | "getVotingPower"
       | "getVotingPowerAt"
+      | "setShareholderRegistry"
+      | "setToken"
       | "snapshot",
   ): FunctionFragment;
 
+  encodeFunctionData(functionFragment: "afterAddContributor", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "afterTokenTransfer",
     values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
+  encodeFunctionData(functionFragment: "beforeRemoveContributor", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "canVote", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "canVoteAt",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "delegate", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: "delegateFrom",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
+  ): string;
   encodeFunctionData(functionFragment: "getCurrentSnapshotId", values?: undefined): string;
   encodeFunctionData(functionFragment: "getDelegate", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
@@ -75,12 +91,17 @@ export interface VotingSnapshotInterface extends utils.Interface {
     functionFragment: "getVotingPowerAt",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
+  encodeFunctionData(functionFragment: "setShareholderRegistry", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setToken", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "afterAddContributor", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "afterTokenTransfer", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "beforeRemoveContributor", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canVote", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canVoteAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegateFrom", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getCurrentSnapshotId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegateAt", data: BytesLike): Result;
@@ -88,6 +109,8 @@ export interface VotingSnapshotInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getTotalVotingPowerAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVotingPower", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVotingPowerAt", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setShareholderRegistry", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "snapshot", data: BytesLike): Result;
 
   events: {
@@ -149,10 +172,20 @@ export interface VotingSnapshot extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    afterAddContributor(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     afterTokenTransfer(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    beforeRemoveContributor(
+      account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -165,6 +198,12 @@ export interface VotingSnapshot extends BaseContract {
     ): Promise<[boolean]>;
 
     delegate(
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
       newDelegate: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
@@ -191,13 +230,33 @@ export interface VotingSnapshot extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setToken(
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
   };
+
+  afterAddContributor(
+    account: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
 
   afterTokenTransfer(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  beforeRemoveContributor(
+    account: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -210,6 +269,12 @@ export interface VotingSnapshot extends BaseContract {
   ): Promise<boolean>;
 
   delegate(
+    newDelegate: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  delegateFrom(
+    delegator: PromiseOrValue<string>,
     newDelegate: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
@@ -236,15 +301,29 @@ export interface VotingSnapshot extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
+  setShareholderRegistry(
+    shareholderRegistry: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setToken(
+    token: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
   snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
   callStatic: {
+    afterAddContributor(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
     afterTokenTransfer(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>;
+
+    beforeRemoveContributor(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     canVote(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<boolean>;
 
@@ -255,6 +334,12 @@ export interface VotingSnapshot extends BaseContract {
     ): Promise<boolean>;
 
     delegate(newDelegate: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -277,6 +362,10 @@ export interface VotingSnapshot extends BaseContract {
       snapshotId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
+
+    setShareholderRegistry(shareholderRegistry: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    setToken(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -309,10 +398,20 @@ export interface VotingSnapshot extends BaseContract {
   };
 
   estimateGas: {
+    afterAddContributor(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     afterTokenTransfer(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    beforeRemoveContributor(
+      account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -325,6 +424,12 @@ export interface VotingSnapshot extends BaseContract {
     ): Promise<BigNumber>;
 
     delegate(
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
       newDelegate: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
@@ -351,14 +456,34 @@ export interface VotingSnapshot extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setToken(
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    afterAddContributor(
+      account: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
     afterTokenTransfer(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    beforeRemoveContributor(
+      account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -371,6 +496,12 @@ export interface VotingSnapshot extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     delegate(
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
       newDelegate: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
@@ -398,6 +529,16 @@ export interface VotingSnapshot extends BaseContract {
       account: PromiseOrValue<string>,
       snapshotId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setToken(
+      token: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;

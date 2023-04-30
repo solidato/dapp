@@ -3,24 +3,30 @@
 /* tslint:disable */
 
 /* eslint-disable */
+import type * as governanceToken from "./GovernanceToken";
 import type * as internalMarket from "./InternalMarket";
+import type * as neokingdomToken from "./NeokingdomToken";
 import type * as priceOracle from "./PriceOracle";
+import type * as redemptionController from "./RedemptionController";
 import type * as resolutionManager from "./ResolutionManager";
 import type * as shareholderRegistry from "./ShareholderRegistry";
-import type * as telediskoToken from "./TelediskoToken";
 import type * as voting from "./Voting";
 import type * as extensions from "./extensions";
 import type * as mocks from "./mocks";
 
+export type { governanceToken };
+
 export type { internalMarket };
 
+export type { neokingdomToken };
+
 export type { priceOracle };
+
+export type { redemptionController };
 
 export type { resolutionManager };
 
 export type { shareholderRegistry };
-
-export type { telediskoToken };
 
 export type { voting };
 

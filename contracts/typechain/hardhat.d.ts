@@ -59,6 +59,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ERC20__factory>;
     getContractFactory(
+      name: "ERC20Burnable",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.ERC20Burnable__factory>;
+    getContractFactory(
       name: "IERC20Metadata",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.IERC20Metadata__factory>;
@@ -75,6 +79,14 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.IERC165__factory>;
     getContractFactory(
+      name: "DAORoles",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.DAORoles__factory>;
+    getContractFactory(
+      name: "HasRole",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.HasRole__factory>;
+    getContractFactory(
       name: "ISnapshot",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ISnapshot__factory>;
@@ -86,6 +98,22 @@ declare module "hardhat/types/runtime" {
       name: "Snapshottable",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.Snapshottable__factory>;
+    getContractFactory(
+      name: "GovernanceToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.GovernanceToken__factory>;
+    getContractFactory(
+      name: "GovernanceTokenBase",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.GovernanceTokenBase__factory>;
+    getContractFactory(
+      name: "GovernanceTokenSnapshot",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.GovernanceTokenSnapshot__factory>;
+    getContractFactory(
+      name: "IGovernanceToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.IGovernanceToken__factory>;
     getContractFactory(
       name: "InternalMarket",
       signerOrOptions?: ethers.Signer | FactoryOptions,
@@ -99,9 +127,21 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ERC20Mock__factory>;
     getContractFactory(
-      name: "NewTelediskoTokenMock",
+      name: "HasRoleMock",
       signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.NewTelediskoTokenMock__factory>;
+    ): Promise<Contracts.HasRoleMock__factory>;
+    getContractFactory(
+      name: "GovernanceTokenMock",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.GovernanceTokenMock__factory>;
+    getContractFactory(
+      name: "GovernanceTokenV2Mock",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.GovernanceTokenV2Mock__factory>;
+    getContractFactory(
+      name: "NewGovernanceTokenMock",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.NewGovernanceTokenMock__factory>;
     getContractFactory(
       name: "ResolutionExecutorMock",
       signerOrOptions?: ethers.Signer | FactoryOptions,
@@ -115,14 +155,6 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ShareholderRegistryMock__factory>;
     getContractFactory(
-      name: "TelediskoTokenMock",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.TelediskoTokenMock__factory>;
-    getContractFactory(
-      name: "TelediskoTokenV2Mock",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.TelediskoTokenV2Mock__factory>;
-    getContractFactory(
       name: "TokenMock",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.TokenMock__factory>;
@@ -130,6 +162,14 @@ declare module "hardhat/types/runtime" {
       name: "VotingMock",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.VotingMock__factory>;
+    getContractFactory(
+      name: "INeokingdomToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.INeokingdomToken__factory>;
+    getContractFactory(
+      name: "NeokingdomToken",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.NeokingdomToken__factory>;
     getContractFactory(
       name: "IStdReference",
       signerOrOptions?: ethers.Signer | FactoryOptions,
@@ -139,9 +179,25 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.PriceOracle__factory>;
     getContractFactory(
+      name: "IRedemptionController",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.IRedemptionController__factory>;
+    getContractFactory(
+      name: "RedemptionController",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.RedemptionController__factory>;
+    getContractFactory(
+      name: "RedemptionControllerBase",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.RedemptionControllerBase__factory>;
+    getContractFactory(
       name: "ResolutionManager",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ResolutionManager__factory>;
+    getContractFactory(
+      name: "ResolutionManagerBase",
+      signerOrOptions?: ethers.Signer | FactoryOptions,
+    ): Promise<Contracts.ResolutionManagerBase__factory>;
     getContractFactory(
       name: "IShareholderRegistry",
       signerOrOptions?: ethers.Signer | FactoryOptions,
@@ -158,22 +214,6 @@ declare module "hardhat/types/runtime" {
       name: "ShareholderRegistrySnapshot",
       signerOrOptions?: ethers.Signer | FactoryOptions,
     ): Promise<Contracts.ShareholderRegistrySnapshot__factory>;
-    getContractFactory(
-      name: "ITelediskoToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.ITelediskoToken__factory>;
-    getContractFactory(
-      name: "TelediskoToken",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.TelediskoToken__factory>;
-    getContractFactory(
-      name: "TelediskoTokenBase",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.TelediskoTokenBase__factory>;
-    getContractFactory(
-      name: "TelediskoTokenSnapshot",
-      signerOrOptions?: ethers.Signer | FactoryOptions,
-    ): Promise<Contracts.TelediskoTokenSnapshot__factory>;
     getContractFactory(
       name: "IVoting",
       signerOrOptions?: ethers.Signer | FactoryOptions,
@@ -235,13 +275,32 @@ declare module "hardhat/types/runtime" {
     getContractAt(name: "AccessControl", address: string, signer?: ethers.Signer): Promise<Contracts.AccessControl>;
     getContractAt(name: "IAccessControl", address: string, signer?: ethers.Signer): Promise<Contracts.IAccessControl>;
     getContractAt(name: "ERC20", address: string, signer?: ethers.Signer): Promise<Contracts.ERC20>;
+    getContractAt(name: "ERC20Burnable", address: string, signer?: ethers.Signer): Promise<Contracts.ERC20Burnable>;
     getContractAt(name: "IERC20Metadata", address: string, signer?: ethers.Signer): Promise<Contracts.IERC20Metadata>;
     getContractAt(name: "IERC20", address: string, signer?: ethers.Signer): Promise<Contracts.IERC20>;
     getContractAt(name: "ERC165", address: string, signer?: ethers.Signer): Promise<Contracts.ERC165>;
     getContractAt(name: "IERC165", address: string, signer?: ethers.Signer): Promise<Contracts.IERC165>;
+    getContractAt(name: "DAORoles", address: string, signer?: ethers.Signer): Promise<Contracts.DAORoles>;
+    getContractAt(name: "HasRole", address: string, signer?: ethers.Signer): Promise<Contracts.HasRole>;
     getContractAt(name: "ISnapshot", address: string, signer?: ethers.Signer): Promise<Contracts.ISnapshot>;
     getContractAt(name: "Roles", address: string, signer?: ethers.Signer): Promise<Contracts.Roles>;
     getContractAt(name: "Snapshottable", address: string, signer?: ethers.Signer): Promise<Contracts.Snapshottable>;
+    getContractAt(name: "GovernanceToken", address: string, signer?: ethers.Signer): Promise<Contracts.GovernanceToken>;
+    getContractAt(
+      name: "GovernanceTokenBase",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.GovernanceTokenBase>;
+    getContractAt(
+      name: "GovernanceTokenSnapshot",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.GovernanceTokenSnapshot>;
+    getContractAt(
+      name: "IGovernanceToken",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.IGovernanceToken>;
     getContractAt(name: "InternalMarket", address: string, signer?: ethers.Signer): Promise<Contracts.InternalMarket>;
     getContractAt(
       name: "InternalMarketBase",
@@ -249,11 +308,22 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer,
     ): Promise<Contracts.InternalMarketBase>;
     getContractAt(name: "ERC20Mock", address: string, signer?: ethers.Signer): Promise<Contracts.ERC20Mock>;
+    getContractAt(name: "HasRoleMock", address: string, signer?: ethers.Signer): Promise<Contracts.HasRoleMock>;
     getContractAt(
-      name: "NewTelediskoTokenMock",
+      name: "GovernanceTokenMock",
       address: string,
       signer?: ethers.Signer,
-    ): Promise<Contracts.NewTelediskoTokenMock>;
+    ): Promise<Contracts.GovernanceTokenMock>;
+    getContractAt(
+      name: "GovernanceTokenV2Mock",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.GovernanceTokenV2Mock>;
+    getContractAt(
+      name: "NewGovernanceTokenMock",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.NewGovernanceTokenMock>;
     getContractAt(
       name: "ResolutionExecutorMock",
       address: string,
@@ -269,25 +339,41 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer,
     ): Promise<Contracts.ShareholderRegistryMock>;
-    getContractAt(
-      name: "TelediskoTokenMock",
-      address: string,
-      signer?: ethers.Signer,
-    ): Promise<Contracts.TelediskoTokenMock>;
-    getContractAt(
-      name: "TelediskoTokenV2Mock",
-      address: string,
-      signer?: ethers.Signer,
-    ): Promise<Contracts.TelediskoTokenV2Mock>;
     getContractAt(name: "TokenMock", address: string, signer?: ethers.Signer): Promise<Contracts.TokenMock>;
     getContractAt(name: "VotingMock", address: string, signer?: ethers.Signer): Promise<Contracts.VotingMock>;
+    getContractAt(
+      name: "INeokingdomToken",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.INeokingdomToken>;
+    getContractAt(name: "NeokingdomToken", address: string, signer?: ethers.Signer): Promise<Contracts.NeokingdomToken>;
     getContractAt(name: "IStdReference", address: string, signer?: ethers.Signer): Promise<Contracts.IStdReference>;
     getContractAt(name: "PriceOracle", address: string, signer?: ethers.Signer): Promise<Contracts.PriceOracle>;
+    getContractAt(
+      name: "IRedemptionController",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.IRedemptionController>;
+    getContractAt(
+      name: "RedemptionController",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.RedemptionController>;
+    getContractAt(
+      name: "RedemptionControllerBase",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.RedemptionControllerBase>;
     getContractAt(
       name: "ResolutionManager",
       address: string,
       signer?: ethers.Signer,
     ): Promise<Contracts.ResolutionManager>;
+    getContractAt(
+      name: "ResolutionManagerBase",
+      address: string,
+      signer?: ethers.Signer,
+    ): Promise<Contracts.ResolutionManagerBase>;
     getContractAt(
       name: "IShareholderRegistry",
       address: string,
@@ -308,18 +394,6 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer,
     ): Promise<Contracts.ShareholderRegistrySnapshot>;
-    getContractAt(name: "ITelediskoToken", address: string, signer?: ethers.Signer): Promise<Contracts.ITelediskoToken>;
-    getContractAt(name: "TelediskoToken", address: string, signer?: ethers.Signer): Promise<Contracts.TelediskoToken>;
-    getContractAt(
-      name: "TelediskoTokenBase",
-      address: string,
-      signer?: ethers.Signer,
-    ): Promise<Contracts.TelediskoTokenBase>;
-    getContractAt(
-      name: "TelediskoTokenSnapshot",
-      address: string,
-      signer?: ethers.Signer,
-    ): Promise<Contracts.TelediskoTokenSnapshot>;
     getContractAt(name: "IVoting", address: string, signer?: ethers.Signer): Promise<Contracts.IVoting>;
     getContractAt(name: "Voting", address: string, signer?: ethers.Signer): Promise<Contracts.Voting>;
     getContractAt(name: "VotingBase", address: string, signer?: ethers.Signer): Promise<Contracts.VotingBase>;

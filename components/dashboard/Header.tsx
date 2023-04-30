@@ -38,7 +38,7 @@ export default function Header() {
 
   return (
     <>
-      <Modal open={infoOpen} setOpen={setInfoOpen}>
+      <Modal open={infoOpen} onClose={() => setInfoOpen(false)}>
         <Alert severity="info">
           Once the completed tasks will be approved, the corresponding tokens will be minted through the monthly
           resolution

@@ -1,12 +1,23 @@
 import { createContext, useContext } from "react";
 
-import { InternalMarket, ResolutionManager, TelediskoToken, Voting } from "../contracts/typechain";
+import {
+  GovernanceToken,
+  InternalMarket,
+  NeokingdomToken,
+  ResolutionManager,
+  TokenMock,
+  Voting,
+} from "../contracts/typechain";
 
 export type ContractsContextType = {
   resolutionContract?: ResolutionManager;
-  tokenContract?: TelediskoToken;
+  neokingdomTokenContract?: NeokingdomToken;
   internalMarketContract?: InternalMarket;
+  internalMarketContractAddress?: string;
   votingContract?: Voting;
+  governanceTokenContract?: GovernanceToken;
+  governanceTokenContractAddress?: string;
+  usdcContract?: TokenMock;
 };
 
 export const ContractsContext = createContext<ContractsContextType>({});

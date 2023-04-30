@@ -72,7 +72,7 @@ export default function Tokens() {
           <Tab
             label={
               <Badge badgeContent={(data?.activeOffers || []).length} color="primary">
-                Active offers ({(data?.activeOffers || []).length})
+                Active offers
               </Badge>
             }
             {...a11yProps(1)}

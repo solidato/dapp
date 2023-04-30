@@ -1,6 +1,4 @@
-import { useWeb3Modal } from "@web3modal/react";
 import useSWR from "swr";
-import { useAccount } from "wagmi";
 
 import { useMemo } from "react";
 

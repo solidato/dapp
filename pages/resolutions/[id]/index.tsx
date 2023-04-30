@@ -1,4 +1,4 @@
-import { TelediskoToken__factory } from "@contracts/typechain/factories/contracts/TelediskoToken/TelediskoToken__factory";
+import { NeokingdomToken__factory } from "@contracts/typechain";
 import { Interface } from "@ethersproject/abi";
 import { formatEther } from "ethers/lib/utils";
 import { useRouter } from "next/router";
@@ -63,7 +63,7 @@ export default function ResolutionView() {
 
   const executionPayload = useMemo(() => {
     if ((resolution?.executionData || []).length > 0) {
-      const contractInterface = new Interface(TelediskoToken__factory.abi);
+      const contractInterface = new Interface(NeokingdomToken__factory.abi);
       return (resolution?.executionData || [])?.map((data) => {
         const {
           args: [address, tokens],

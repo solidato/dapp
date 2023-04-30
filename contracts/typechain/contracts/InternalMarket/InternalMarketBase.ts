@@ -11,24 +11,44 @@ import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListen
 
 export interface InternalMarketBaseInterface extends utils.Interface {
   functions: {
-    "erc20()": FunctionFragment;
+    "exchangeToken()": FunctionFragment;
     "offerDuration()": FunctionFragment;
     "offeredBalanceOf(address)": FunctionFragment;
+    "priceOracle()": FunctionFragment;
+    "redemptionController()": FunctionFragment;
+    "reserve()": FunctionFragment;
+    "tokenInternal()": FunctionFragment;
     "withdrawableBalanceOf(address)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "erc20" | "offerDuration" | "offeredBalanceOf" | "withdrawableBalanceOf",
+    nameOrSignatureOrTopic:
+      | "exchangeToken"
+      | "offerDuration"
+      | "offeredBalanceOf"
+      | "priceOracle"
+      | "redemptionController"
+      | "reserve"
+      | "tokenInternal"
+      | "withdrawableBalanceOf",
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "erc20", values?: undefined): string;
+  encodeFunctionData(functionFragment: "exchangeToken", values?: undefined): string;
   encodeFunctionData(functionFragment: "offerDuration", values?: undefined): string;
   encodeFunctionData(functionFragment: "offeredBalanceOf", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "priceOracle", values?: undefined): string;
+  encodeFunctionData(functionFragment: "redemptionController", values?: undefined): string;
+  encodeFunctionData(functionFragment: "reserve", values?: undefined): string;
+  encodeFunctionData(functionFragment: "tokenInternal", values?: undefined): string;
   encodeFunctionData(functionFragment: "withdrawableBalanceOf", values: [PromiseOrValue<string>]): string;
 
-  decodeFunctionResult(functionFragment: "erc20", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "exchangeToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "offerDuration", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "offeredBalanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "priceOracle", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redemptionController", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "reserve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenInternal", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdrawableBalanceOf", data: BytesLike): Result;
 
   events: {
@@ -44,7 +64,7 @@ export interface OfferCreatedEventObject {
   id: BigNumber;
   from: string;
   amount: BigNumber;
-  createdAt: BigNumber;
+  expiredAt: BigNumber;
 }
 export type OfferCreatedEvent = TypedEvent<[BigNumber, string, BigNumber, BigNumber], OfferCreatedEventObject>;
 
@@ -83,29 +103,53 @@ export interface InternalMarketBase extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    erc20(overrides?: CallOverrides): Promise<[string]>;
+    exchangeToken(overrides?: CallOverrides): Promise<[string]>;
 
     offerDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    priceOracle(overrides?: CallOverrides): Promise<[string]>;
+
+    redemptionController(overrides?: CallOverrides): Promise<[string]>;
+
+    reserve(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<[string]>;
+
     withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  erc20(overrides?: CallOverrides): Promise<string>;
+  exchangeToken(overrides?: CallOverrides): Promise<string>;
 
   offerDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
   offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
+  priceOracle(overrides?: CallOverrides): Promise<string>;
+
+  redemptionController(overrides?: CallOverrides): Promise<string>;
+
+  reserve(overrides?: CallOverrides): Promise<string>;
+
+  tokenInternal(overrides?: CallOverrides): Promise<string>;
+
   withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    erc20(overrides?: CallOverrides): Promise<string>;
+    exchangeToken(overrides?: CallOverrides): Promise<string>;
 
     offerDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
+
+    priceOracle(overrides?: CallOverrides): Promise<string>;
+
+    redemptionController(overrides?: CallOverrides): Promise<string>;
+
+    reserve(overrides?: CallOverrides): Promise<string>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<string>;
 
     withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
   };
@@ -115,9 +159,9 @@ export interface InternalMarketBase extends BaseContract {
       id?: null,
       from?: null,
       amount?: null,
-      createdAt?: null,
+      expiredAt?: null,
     ): OfferCreatedEventFilter;
-    OfferCreated(id?: null, from?: null, amount?: null, createdAt?: null): OfferCreatedEventFilter;
+    OfferCreated(id?: null, from?: null, amount?: null, expiredAt?: null): OfferCreatedEventFilter;
 
     "OfferMatched(uint128,address,address,uint256)"(
       id?: null,
@@ -129,21 +173,37 @@ export interface InternalMarketBase extends BaseContract {
   };
 
   estimateGas: {
-    erc20(overrides?: CallOverrides): Promise<BigNumber>;
+    exchangeToken(overrides?: CallOverrides): Promise<BigNumber>;
 
     offerDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
+    priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redemptionController(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserve(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<BigNumber>;
+
     withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    erc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    exchangeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     offerDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    redemptionController(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    reserve(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };

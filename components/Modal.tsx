@@ -32,19 +32,19 @@ const style = (size: string) => ({
 
 export default function Modal({
   open,
-  setOpen,
+  onClose,
   children,
   title,
   size = "medium",
 }: {
   open: boolean;
-  setOpen?: (o: boolean) => void;
+  onClose?: () => void;
   children: ReactElement;
   title?: string;
   size?: "small" | "medium" | "large";
 }) {
   const handleClose = () => {
-    typeof setOpen === "function" && setOpen(false);
+    typeof onClose === "function" && onClose();
   };
   const theme = useTheme();
 

@@ -1,8 +1,6 @@
-import { useWeb3Modal } from "@web3modal/react";
 import Link from "next/link";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
-import { shallow } from "zustand/shallow";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -12,14 +10,12 @@ import { fetcher } from "@graphql/client";
 import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
 
 import { getEnhancedResolutions } from "@lib/resolutions/common";
-
-import useLoginModalStore from "@store/loginModal";
+import { RESOLUTION_STATES } from "@lib/resolutions/common";
 
 import ResolutionCard from "@components/ResolutionCard";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 
-import { RESOLUTION_STATES } from "../../lib/resolutions/common";
 import { ResolutionEntityEnhanced } from "../../types";
 
 Resolutions.title = "Resolutions";
@@ -28,17 +24,10 @@ const REFRESH_EVERY_MS = 3000;
 
 export default function Resolutions() {
   const { isConnected } = useAccount();
-  const { data, isLoading } = useSWR(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
+  const { data, isLoading } = useSWR<any>(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
   const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
-
-  const { handleOpenLoginModalFromLink } = useLoginModalStore(
-    (state) => ({
-      handleOpenLoginModalFromLink: state.handleOpenLoginModalFromLink,
-    }),
-    shallow,
-  );
 
   useEffect(() => {
     const intervalCallback = () => {
