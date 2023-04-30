@@ -5,5 +5,13 @@
     "NeokingdomToken": "0xA31c18929590B87eC11D854d1424b059f1D94732",
     "ResolutionManager": "0x8ac36631c0C1B630FF50Bb653F5a2edc405873D0",
     "InternalMarket": "0xB408f6b9f4cbe8523D175c5d965360a980b64B4C"
+  },
+  "9000": {
+    "Voting": "0x6526d7E9ecf819ff10184CCfD320863Bee6d975F",
+    "GovernanceToken": "0xB0D4A412E253E1245847E910972d64B9006820bA",
+    "NeokingdomToken": "0x1F7111c43dec6e32Ef3B643C9e3d7bA823C92940",
+    "ShareholderRegistry": "0xd114ec88EDF928D703E0b379BF45c1B6e877C3cC",
+    "ResolutionManager": "0x39a5d460E799Ebb8F6613c836Db8bC28c6bF6827",
+    "InternalMarket": "0x3D76AaF1E34Fcb191018Cf8FC76Dcc2547c4A59d"
   }
 }

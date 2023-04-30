@@ -67,7 +67,7 @@ export const getRelativeDateFromUnixTimestamp = (unixTs: string, forceAbsolute =
 };
 
 export const getResolutionTypeInfo = (resolution: ResolutionEntity): ResolutionTypeInfo => {
-  if (resolution.approveTimestamp === "0") {
+  if (resolution.approveTimestamp === null) {
     return {
       noticePeriodEnds: null,
       noticePeriodEndsAt: null,
@@ -95,10 +95,10 @@ export const getResolutionState = (
   $currentTimestamp: number,
   resolutionTypeInfo: ResolutionTypeInfo,
 ): ResolutionState => {
-  if (resolution.rejectTimestamp !== "0") {
+  if (resolution.rejectTimestamp !== null) {
     return RESOLUTION_STATES.REJECTED;
   }
-  if (resolution.approveTimestamp !== "0") {
+  if (resolution.approveTimestamp !== null) {
     const { noticePeriodEnds, votingEnds } = resolutionTypeInfo;
     if (isBefore(new Date($currentTimestamp), noticePeriodEnds as Date)) {
       return RESOLUTION_STATES.NOTICE;
@@ -145,19 +145,19 @@ export const getEnhancedResolutionMapper =
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp, forceAbsolute),
       rejectedAt:
-        resolution.rejectTimestamp !== "0"
+        resolution.rejectTimestamp !== null
           ? getRelativeDateFromUnixTimestamp(resolution.rejectTimestamp, forceAbsolute)
           : null,
       updatedAt:
-        resolution.updateTimestamp !== "0"
+        resolution.updateTimestamp !== null
           ? getRelativeDateFromUnixTimestamp(resolution.updateTimestamp, forceAbsolute)
           : null,
       approvedAt:
-        resolution.approveTimestamp !== "0"
+        resolution.approveTimestamp !== null
           ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp, forceAbsolute)
           : null,
       executedAt:
-        resolution.executionTimestamp && resolution.executionTimestamp !== "0"
+        resolution.executionTimestamp && resolution.executionTimestamp !== null
           ? getRelativeDateFromUnixTimestamp(resolution.executionTimestamp, forceAbsolute)
           : null,
       href:

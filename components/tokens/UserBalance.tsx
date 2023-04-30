@@ -22,15 +22,15 @@ export default function UserBalance() {
       <AddCircleIcon sx={{ position: "absolute", left: "50%", top: "50%", ml: -2, mt: -4 }} fontSize="large" />
       <Stack direction="row" justifyContent="center" spacing={8} sx={{ pb: 4 }}>
         <Paper sx={PAPER_SX}>
-          <Typography variant="h4">Governance Balance</Typography>
+          <Typography variant="h4">Governance Tokens</Typography>
           <Typography variant="h3" sx={{ width: "100%" }}>
-            TODO
+            {data?.balance.governanceTokens}
           </Typography>
         </Paper>
         <Paper sx={PAPER_SX}>
-          <Typography variant="h4">NKD Balance</Typography>
+          <Typography variant="h4">NEOK Tokens</Typography>
           <Typography variant="h3" sx={{ width: "100%" }}>
-            {data?.balance.total}
+            {data?.balance.neokTokens}
           </Typography>
         </Paper>
       </Stack>

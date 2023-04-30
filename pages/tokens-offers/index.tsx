@@ -1,7 +1,9 @@
+import { useAccount } from "wagmi";
+
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
-import { Badge, Box, CircularProgress, Tab, Tabs } from "@mui/material";
+import { Alert, Badge, Box, CircularProgress, Tab, Tabs } from "@mui/material";
 
 import OffersList from "@components/tokens/OffersList";
 import UserActions from "@components/tokens/UserActions";
@@ -44,6 +46,7 @@ function a11yProps(index: number) {
 export default function Tokens() {
   const [value, setValue] = useState(0);
   const { data, isLoading } = useUserBalanceAndOffers();
+  const { isConnected } = useAccount();
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -53,22 +56,33 @@ export default function Tokens() {
     setValue(index);
   };
 
+  if (!isConnected) {
+    return <Alert severity="warning">Please connect your wallet to be able to visit this page</Alert>;
+  }
+
   return (
     <>
       <UserBalance />
+      <Alert severity="info" sx={{ mb: 2 }}>
+        Difference between governance and NEOK tokens
+      </Alert>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
           <Tab label="Actions" {...a11yProps(0)} />
           <Tab
             label={
               <Badge badgeContent={(data?.activeOffers || []).length} color="primary">
-                Active offers
+                Active offers ({(data?.activeOffers || []).length})
               </Badge>
             }
             {...a11yProps(1)}
             disabled={(data?.activeOffers || []).length === 0}
           />
-          <Tab label="Expired offers" {...a11yProps(1)} />
+          <Tab
+            label={`Expired offers (${(data?.expiredOffers || []).length})`}
+            {...a11yProps(1)}
+            disabled={(data?.expiredOffers || []).length === 0}
+          />
         </Tabs>
       </Box>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>

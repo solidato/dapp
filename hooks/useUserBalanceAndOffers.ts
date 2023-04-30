@@ -7,45 +7,36 @@ import { useAccount } from "wagmi";
 import { fetcherWithParams } from "@graphql/client";
 import { getTokensPageData } from "@graphql/queries/get-tokens-page-data";
 
-import { isSameAddress } from "@lib/utils";
-
 export const isNonExpired = (offer: Offer) => Number(offer.expirationTimestamp) * 1000 > Date.now();
 
 export const isExpired = (offer: Offer) => Number(offer.expirationTimestamp) * 1000 <= Date.now();
 
 export const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
-export const computeBalances = (daoUser: DaoUser | null, userOffers: Offer[]): ComputedBalances => {
-  const nowTimestamp = Date.now();
+export const computeBalances = (daoUser: DaoUser | null): ComputedBalances => {
+  const governanceTokens =
+    bigIntToNum(daoUser?.governanceVaultedBalance || BigInt(0)) + bigIntToNum(daoUser?.governanceBalance || BigInt(0));
+  const neokTokens = bigIntToNum(daoUser?.neokigdomTokenBalance || BigInt(0));
 
-  const total = daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0;
-  const vesting = daoUser?.vestingBalance ? bigIntToNum(daoUser.vestingBalance) : 0;
-  const unlockedTempBalance = daoUser?.unlockedTempBalance ? bigIntToNum(daoUser.unlockedTempBalance) : 0;
-
-  const [unlocked, currentlyOffered] = userOffers
-    .filter((offer) => isSameAddress(offer.from, daoUser?.address as string))
-    .reduce(
-      (totals, offer) => {
-        const offerAmount = Number(formatEther(BigNumber.from(offer.amount)));
-        const offerExpirationTimestamp = Number(offer.expirationTimestamp) * 1000;
-        const [totUnlocked, totCurrentlyOffered] = totals;
-        const newUnlocked = totUnlocked + (nowTimestamp > offerExpirationTimestamp ? offerAmount : 0);
-        const newCurrentlyOffered = totCurrentlyOffered + (nowTimestamp <= offerExpirationTimestamp ? offerAmount : 0);
-        return [newUnlocked, newCurrentlyOffered];
-      },
-      [unlockedTempBalance, 0],
-    );
-
-  const locked = total - unlocked - vesting;
-  const maxToOffer = locked - currentlyOffered;
+  const lockedTokens =
+    bigIntToNum(daoUser?.governanceBalance || BigInt(0)) - bigIntToNum(daoUser?.governanceVestingBalance || BigInt(0));
+  const offeredTokens = (daoUser?.activeOffers || []).reduce((sum, activeOffer) => {
+    return sum + (isNonExpired(activeOffer) ? bigIntToNum(activeOffer.amount) : 0);
+  }, 0);
+  const unlockedTokens =
+    bigIntToNum(daoUser?.governanceWithdrawableTempBalance || BigInt(0)) +
+    (daoUser?.activeOffers || []).reduce((sum, activeOffer) => {
+      return sum + (isExpired(activeOffer) ? bigIntToNum(activeOffer.amount) : 0);
+    }, 0);
+  const vestingTokens = bigIntToNum(daoUser?.governanceVestingBalance || BigInt(0));
 
   return {
-    total,
-    vesting,
-    unlocked,
-    locked,
-    currentlyOffered,
-    maxToOffer,
+    governanceTokens,
+    neokTokens,
+    lockedTokens,
+    offeredTokens,
+    unlockedTokens,
+    vestingTokens,
   };
 };
 
@@ -67,7 +58,7 @@ export default function useUserBalanceAndOffers(): {
   if (data && !isLoading) {
     return {
       data: {
-        balance: computeBalances(data.daoUser, data.offers),
+        balance: computeBalances(data.daoUser),
         allOffers: data.offers,
         expiredOffers: data.offers.filter(isExpired),
         activeOffers: data.offers.filter(isNonExpired),

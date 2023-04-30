@@ -22,29 +22,23 @@ export default function UserActions() {
   return (
     <>
       <Row sx={{ pt: 3 }}>
-        <TokenPaper title="Locked" total={data?.balance.locked} />
+        <TokenPaper title="Locked" total={data?.balance.lockedTokens} />
         <OfferTokens />
       </Row>
-      {(data?.balance.currentlyOffered || 0) > 0 && (
-        <Row>
-          <TokenPaper title="Offered" total={data?.balance.currentlyOffered} />
-        </Row>
-      )}
-      {(data?.balance.unlocked || 0) > 0 && (
-        <Row>
-          <TokenPaper title="Unlocked" total={data?.balance.unlocked} />
-          <WithdrawTokens />
-        </Row>
-      )}
       <Row>
-        <TokenPaper title="NKD Balance" total={data?.balance.total} />
+        <TokenPaper title="Offered" total={data?.balance.offeredTokens} />
+      </Row>
+      <Row>
+        <TokenPaper title="Unlocked" total={data?.balance.unlockedTokens} />
+        <WithdrawTokens />
+      </Row>
+      <Row>
+        <TokenPaper title="NEOK Balance" total={data?.balance.neokTokens} />
         <DepositTokens />
       </Row>
-      {(data?.balance.vesting || 0) > 0 && (
-        <Row>
-          <TokenPaper title="Vesting" total={data?.balance.vesting} />
-        </Row>
-      )}
+      <Row>
+        <TokenPaper title="Vesting" total={data?.balance.vestingTokens} />
+      </Row>
     </>
   );
 }

@@ -77,11 +77,6 @@ export default function Resolutions() {
             </Button>
           </Stack>
         )}
-        {!isConnected && (
-          <Button onClick={handleOpenLoginModalFromLink} variant="outlined" href="/login">
-            Login to create a new Resolution
-          </Button>
-        )}
         {hasRejected && (
           <FormControlLabel
             sx={{ ml: "auto" }}

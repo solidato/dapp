@@ -64,6 +64,7 @@ export function useContracts() {
           internalMarketContract: getInternalMarketContract(chainId, signer),
         });
       } catch (error) {
+        console.error(error);
         enqueueSnackbar("Your wallet was connected to an unsupported network, please re-connect", { variant: "error" });
         return disconnect();
       }

@@ -10,7 +10,14 @@ export const getShareholdersInfo = gql`
 
     daoUsers {
       address
-      totalBalance
+      governanceBalance
+      governanceOfferedTempBalance
+      governanceVestingBalance
+      governanceVaultedBalance
+      governanceWithdrawableTempBalance
+      votingPower
+      shareholderRegistryBalance
+      neokigdomTokenBalance
     }
   }
 

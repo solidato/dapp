@@ -27,43 +27,52 @@ export default function ResolutionsStats({
           <Typography variant="h5">Total resolutions</Typography>
           <Typography variant="h3">{isLoading ? <Skeleton /> : totalResolutions}</Typography>
         </Box>
-        <Box sx={{ ml: "auto", p: { xs: 1, sm: 4, textAlign: "left" } }}>
-          {stats.inProgressTot > 0 && (
+        {!isLoading && totalResolutions > 0 && (
+          <Box sx={{ ml: "auto", p: { xs: 1, sm: 4, textAlign: "left" } }}>
+            {stats.inProgressTot > 0 && (
+              <Typography
+                variant="body2"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 1.5,
+                  pb: 1.5,
+                  borderBottom: 1,
+                  borderColor: "divider",
+                }}
+              >
+                <Box component="span" sx={{ mr: 2, width: 130 }}>
+                  In progress ({stats.inProgressTot})
+                </Box>
+                <CircularProgressWithLabel isLoading={isLoading} value={stats.inProgress} color="primary" />
+              </Typography>
+            )}
             <Typography
               variant="body2"
               sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
             >
               <Box component="span" sx={{ mr: 2, width: 130 }}>
-                In progress ({stats.inProgressTot})
+                With quorum ({stats.withQuorumTot})
               </Box>
-              <CircularProgressWithLabel isLoading={isLoading} value={stats.inProgress} color="primary" />
+              <CircularProgressWithLabel isLoading={isLoading} value={stats.withQuorum} color="success" />
             </Typography>
-          )}
-          <Typography
-            variant="body2"
-            sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
-          >
-            <Box component="span" sx={{ mr: 2, width: 130 }}>
-              With quorum ({stats.withQuorumTot})
-            </Box>
-            <CircularProgressWithLabel isLoading={isLoading} value={stats.withQuorum} color="success" />
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
-          >
-            <Box component="span" sx={{ mr: 2, width: 130 }}>
-              Without quorum ({stats.withoutQuorumTot})
-            </Box>
-            <CircularProgressWithLabel isLoading={isLoading} value={stats.withoutQuorum} color="warning" />
-          </Typography>
-          <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-            <Box component="span" sx={{ mr: 2, width: 130 }}>
-              Rejected ({stats.rejectedTot})
-            </Box>
-            <CircularProgressWithLabel isLoading={isLoading} value={stats.rejected} color="error" />
-          </Typography>
-        </Box>
+            <Typography
+              variant="body2"
+              sx={{ display: "flex", alignItems: "center", mb: 1.5, pb: 1.5, borderBottom: 1, borderColor: "divider" }}
+            >
+              <Box component="span" sx={{ mr: 2, width: 130 }}>
+                Without quorum ({stats.withoutQuorumTot})
+              </Box>
+              <CircularProgressWithLabel isLoading={isLoading} value={stats.withoutQuorum} color="warning" />
+            </Typography>
+            <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+              <Box component="span" sx={{ mr: 2, width: 130 }}>
+                Rejected ({stats.rejectedTot})
+              </Box>
+              <CircularProgressWithLabel isLoading={isLoading} value={stats.rejected} color="error" />
+            </Typography>
+          </Box>
+        )}
       </Stack>
       {stats?.typesTotals && (
         <Stack spacing={1} direction="row" justifyContent="center" flexWrap="wrap">

@@ -113,7 +113,7 @@ export default function Delegation() {
   return (
     <>
       <Alert severity="info" sx={{ mb: 2 }}>
-        <AlertTitle>Heads up</AlertTitle>
+        <AlertTitle>Info</AlertTitle>
         Delegating somebody (i.e. giving a power of attorney) means that this person can use your voting power to vote
         for resolutions in his/her favor (i.e. your tokens are considered as his/her tokens while voting). Delegations
         are a great tool for you if you want to be a passive DAO member. However, you need to acknowledge, that the
