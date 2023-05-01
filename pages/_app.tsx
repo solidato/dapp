@@ -52,6 +52,7 @@ interface DappProps extends AppProps {
     renderOnServer?: boolean;
     fullWidth?: boolean;
   };
+  pageProps: any;
 }
 
 const StyledSnackbarProvider = styled(SnackbarProvider)`
