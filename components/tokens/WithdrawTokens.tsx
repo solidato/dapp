@@ -2,7 +2,13 @@ import { useAccount } from "wagmi";
 
 import { useState } from "react";
 
-import { Alert, Box, Button, Slider, TextField, Typography } from "@mui/material";
+import { CloseRounded } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
+import { Alert, Box, Button, IconButton, InputAdornment, Slider, TextField, Typography } from "@mui/material";
+
+import { calculateSteps } from "@lib/utils";
+
+import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import Modal from "@components/Modal";
 
@@ -15,6 +21,7 @@ export default function WithdrawTokens() {
   const [withdrawing, setWithdrawing] = useState(0);
   const [withdrawalAddress, setWithdrawalAddress] = useState(String(address));
   const [changeAddress, setChangeAddress] = useState(false);
+  const { isAwaitingConfirmation, isLoading } = useBlockchainTransactionStore();
 
   const { data } = useUserBalanceAndOffers();
   const { onSubmit } = useWithdrawTokens();
@@ -26,14 +33,33 @@ export default function WithdrawTokens() {
     }
   };
 
-  const maxToWithdraw = data?.balance.unlocked || 0;
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setWithdrawing(0);
+    setWithdrawalAddress(String(address));
+    setChangeAddress(false);
+  };
+
+  const handleSetChangeAddress = () => {
+    setChangeAddress(true);
+    setTimeout(() => {
+      document.getElementById("address")?.focus();
+    }, 100);
+  };
+
+  const handleResetSetChangeAddress = () => {
+    setChangeAddress(false);
+    setWithdrawalAddress(String(address));
+  };
+
+  const maxToWithdraw = data?.balance.unlockedTokens || 0;
 
   return (
     <>
       <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} disabled={maxToWithdraw === 0}>
         Withdraw tokens
       </Button>
-      <Modal open={modalOpen} setOpen={setModalOpen} size="medium">
+      <Modal open={modalOpen} onClose={handleModalClose} size="medium">
         <>
           <Typography variant="h5">Withdraw tokens</Typography>
           <Box sx={{ p: 4 }}>
@@ -43,7 +69,7 @@ export default function WithdrawTokens() {
               max={maxToWithdraw}
               aria-label="Small"
               valueLabelDisplay="auto"
-              step={100}
+              step={calculateSteps(maxToWithdraw)}
               marks={[
                 {
                   value: maxToWithdraw,
@@ -82,12 +108,21 @@ export default function WithdrawTokens() {
                 onChange={(e) => {
                   setWithdrawalAddress(e.target.value);
                 }}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton aria-label="toggle back" onClick={handleResetSetChangeAddress} edge="end">
+                        <CloseRounded />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             ) : (
               <Alert
                 severity="info"
                 action={
-                  <Button size="small" variant="outlined" onClick={() => setChangeAddress(true)}>
+                  <Button size="small" variant="outlined" onClick={handleSetChangeAddress}>
                     Change
                   </Button>
                 }
@@ -97,16 +132,17 @@ export default function WithdrawTokens() {
             )}
           </Box>
           <Box sx={{ textAlign: "center", pt: 2 }}>
-            <Button
+            <LoadingButton
               fullWidth
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
-              disabled={withdrawing <= 0}
+              disabled={withdrawing === 0 || withdrawalAddress.trim() === ""}
               onClick={handlePlaceOffer}
+              loading={isAwaitingConfirmation || isLoading}
             >
               Withdraw
-            </Button>
+            </LoadingButton>
           </Box>
         </>
       </Modal>

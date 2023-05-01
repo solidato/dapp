@@ -60,4 +60,6 @@ export const BLOCKCHAIN_TRANSACTION_KEYS = {
   APPROVE_TO_MATCH_OFFER: "approveToMatchOffer",
   OFFER_TOKENS: "offerTokens",
   MATCH_TOKENS: "matchTokens",
+  APPROVE_DEPOSIT_NEOK: "approveDepositNeok",
+  DEPOSIT_NEOK: "depositNeok",
 };

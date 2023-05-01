@@ -35,6 +35,7 @@ export default function OfferTokens() {
     const submitted = await onSubmit({ amount: offered });
     if (submitted) {
       setModalOpen(false);
+      setOffered(0);
     }
   };
 
@@ -45,38 +46,32 @@ export default function OfferTokens() {
     }
   };
 
-  const maxToOffer = allowance;
+  const lockedTokens = data?.balance.lockedTokens || 0;
+  const maxToOffer = allowance > lockedTokens ? lockedTokens : allowance;
   const isLoadingAllowance =
     (isAwaitingConfirmation || isLoading) && type === BLOCKCHAIN_TRANSACTION_KEYS.APPROVE_TO_OFFER;
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalOpen(true)}
-        disabled={(data?.balance.lockedTokens || 0) === 0}
-      >
+      <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} disabled={lockedTokens === 0}>
         I want to offer my tokens
       </Button>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="medium">
         <>
           <Typography variant="h5">Token offer</Typography>
-          {allowance < (data?.balance.lockedTokens || 0) && (
-            <Alert
-              severity="warning"
-              action={
-                <LoadingButton variant="contained" onClick={handleApproval} loading={isLoadingAllowance}>
-                  {allowance === 0 ? "Add allowance" : "Edit allowance"}
-                </LoadingButton>
-              }
-              sx={{ mt: 2 }}
-            >
-              {allowance === 0
-                ? "Before offering, you need to add allowance to offer your tokens."
-                : `You can offer max ${allowance} tokens.`}
-            </Alert>
-          )}
+          <Alert
+            severity="warning"
+            action={
+              <LoadingButton variant="contained" onClick={handleApproval} loading={isLoadingAllowance}>
+                {allowance === 0 ? "Add allowance" : "Edit allowance"}
+              </LoadingButton>
+            }
+            sx={{ mt: 2 }}
+          >
+            {allowance === 0 && "Before offering, you need to add allowance for your tokens"}
+            {allowance > 0 && allowance < lockedTokens && `You can deposit max ${maxToOffer} tokens`}
+            {allowance > 0 && allowance >= lockedTokens && `You can deposit up to your tokens balance`}
+          </Alert>
           {allowance > 0 && (
             <>
               <Box sx={{ p: 4 }}>
