@@ -23,8 +23,8 @@
     "@react-pdf/renderer": "^3.1.9",
     "@types/lodash.kebabcase": "^4.1.7",
     "@types/lodash.throttle": "^4.1.7",
-    "@web3modal/ethereum": "^2.2.2",
-    "@web3modal/react": "^2.2.2",
+    "@web3modal/ethereum": "^2.3.7",
+    "@web3modal/react": "^2.3.7",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.0",
     "easymde": "^2.18.0",
@@ -52,7 +52,7 @@
     "swr": "^2.0.4",
     "usehooks-ts": "^2.9.1",
     "uuid": "^9.0.0",
-    "wagmi": "^0.12.6",
+    "wagmi": "^0.12.12",
     "zustand": "^4.3.5"
   },
   "devDependencies": {
