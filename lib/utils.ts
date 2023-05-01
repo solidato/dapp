@@ -159,4 +159,8 @@ export const PDF_SIGNER = {
   neokingdom: "Benjamin Gregor Uphues",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
-export const calculateSteps = (value: number) => Math.ceil(value / 10);
+export const calculateSteps = (value: number) => {
+  if (value >= 10000) return 100;
+  if (value >= 100) return 10;
+  return 1;
+};
