@@ -1,10 +1,10 @@
-import { ReactEventHandler, SyntheticEvent, useEffect, useState } from "react";
+import { ReactEventHandler, SyntheticEvent, useEffect, useMemo, useState } from "react";
 
 import { AccessAlarm, CheckCircleRounded, PlayArrow, Stop } from "@mui/icons-material";
 import { Box, Chip, IconButton, keyframes, useTheme } from "@mui/material";
 
 import { STAGE_TO_ID_MAP } from "@lib/constants";
-import { getTaskName, toPrettyDuration } from "@lib/utils";
+import { findActiveTimesheet, getTaskName, toPrettyDuration } from "@lib/utils";
 
 import useDialogStore from "@store/dialogStore";
 import useProjectTaskStore, { ProjectTask, useProjectTaskActions } from "@store/projectTaskStore";
@@ -38,7 +38,20 @@ export default function StopwatchSlim({
   const openDialog = useDialogStore(({ openDialog }) => openDialog);
   const closeDialog = useDialogStore(({ closeDialog }) => closeDialog);
 
-  const { seconds, minutes, hours, isRunning, start: startTime, pause: pauseTime, reset: resetTime } = useStopwatch({});
+  const offsetTimestamp = useMemo(() => {
+    const activeTimesheet = findActiveTimesheet(task);
+    return activeTimesheet ? new Date(activeTimesheet.start * 1000).getTime() : 0;
+  }, [task]);
+
+  const {
+    seconds,
+    minutes,
+    hours,
+    isRunning,
+    start: startTime,
+    pause: pauseTime,
+    reset: resetTime,
+  } = useStopwatch({ offsetTimestamp });
 
   const isTrackingTask = (task: ProjectTask) => trackedTask && trackedTask.id === task.id;
 
@@ -116,22 +129,23 @@ export default function StopwatchSlim({
   };
 
   return (
-    <Box sx={{ position: "relative" }}>
+    <Box className={className} sx={{ position: "relative" }}>
       <Box
+        className="stopwatch-"
         sx={{
           position: "absolute",
           left: "-2px",
-          top: "4px",
+          top: 0,
           zIndex: 1,
           background: theme.palette.background.paper,
-          border: `1px solid ${isDone ? theme.palette.success.main : theme.palette.grey[300]}`,
+          border: `1px solid ${isDone ? theme.palette.success.main : theme.palette.grey[400]}`,
           borderRadius: "50%",
         }}
       >
         {renderTaskAction()}
       </Box>
       <Chip
-        className={className}
+        className="stopwatch-chip"
         icon={<PlayArrow />}
         color={isDone ? "success" : undefined}
         variant="outlined"
