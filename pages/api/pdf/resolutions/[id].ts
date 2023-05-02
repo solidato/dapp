@@ -6,8 +6,9 @@ import { OdooUser, ResolutionEntity, ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
-import { fetcherWithParams } from "@graphql/client";
+import { clientLegacyGraph, fetcherWithParams, legacyFetcherWithParams } from "@graphql/client";
 import odooClient from "@graphql/odoo";
+import { getLegacyResolutionQuery } from "@graphql/queries/get-legacy-resolution.query";
 import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
 import { getUsersQuery } from "@graphql/queries/get-users.query";
 
@@ -25,8 +26,12 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const graphQlResolutionData: any = await fetcherWithParams([getResolutionQuery, { id }]);
+    const legacyGraphQlResolutionData: any =
+      graphQlResolutionData.resolution === null && clientLegacyGraph
+        ? await legacyFetcherWithParams([getLegacyResolutionQuery, { id }])
+        : null;
 
-    if (graphQlResolutionData.resolution === null) {
+    if (graphQlResolutionData.resolution === null && legacyGraphQlResolutionData.resolution === null) {
       return res.status(404).send("resolution not found");
     }
 
@@ -39,7 +44,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
-      graphQlResolutionData?.resolution as ResolutionEntity,
+      graphQlResolutionData?.resolution || (legacyGraphQlResolutionData?.resolution as ResolutionEntity),
       true,
     );
 

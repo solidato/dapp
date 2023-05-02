@@ -61,6 +61,7 @@ export type ResolutionEntity = {
   executionData?: string[];
   executionTo?: string[];
   totalVotingPower: BigInt;
+  isLegacy?: boolean;
 };
 
 export type ResolutionAction = {

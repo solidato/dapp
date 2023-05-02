@@ -31,6 +31,9 @@
     "ResolutionManager": {
       "address": "0xE5714C29b7acE2C6a3A80BE511ED7e5b92594204",
       "startBlock": 12936843
+    },
+    "TokenMock": {
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
     }
   },
   "9000": {
