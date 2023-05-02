@@ -198,7 +198,7 @@ const ResolutionPdf = ({
                 </Text>
               )}
               <Br />
-              <Small>Shareholders did not submit dissenting options</Small>
+              <Small>Shareholders did not submit dissenting opinions</Small>
             </View>
             <VotingPdf resolution={resolution} />
             <ShareholdersPdf resolution={resolution} getUserName={getUserName} />

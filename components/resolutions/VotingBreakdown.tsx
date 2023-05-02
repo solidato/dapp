@@ -20,12 +20,12 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           {resolution.hasQuorum ? (
             <span>
               THE RESOLUTION OF SHAREHOLDERS <b>HAS BEEN</b> ADOPTED on {resolution.resolutionTypeInfo.votingEndsAt}.
-              Shareholders did not submit dissenting options
+              Shareholders did not submit dissenting opinions
             </span>
           ) : (
             <span>
               THE RESOLUTION OF SHAREHOLDERS <b>HAS NOT BEEN</b> ADOPTED. Voting ended on{" "}
-              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit dissenting options
+              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit dissenting opinions
             </span>
           )}
         </Alert>
