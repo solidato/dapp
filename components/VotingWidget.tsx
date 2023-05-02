@@ -5,7 +5,7 @@ import { shallow } from "zustand/shallow";
 import { useMemo, useState } from "react";
 
 import { LoadingButton } from "@mui/lab";
-import { Alert, Box, Button, ButtonGroup, CircularProgress, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, CircularProgress, Link, Stack, Typography } from "@mui/material";
 
 import { isSameAddress } from "@lib/utils";
 
@@ -61,6 +61,17 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
 
   if (isLoadingAcl) {
     <CircularProgress />;
+  }
+
+  if (resolution.isLegacy) {
+    return (
+      <Alert severity="warning" sx={{ mt: 2 }}>
+        This resolution can be voted on{" "}
+        <Link target="_blank" href={`https://dao.legacy.neokingdom.org/#/resolutions/${resolution.id}`}>
+          the old dapp
+        </Link>
+      </Alert>
+    );
   }
 
   if (!isConnected) {

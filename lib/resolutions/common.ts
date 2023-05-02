@@ -94,10 +94,10 @@ export const getResolutionState = (
   $currentTimestamp: number,
   resolutionTypeInfo: ResolutionTypeInfo,
 ): ResolutionState => {
-  if (resolution.rejectTimestamp !== null) {
+  if (resolution.rejectTimestamp !== null && resolution.rejectTimestamp !== "0") {
     return RESOLUTION_STATES.REJECTED;
   }
-  if (resolution.approveTimestamp !== null) {
+  if (resolution.approveTimestamp !== null && resolution.approveTimestamp !== "0") {
     const { noticePeriodEnds, votingEnds } = resolutionTypeInfo;
     if (isBefore(new Date($currentTimestamp), noticePeriodEnds as Date)) {
       return RESOLUTION_STATES.NOTICE;
@@ -144,19 +144,19 @@ export const getEnhancedResolutionMapper =
       state,
       createdAt: getRelativeDateFromUnixTimestamp(resolution.createTimestamp, forceAbsolute),
       rejectedAt:
-        resolution.rejectTimestamp !== null
+        resolution.rejectTimestamp !== null && resolution.rejectTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.rejectTimestamp, forceAbsolute)
           : null,
       updatedAt:
-        resolution.updateTimestamp !== null
+        resolution.updateTimestamp !== null && resolution.updateTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.updateTimestamp, forceAbsolute)
           : null,
       approvedAt:
-        resolution.approveTimestamp !== null
+        resolution.approveTimestamp !== null && resolution.approveTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.approveTimestamp, forceAbsolute)
           : null,
       executedAt:
-        resolution.executionTimestamp && resolution.executionTimestamp !== null
+        resolution.executionTimestamp && resolution.executionTimestamp !== null && resolution.executionTimestamp !== "0"
           ? getRelativeDateFromUnixTimestamp(resolution.executionTimestamp, forceAbsolute)
           : null,
       href:

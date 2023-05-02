@@ -1,50 +1,36 @@
 import Link from "next/link";
-import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Box, Button, CircularProgress, FormControlLabel, Grid, Stack, Switch } from "@mui/material";
-
-import { fetcher } from "@graphql/client";
-import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
 
 import { getEnhancedResolutions } from "@lib/resolutions/common";
 import { RESOLUTION_STATES } from "@lib/resolutions/common";
 
 import ResolutionCard from "@components/ResolutionCard";
 
+import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
+import useTimestamp from "@hooks/useTimestamp";
 
 import { ResolutionEntityEnhanced } from "../../types";
 
 Resolutions.title = "Resolutions";
 
-const REFRESH_EVERY_MS = 3000;
-
 export default function Resolutions() {
   const { isConnected } = useAccount();
-  const { data, isLoading } = useSWR<any>(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
-  const [currentTimestamp, setCurrentTimestamp] = useState(Date.now());
-
-  useEffect(() => {
-    const intervalCallback = () => {
-      setCurrentTimestamp(Date.now());
-    };
-
-    const interval = setInterval(intervalCallback, REFRESH_EVERY_MS);
-
-    return () => clearInterval(interval);
-  }, []);
+  const { currentTimestamp } = useTimestamp();
+  const { resolutions, isLoading } = useGetResolutions();
 
   const enhancedResolutions: ResolutionEntityEnhanced[] = useMemo(() => {
     if (isLoading || isLoadingAcl) {
       return [];
     }
-    return getEnhancedResolutions(data?.resolutions, currentTimestamp, acl);
-  }, [data?.resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
+    return getEnhancedResolutions(resolutions, +currentTimestamp, acl);
+  }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 
   const filteredResolutions = includeRejected
     ? enhancedResolutions
