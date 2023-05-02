@@ -47,7 +47,7 @@ Delegation.requireLogin = true;
 export default function Delegation() {
   const { user } = useUser();
   const { address: walletAddress } = useAccount();
-  const { data, isLoading } = useSWR(getShareholdersInfo, fetcher);
+  const { data, isLoading } = useSWR<any>(getShareholdersInfo, fetcher);
   const { data: delegationData, isLoading: delegationLoading } = useDelegationStatus();
   const [onlyManagingBoard, setOnlyManagingBoard] = React.useState(false);
   const { isLoading: isLoadingTransaction } = useBlockchainTransactionStore();
@@ -77,19 +77,12 @@ export default function Delegation() {
       return [];
     }
 
-    const balancesSum = data.daoUsers.reduce(
-      (sum: number, daoUser: DaoUser) =>
-        getShareholderStatus(daoUser.address).length === 0
-          ? sum
-          : sum + (daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0),
-      0,
-    );
+    const totalVotingPower = bigIntToNum(data?.daoManager?.totalVotingPower || BigInt(0));
 
     const users = data?.daoUsers.reduce((computed: any, daoUser: DaoUser) => {
-      const balance = Math.round(daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0);
+      const userVotingPower = bigIntToNum(daoUser.votingPower);
       computed[daoUser.address] = {
-        balance,
-        power: ((balance * 100) / balancesSum).toFixed(2),
+        power: ((100 * userVotingPower) / totalVotingPower).toFixed(2),
         canBeDelegated: delegationData.usersList.find((user) => isSameAddress(daoUser.address, user.address))
           ?.canBeDelegated,
       };
@@ -195,7 +188,7 @@ export default function Delegation() {
                 (onlyManagingBoard && data.daoManager?.managingBoardAddresses.includes(userAddress))),
           )
           .map((userAddress) => {
-            const { balance, power, canBeDelegated } = daoUsers[userAddress];
+            const { power, canBeDelegated } = daoUsers[userAddress];
             const isDelegatedByCurrentUser = delegationData?.signerDelegationStatus?.delegated === userAddress;
             const ctaCurrentUser = isDelegatedByCurrentUser ? (
               <Chip icon={<CheckCircle />} label="Delegated" variant="filled" color="success" size="small" />
@@ -228,7 +221,6 @@ export default function Delegation() {
               <Grid item xs={12} md={6} lg={4} key={userAddress}>
                 <UserCard
                   address={userAddress}
-                  balance={balance.toLocaleString()}
                   power={power}
                   statuses={getShareholderStatus(userAddress)}
                   cta={ctaCurrentUser || ctaCanBeDelegated}

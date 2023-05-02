@@ -44,6 +44,7 @@ export const computeBalances = (daoUser: DaoUser | null): ComputedBalances => {
     offeredTokens: Number(formatEther(offeredTokens)),
     unlockedTokens: Number(formatEther(unlockedTokens)),
     vestingTokens: Number(formatEther(vestingTokens)),
+    votingPower: bigIntToNum(daoUser?.votingPower || BigInt(0)),
   };
 };
 

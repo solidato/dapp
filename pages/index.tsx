@@ -13,6 +13,7 @@ import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
 import Tasks from "@components/dashboard/Tasks";
+import Tokens from "@components/dashboard/Tokens";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
@@ -118,6 +119,9 @@ export default function Home() {
       </Section>
       <Section inverse={enhancedResolutionsToVote?.length > 0}>
         <ResolutionsStats stats={stats} isLoading={isLoading} totalResolutions={enhancedResolutions.length} />
+      </Section>
+      <Section inverse={enhancedResolutionsToVote?.length === 0}>
+        <Tokens />
       </Section>
     </>
   );

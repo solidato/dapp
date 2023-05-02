@@ -60,6 +60,9 @@ export default function Tokens() {
     return <Alert severity="warning">Please connect your wallet to be able to visit this page</Alert>;
   }
 
+  const activeOffersCount = (data?.activeOffers || []).length;
+  const expiredOffersCount = (data?.expiredOffers || []).length;
+
   return (
     <>
       <UserBalance />
@@ -71,15 +74,15 @@ export default function Tokens() {
           <Tab label="Actions" {...a11yProps(0)} />
           <Tab
             label={
-              <Badge badgeContent={(data?.activeOffers || []).length} color="primary">
+              <Badge badgeContent={activeOffersCount} color="primary">
                 Active offers
               </Badge>
             }
             {...a11yProps(1)}
-            disabled={(data?.activeOffers || []).length === 0}
+            disabled={activeOffersCount === 0}
           />
           <Tab
-            label={`Expired offers (${(data?.expiredOffers || []).length})`}
+            label={`Expired offers${expiredOffersCount > 0 ? ` (${expiredOffersCount})` : ""}`}
             {...a11yProps(1)}
             disabled={(data?.expiredOffers || []).length === 0}
           />

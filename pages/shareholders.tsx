@@ -60,7 +60,6 @@ export default function Shareholders() {
             <Grid item xs={12} md={6} lg={4} key={userAddress}>
               <UserCard
                 address={userAddress}
-                balance={daoUsers[userAddress].balance.toLocaleString()}
                 power={daoUsers[userAddress].power}
                 statuses={getShareholderStatus(userAddress)}
               />

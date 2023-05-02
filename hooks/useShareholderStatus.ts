@@ -35,20 +35,12 @@ export default function useShareholderStatus() {
       return [];
     }
 
-    const balancesSum = data.daoUsers.reduce(
-      (sum: number, daoUser: DaoUser) =>
-        getShareholderStatus(daoUser.address).length === 0
-          ? sum
-          : sum + (daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0),
-      0,
-    );
+    const totalVotingPower = bigIntToNum(data?.daoManager?.totalVotingPower || BigInt(0));
 
     const users = data?.daoUsers.reduce((computed: any, daoUser: DaoUser) => {
-      const balance = Math.round(daoUser?.totalBalance ? bigIntToNum(daoUser.totalBalance) : 0);
-      const power = (balance * 100) / balancesSum;
+      const userVotingPower = bigIntToNum(daoUser.votingPower);
       computed[daoUser.address] = {
-        balance,
-        power: power > 0 ? power.toFixed(2) : 0,
+        power: ((100 * userVotingPower) / totalVotingPower).toFixed(2),
       };
       return computed;
     }, {});

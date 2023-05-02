@@ -168,6 +168,7 @@ export type ComputedBalances = {
   offeredTokens: number;
   unlockedTokens: number;
   vestingTokens: number;
+  votingPower: number;
 };
 
 export type MonthlyRewardsUserData = {
