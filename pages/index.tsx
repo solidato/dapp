@@ -15,6 +15,7 @@ import Header from "@components/dashboard/Header";
 import Tasks from "@components/dashboard/Tasks";
 import Tokens from "@components/dashboard/Tokens";
 
+import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 
@@ -37,7 +38,7 @@ const emptyStats = {
 };
 
 export default function Home() {
-  const { data, isLoading } = useSWR<any>(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
+  const { resolutions, isLoading } = useGetResolutions();
 
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const { currentTimestamp } = useTimestamp();
@@ -51,7 +52,7 @@ export default function Home() {
       return [[], [], emptyStats];
     }
 
-    const allResolutions = getEnhancedResolutions(data?.resolutions, +currentTimestamp, acl);
+    const allResolutions = getEnhancedResolutions(resolutions, +currentTimestamp, acl);
 
     const inProgress = allResolutions.filter(
       (res) => ![RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(res.state),
@@ -82,7 +83,7 @@ export default function Home() {
           };
 
     return [allResolutions, resolutionsToVote, statsValues];
-  }, [data?.resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
+  }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 
   return (
     <>
