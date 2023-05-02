@@ -24,10 +24,9 @@ import VotingBreakdown from "@components/resolutions/VotingBreakdown";
 import VotingSection from "@components/resolutions/VotingSection";
 import VotingUsers from "@components/resolutions/VotingUsers";
 
+import useGetResolution from "@hooks/useGetResolution";
 import useTimestamp from "@hooks/useTimestamp";
 import useUser from "@hooks/useUser";
-
-const REFRESH_INTERVAL_MS = 5000;
 
 const converter = new showdown.Converter();
 converter.setFlavor("github");
@@ -35,31 +34,19 @@ converter.setFlavor("github");
 ResolutionView.fullWidth = true;
 
 export default function ResolutionView() {
-  const router = useRouter();
   const { currentTimestamp } = useTimestamp();
   const { user } = useUser();
 
-  const { data: resolutionData, isLoading: isLoadingResolution } = useSWR<any>(
-    [getResolutionQuery, { id: router.query.id }],
-    fetcherWithParams,
-    { refreshInterval: REFRESH_INTERVAL_MS },
-  );
+  const { resolution: resolutionEntity, isLoading } = useGetResolution();
 
-  const notFound = resolutionData && !resolutionData.resolution;
-
-  useEffect(() => {
-    if (router.query?.viewMode === "print" && !isLoadingResolution && !notFound) {
-      window.print();
-      window.close();
-    }
-  }, [router.query, notFound, isLoadingResolution]);
+  const notFound = !resolutionEntity;
 
   const resolution = useMemo(() => {
-    if (resolutionData?.resolution) {
-      return getEnhancedResolutionMapper(+currentTimestamp)(resolutionData.resolution);
+    if (resolutionEntity) {
+      return getEnhancedResolutionMapper(+currentTimestamp)(resolutionEntity);
     }
     return null;
-  }, [resolutionData?.resolution, currentTimestamp]);
+  }, [resolutionEntity, currentTimestamp]);
 
   const executionPayload = useMemo(() => {
     if ((resolution?.executionData || []).length > 0) {
@@ -77,7 +64,7 @@ export default function ResolutionView() {
     return [];
   }, [resolution]);
 
-  if (isLoadingResolution) {
+  if (isLoading) {
     return (
       <Section>
         <CircularProgress />
