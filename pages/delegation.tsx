@@ -91,7 +91,7 @@ export default function Delegation() {
 
     const addresses = Object.keys(users)
       .filter((address) => getShareholderStatus(address).length > 0)
-      .sort((userA, userB) => users[userB].balance - users[userA].balance);
+      .sort((userA, userB) => users[userB].power - users[userA].power);
 
     return [users, addresses];
   }, [data, delegationData, getShareholderStatus]);
