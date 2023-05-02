@@ -16,6 +16,7 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
+import CheckConnected from "@components/CheckConnected";
 import Layout from "@components/Layout";
 
 import useUser from "@hooks/useUser";
@@ -51,6 +52,7 @@ interface DappProps extends AppProps {
     renderOnServer?: boolean;
     fullWidth?: boolean;
   };
+  pageProps: any;
 }
 
 const StyledSnackbarProvider = styled(SnackbarProvider)`
@@ -90,7 +92,10 @@ export default function App({ Component, pageProps }: DappProps) {
               )}
               {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
                 <ContractsProvider>
-                  <Component {...pageProps} />
+                  <>
+                    <CheckConnected fullWidth={!!Component.fullWidth} />
+                    <Component {...pageProps} />
+                  </>
                 </ContractsProvider>
               )}
             </Layout>

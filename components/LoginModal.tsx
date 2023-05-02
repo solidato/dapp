@@ -43,7 +43,7 @@ export default function LoginModal() {
   };
 
   return (
-    <Modal open={modalOpen} setOpen={handleModalClose}>
+    <Modal open={modalOpen} onClose={handleModalClose}>
       <>
         {readyToSign ? (
           <>

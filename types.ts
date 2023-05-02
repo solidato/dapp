@@ -37,6 +37,7 @@ export type DaoManagerEntity = {
   shareholdersAddresses: string[];
   investorsAddresses: string[];
   resolutionTypes: ResolutionTypeEntity[];
+  totalVotingPower: BigInt;
 };
 
 export type ResolutionEntity = {
@@ -59,6 +60,7 @@ export type ResolutionEntity = {
   executionTimestamp?: string;
   executionData?: string[];
   executionTo?: string[];
+  totalVotingPower: BigInt;
 };
 
 export type ResolutionAction = {
@@ -140,23 +142,33 @@ export type Offer = {
   from: string;
   amount: BigInt;
   expirationTimestamp: string;
+  expiredOnTransfer: boolean;
 };
 
 export type DaoUser = {
   id: string;
   address: string;
-  totalBalance: BigInt;
-  vestingBalance: BigInt;
-  unlockedTempBalance: BigInt;
+
+  governanceBalance: BigInt;
+  governanceOfferedTempBalance: BigInt;
+  governanceVestingBalance: BigInt;
+  governanceVaultedBalance: BigInt;
+  governanceWithdrawableTempBalance: BigInt;
+  votingPower: BigInt;
+  shareholderRegistryBalance: BigInt;
+  neokigdomTokenBalance: BigInt;
+
+  activeOffers: Offer[];
 };
 
 export type ComputedBalances = {
-  total: number;
-  vesting: number;
-  unlocked: number;
-  locked: number;
-  currentlyOffered: number;
-  maxToOffer: number;
+  governanceTokens: number;
+  neokTokens: number;
+  lockedTokens: number;
+  offeredTokens: number;
+  unlockedTokens: number;
+  vestingTokens: number;
+  votingPower: number;
 };
 
 export type MonthlyRewardsUserData = {

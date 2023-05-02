@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ResolutionManager__factory } from "./ResolutionManager__factory";
+export { ResolutionManagerBase__factory } from "./ResolutionManagerBase__factory";

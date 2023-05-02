@@ -22,61 +22,52 @@ import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListen
 
 export interface VotingInterface extends utils.Interface {
   functions: {
-    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "afterAddContributor(address)": FunctionFragment;
     "afterTokenTransfer(address,address,uint256)": FunctionFragment;
     "beforeRemoveContributor(address)": FunctionFragment;
     "canVote(address)": FunctionFragment;
     "canVoteAt(address,uint256)": FunctionFragment;
     "delegate(address)": FunctionFragment;
+    "delegateFrom(address,address)": FunctionFragment;
     "getCurrentSnapshotId()": FunctionFragment;
     "getDelegate(address)": FunctionFragment;
     "getDelegateAt(address,uint256)": FunctionFragment;
-    "getRoleAdmin(bytes32)": FunctionFragment;
+    "getRoles()": FunctionFragment;
     "getTotalVotingPower()": FunctionFragment;
     "getTotalVotingPowerAt(uint256)": FunctionFragment;
     "getVotingPower(address)": FunctionFragment;
     "getVotingPowerAt(address,uint256)": FunctionFragment;
-    "grantRole(bytes32,address)": FunctionFragment;
-    "hasRole(bytes32,address)": FunctionFragment;
-    "initialize()": FunctionFragment;
-    "renounceRole(bytes32,address)": FunctionFragment;
-    "revokeRole(bytes32,address)": FunctionFragment;
+    "initialize(address)": FunctionFragment;
+    "setRoles(address)": FunctionFragment;
     "setShareholderRegistry(address)": FunctionFragment;
     "setToken(address)": FunctionFragment;
     "snapshot()": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "DEFAULT_ADMIN_ROLE"
       | "afterAddContributor"
       | "afterTokenTransfer"
       | "beforeRemoveContributor"
       | "canVote"
       | "canVoteAt"
       | "delegate"
+      | "delegateFrom"
       | "getCurrentSnapshotId"
       | "getDelegate"
       | "getDelegateAt"
-      | "getRoleAdmin"
+      | "getRoles"
       | "getTotalVotingPower"
       | "getTotalVotingPowerAt"
       | "getVotingPower"
       | "getVotingPowerAt"
-      | "grantRole"
-      | "hasRole"
       | "initialize"
-      | "renounceRole"
-      | "revokeRole"
+      | "setRoles"
       | "setShareholderRegistry"
       | "setToken"
-      | "snapshot"
-      | "supportsInterface",
+      | "snapshot",
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "DEFAULT_ADMIN_ROLE", values?: undefined): string;
   encodeFunctionData(functionFragment: "afterAddContributor", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "afterTokenTransfer",
@@ -89,13 +80,17 @@ export interface VotingInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "delegate", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: "delegateFrom",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
+  ): string;
   encodeFunctionData(functionFragment: "getCurrentSnapshotId", values?: undefined): string;
   encodeFunctionData(functionFragment: "getDelegate", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "getDelegateAt",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: "getRoleAdmin", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "getRoles", values?: undefined): string;
   encodeFunctionData(functionFragment: "getTotalVotingPower", values?: undefined): string;
   encodeFunctionData(functionFragment: "getTotalVotingPowerAt", values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(functionFragment: "getVotingPower", values: [PromiseOrValue<string>]): string;
@@ -103,66 +98,43 @@ export interface VotingInterface extends utils.Interface {
     functionFragment: "getVotingPowerAt",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(
-    functionFragment: "grantRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(functionFragment: "hasRole", values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]): string;
-  encodeFunctionData(functionFragment: "initialize", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "renounceRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
+  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setRoles", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "setShareholderRegistry", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "setToken", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
-  encodeFunctionData(functionFragment: "supportsInterface", values: [PromiseOrValue<BytesLike>]): string;
 
-  decodeFunctionResult(functionFragment: "DEFAULT_ADMIN_ROLE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "afterAddContributor", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "afterTokenTransfer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "beforeRemoveContributor", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canVote", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canVoteAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegateFrom", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getCurrentSnapshotId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegateAt", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRoleAdmin", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRoles", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getTotalVotingPower", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getTotalVotingPowerAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVotingPower", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getVotingPowerAt", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "renounceRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setShareholderRegistry", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "snapshot", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "supportsInterface", data: BytesLike): Result;
 
   events: {
     "DelegateChanged(address,address,address)": EventFragment;
     "DelegateVotesChanged(address,uint256,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
-    "RoleGranted(bytes32,address,address)": EventFragment;
-    "RoleRevoked(bytes32,address,address)": EventFragment;
     "Snapshot(uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "DelegateChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "DelegateVotesChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Snapshot"): EventFragment;
 }
 
@@ -190,33 +162,6 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
-
-export interface RoleAdminChangedEventObject {
-  role: string;
-  previousAdminRole: string;
-  newAdminRole: string;
-}
-export type RoleAdminChangedEvent = TypedEvent<[string, string, string], RoleAdminChangedEventObject>;
-
-export type RoleAdminChangedEventFilter = TypedEventFilter<RoleAdminChangedEvent>;
-
-export interface RoleGrantedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleGrantedEvent = TypedEvent<[string, string, string], RoleGrantedEventObject>;
-
-export type RoleGrantedEventFilter = TypedEventFilter<RoleGrantedEvent>;
-
-export interface RoleRevokedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleRevokedEvent = TypedEvent<[string, string, string], RoleRevokedEventObject>;
-
-export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
 
 export interface SnapshotEventObject {
   id: BigNumber;
@@ -248,8 +193,6 @@ export interface Voting extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
-
     afterAddContributor(
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -280,6 +223,12 @@ export interface Voting extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[string]>;
@@ -290,7 +239,7 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[string]>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string]>;
+    getRoles(overrides?: CallOverrides): Promise<[string]>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -304,29 +253,13 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[BigNumber]>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    initialize(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<[boolean]>;
-
-    initialize(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -341,11 +274,7 @@ export interface Voting extends BaseContract {
     ): Promise<ContractTransaction>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[boolean]>;
   };
-
-  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   afterAddContributor(
     account: PromiseOrValue<string>,
@@ -377,6 +306,12 @@ export interface Voting extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
+  delegateFrom(
+    delegator: PromiseOrValue<string>,
+    newDelegate: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
   getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
   getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
@@ -387,7 +322,7 @@ export interface Voting extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<string>;
 
-  getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getRoles(overrides?: CallOverrides): Promise<string>;
 
   getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -401,29 +336,13 @@ export interface Voting extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<BigNumber>;
 
-  grantRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  initialize(
+    roles: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  hasRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<boolean>;
-
-  initialize(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-  renounceRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  revokeRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  setRoles(
+    roles: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -439,11 +358,7 @@ export interface Voting extends BaseContract {
 
   snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
 
-  supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
-
   callStatic: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
-
     afterAddContributor(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     afterTokenTransfer(
@@ -465,6 +380,12 @@ export interface Voting extends BaseContract {
 
     delegate(newDelegate: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
@@ -475,7 +396,7 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<string>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getRoles(overrides?: CallOverrides): Promise<string>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -489,39 +410,15 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
+    initialize(roles: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<boolean>;
-
-    initialize(overrides?: CallOverrides): Promise<void>;
-
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
+    setRoles(roles: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     setShareholderRegistry(shareholderRegistry: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     setToken(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
   };
 
   filters: {
@@ -550,46 +447,11 @@ export interface Voting extends BaseContract {
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
-    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-    RoleAdminChanged(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-
-    "RoleGranted(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-    RoleGranted(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-
-    "RoleRevoked(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
-    RoleRevoked(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
-
     "Snapshot(uint256)"(id?: null): SnapshotEventFilter;
     Snapshot(id?: null): SnapshotEventFilter;
   };
 
   estimateGas: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
-
     afterAddContributor(
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -620,6 +482,12 @@ export interface Voting extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
@@ -630,7 +498,7 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -644,29 +512,13 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    initialize(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    initialize(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
-
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -681,13 +533,9 @@ export interface Voting extends BaseContract {
     ): Promise<BigNumber>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     afterAddContributor(
       account: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -718,6 +566,12 @@ export interface Voting extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -728,7 +582,7 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getTotalVotingPower(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -745,29 +599,13 @@ export interface Voting extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    initialize(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    initialize(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
-
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -782,7 +620,5 @@ export interface Voting extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

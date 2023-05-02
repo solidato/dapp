@@ -1,10 +1,8 @@
-import { useWeb3Modal } from "@web3modal/react";
 import useSWR from "swr";
-import { useAccount } from "wagmi";
 
 import { useMemo } from "react";
 
-import { Alert, AlertTitle, Button, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import { fetcher } from "@graphql/client";
 import { getResolutionsQuery } from "@graphql/queries/get-resolutions.query";
@@ -15,6 +13,7 @@ import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
 import Tasks from "@components/dashboard/Tasks";
+import Tokens from "@components/dashboard/Tokens";
 
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
@@ -38,9 +37,6 @@ const emptyStats = {
 };
 
 export default function Home() {
-  const { address } = useAccount();
-  const { open: openWeb3Modal } = useWeb3Modal();
-
   const { data, isLoading } = useSWR<any>(getResolutionsQuery, fetcher, { refreshInterval: REFRESH_EVERY_MS });
 
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
@@ -70,39 +66,26 @@ export default function Home() {
       return totals;
     }, {} as any);
 
-    const statsValues = {
-      withQuorum: (100 * withQuorum.length) / allResolutions.length,
-      withoutQuorum: (100 * withoutQuorum.length) / allResolutions.length,
-      rejected: (100 * rejected.length) / allResolutions.length,
-      withQuorumTot: withQuorum.length,
-      withoutQuorumTot: withoutQuorum.length,
-      rejectedTot: rejected.length,
-      inProgress: (100 * inProgress.length) / allResolutions.length,
-      inProgressTot: inProgress.length,
-      typesTotals,
-    };
+    const statsValues =
+      allResolutions.length === 0
+        ? emptyStats
+        : {
+            withQuorum: (100 * withQuorum.length) / allResolutions.length,
+            withoutQuorum: (100 * withoutQuorum.length) / allResolutions.length,
+            rejected: (100 * rejected.length) / allResolutions.length,
+            withQuorumTot: withQuorum.length,
+            withoutQuorumTot: withoutQuorum.length,
+            rejectedTot: rejected.length,
+            inProgress: (100 * inProgress.length) / allResolutions.length,
+            inProgressTot: inProgress.length,
+            typesTotals,
+          };
 
     return [allResolutions, resolutionsToVote, statsValues];
   }, [data?.resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 
   return (
     <>
-      {!address && (
-        <Section>
-          <Alert
-            severity="warning"
-            action={
-              <Button variant="outlined" color="warning" size="small" onClick={() => openWeb3Modal()}>
-                Connect
-              </Button>
-            }
-          >
-            <AlertTitle>Heads up</AlertTitle>
-            It looks you&apos;re just connected through odoo. You should also connect your wallet for a smooth
-            experience in the dapp
-          </Alert>
-        </Section>
-      )}
       <Section
         sx={{ pt: 0 }}
         containerSx={{
@@ -136,6 +119,9 @@ export default function Home() {
       </Section>
       <Section inverse={enhancedResolutionsToVote?.length > 0}>
         <ResolutionsStats stats={stats} isLoading={isLoading} totalResolutions={enhancedResolutions.length} />
+      </Section>
+      <Section inverse={enhancedResolutionsToVote?.length === 0}>
+        <Tokens />
       </Section>
     </>
   );

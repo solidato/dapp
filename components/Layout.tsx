@@ -18,7 +18,8 @@ import AccountMenu from "./AccountMenu";
 import LoginModal from "./LoginModal";
 import NkdLogo from "./svg-logos/NkdLogo";
 
-const initActiveStyle = (currentPath: string) => (href: string) => currentPath === href;
+const initActiveStyle = (currentPath: string) => (href: string) =>
+  currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
 export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
   const { user } = useUser();
@@ -96,6 +97,15 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                   clickable
                 />
               )}
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Tasks"
+                  component={Link}
+                  href="/tasks"
+                  variant={isActive("/tasks") ? "filled" : "outlined"}
+                  clickable
+                />
+              )}
               <Chip
                 label="Resolutions"
                 component={Link}
@@ -103,6 +113,15 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                 variant={isActive("/resolutions") ? "filled" : "outlined"}
                 clickable
               />
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Tokens and offers"
+                  component={Link}
+                  href="/tokens-offers"
+                  variant={isActive("/tokens-offers") ? "filled" : "outlined"}
+                  clickable
+                />
+              )}
               {!isLoading && typeof window !== "undefined" && user?.isLoggedIn && (
                 <Badge
                   color="success"
@@ -128,15 +147,6 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                     clickable
                   />
                 </Badge>
-              )}
-              {user?.isLoggedIn && (
-                <Chip
-                  label="Tasks"
-                  component={Link}
-                  href="/tasks"
-                  variant={isActive("/tasks") ? "filled" : "outlined"}
-                  clickable
-                />
               )}
               <Chip
                 label="Shareholders"

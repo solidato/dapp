@@ -118,6 +118,24 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "delegator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "newDelegate",
+        type: "address",
+      },
+    ],
+    name: "delegateFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "account",
         type: "address",
       },

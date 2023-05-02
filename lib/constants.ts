@@ -1,11 +1,4 @@
-const COMMON_FIELDS = ["display_name", "email", "ethereum_address"];
-
 export const ODOO_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-export const USER_FIELDS = {
-  neokingdom: [...COMMON_FIELDS, "avatar_256"],
-  teledisko: [...COMMON_FIELDS, "image"],
-};
 
 export type STAGE_NAME = "backlog" | "created" | "progress" | "inprogress" | "done" | "approved" | "canceled";
 
@@ -60,4 +53,13 @@ export const TAGS_COLORS: Record<number, string> = {
   28: "#C15050",
   29: "#F0D43A",
   30: "#CC0066",
+};
+
+export const BLOCKCHAIN_TRANSACTION_KEYS = {
+  APPROVE_TO_OFFER: "approveToOffer",
+  APPROVE_TO_MATCH_OFFER: "approveToMatchOffer",
+  OFFER_TOKENS: "offerTokens",
+  MATCH_TOKENS: "matchTokens",
+  APPROVE_DEPOSIT_NEOK: "approveDepositNeok",
+  DEPOSIT_NEOK: "depositNeok",
 };

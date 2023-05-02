@@ -23,7 +23,6 @@ import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListen
 export interface ShareholderRegistryInterface extends utils.Interface {
   functions: {
     "CONTRIBUTOR_STATUS()": FunctionFragment;
-    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "INVESTOR_STATUS()": FunctionFragment;
     "MANAGING_BOARD_STATUS()": FunctionFragment;
     "SHAREHOLDER_STATUS()": FunctionFragment;
@@ -37,23 +36,19 @@ export interface ShareholderRegistryInterface extends utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getBalanceAndStatusAt(address,uint256)": FunctionFragment;
     "getCurrentSnapshotId()": FunctionFragment;
-    "getRoleAdmin(bytes32)": FunctionFragment;
+    "getRoles()": FunctionFragment;
     "getStatus(address)": FunctionFragment;
     "getStatusAt(address,uint256)": FunctionFragment;
-    "grantRole(bytes32,address)": FunctionFragment;
-    "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,string)": FunctionFragment;
+    "initialize(address,string,string)": FunctionFragment;
     "isAtLeast(bytes32,address)": FunctionFragment;
     "isAtLeastAt(bytes32,address,uint256)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
-    "renounceRole(bytes32,address)": FunctionFragment;
-    "revokeRole(bytes32,address)": FunctionFragment;
+    "setRoles(address)": FunctionFragment;
     "setStatus(bytes32,address)": FunctionFragment;
     "setVoting(address)": FunctionFragment;
     "snapshot()": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "totalSupplyAt(uint256)": FunctionFragment;
@@ -64,7 +59,6 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "CONTRIBUTOR_STATUS"
-      | "DEFAULT_ADMIN_ROLE"
       | "INVESTOR_STATUS"
       | "MANAGING_BOARD_STATUS"
       | "SHAREHOLDER_STATUS"
@@ -78,23 +72,19 @@ export interface ShareholderRegistryInterface extends utils.Interface {
       | "decreaseAllowance"
       | "getBalanceAndStatusAt"
       | "getCurrentSnapshotId"
-      | "getRoleAdmin"
+      | "getRoles"
       | "getStatus"
       | "getStatusAt"
-      | "grantRole"
-      | "hasRole"
       | "increaseAllowance"
       | "initialize"
       | "isAtLeast"
       | "isAtLeastAt"
       | "mint"
       | "name"
-      | "renounceRole"
-      | "revokeRole"
+      | "setRoles"
       | "setStatus"
       | "setVoting"
       | "snapshot"
-      | "supportsInterface"
       | "symbol"
       | "totalSupply"
       | "totalSupplyAt"
@@ -103,7 +93,6 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "CONTRIBUTOR_STATUS", values?: undefined): string;
-  encodeFunctionData(functionFragment: "DEFAULT_ADMIN_ROLE", values?: undefined): string;
   encodeFunctionData(functionFragment: "INVESTOR_STATUS", values?: undefined): string;
   encodeFunctionData(functionFragment: "MANAGING_BOARD_STATUS", values?: undefined): string;
   encodeFunctionData(functionFragment: "SHAREHOLDER_STATUS", values?: undefined): string;
@@ -129,22 +118,20 @@ export interface ShareholderRegistryInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "getCurrentSnapshotId", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getRoleAdmin", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "getRoles", values?: undefined): string;
   encodeFunctionData(functionFragment: "getStatus", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "getStatusAt",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(
-    functionFragment: "grantRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(functionFragment: "hasRole", values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]): string;
-  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
-  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>, PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<string>],
+  ): string;
   encodeFunctionData(
     functionFragment: "isAtLeast",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
@@ -155,21 +142,13 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "mint", values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "renounceRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(
-    functionFragment: "revokeRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
+  encodeFunctionData(functionFragment: "setRoles", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "setStatus",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
   ): string;
   encodeFunctionData(functionFragment: "setVoting", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "snapshot", values?: undefined): string;
-  encodeFunctionData(functionFragment: "supportsInterface", values: [PromiseOrValue<BytesLike>]): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(functionFragment: "totalSupply", values?: undefined): string;
   encodeFunctionData(functionFragment: "totalSupplyAt", values: [PromiseOrValue<BigNumberish>]): string;
@@ -183,7 +162,6 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "CONTRIBUTOR_STATUS", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "DEFAULT_ADMIN_ROLE", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "INVESTOR_STATUS", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "MANAGING_BOARD_STATUS", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "SHAREHOLDER_STATUS", data: BytesLike): Result;
@@ -197,23 +175,19 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "decreaseAllowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getBalanceAndStatusAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getCurrentSnapshotId", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRoleAdmin", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRoles", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getStatus", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getStatusAt", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "increaseAllowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAtLeast", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "isAtLeastAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "renounceRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setStatus", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setVoting", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "snapshot", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "supportsInterface", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "totalSupply", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "totalSupplyAt", data: BytesLike): Result;
@@ -223,9 +197,6 @@ export interface ShareholderRegistryInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "Initialized(uint8)": EventFragment;
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
-    "RoleGranted(bytes32,address,address)": EventFragment;
-    "RoleRevoked(bytes32,address,address)": EventFragment;
     "Snapshot(uint256)": EventFragment;
     "StatusChanged(address,bytes32,bytes32)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
@@ -233,9 +204,6 @@ export interface ShareholderRegistryInterface extends utils.Interface {
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Snapshot"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StatusChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
@@ -256,33 +224,6 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
-
-export interface RoleAdminChangedEventObject {
-  role: string;
-  previousAdminRole: string;
-  newAdminRole: string;
-}
-export type RoleAdminChangedEvent = TypedEvent<[string, string, string], RoleAdminChangedEventObject>;
-
-export type RoleAdminChangedEventFilter = TypedEventFilter<RoleAdminChangedEvent>;
-
-export interface RoleGrantedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleGrantedEvent = TypedEvent<[string, string, string], RoleGrantedEventObject>;
-
-export type RoleGrantedEventFilter = TypedEventFilter<RoleGrantedEvent>;
-
-export interface RoleRevokedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleRevokedEvent = TypedEvent<[string, string, string], RoleRevokedEventObject>;
-
-export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
 
 export interface SnapshotEventObject {
   id: BigNumber;
@@ -333,8 +274,6 @@ export interface ShareholderRegistry extends BaseContract {
 
   functions: {
     CONTRIBUTOR_STATUS(overrides?: CallOverrides): Promise<[string]>;
-
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     INVESTOR_STATUS(overrides?: CallOverrides): Promise<[string]>;
 
@@ -389,7 +328,7 @@ export interface ShareholderRegistry extends BaseContract {
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string]>;
+    getRoles(overrides?: CallOverrides): Promise<[string]>;
 
     getStatus(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[string]>;
 
@@ -399,18 +338,6 @@ export interface ShareholderRegistry extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<[string] & { status: string }>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<[boolean]>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
@@ -418,6 +345,7 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<ContractTransaction>;
 
     initialize(
+      roles: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -444,15 +372,8 @@ export interface ShareholderRegistry extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<ContractTransaction>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -468,8 +389,6 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<ContractTransaction>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[boolean]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -492,8 +411,6 @@ export interface ShareholderRegistry extends BaseContract {
   };
 
   CONTRIBUTOR_STATUS(overrides?: CallOverrides): Promise<string>;
-
-  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
   INVESTOR_STATUS(overrides?: CallOverrides): Promise<string>;
 
@@ -548,7 +465,7 @@ export interface ShareholderRegistry extends BaseContract {
 
   getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+  getRoles(overrides?: CallOverrides): Promise<string>;
 
   getStatus(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
 
@@ -558,18 +475,6 @@ export interface ShareholderRegistry extends BaseContract {
     overrides?: CallOverrides,
   ): Promise<string>;
 
-  grantRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  hasRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<boolean>;
-
   increaseAllowance(
     spender: PromiseOrValue<string>,
     addedValue: PromiseOrValue<BigNumberish>,
@@ -577,6 +482,7 @@ export interface ShareholderRegistry extends BaseContract {
   ): Promise<ContractTransaction>;
 
   initialize(
+    roles: PromiseOrValue<string>,
     name: PromiseOrValue<string>,
     symbol: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -603,15 +509,8 @@ export interface ShareholderRegistry extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  renounceRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> },
-  ): Promise<ContractTransaction>;
-
-  revokeRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  setRoles(
+    roles: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -627,8 +526,6 @@ export interface ShareholderRegistry extends BaseContract {
   ): Promise<ContractTransaction>;
 
   snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ContractTransaction>;
-
-  supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -651,8 +548,6 @@ export interface ShareholderRegistry extends BaseContract {
 
   callStatic: {
     CONTRIBUTOR_STATUS(overrides?: CallOverrides): Promise<string>;
-
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
     INVESTOR_STATUS(overrides?: CallOverrides): Promise<string>;
 
@@ -704,7 +599,7 @@ export interface ShareholderRegistry extends BaseContract {
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getRoles(overrides?: CallOverrides): Promise<string>;
 
     getStatus(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
 
@@ -714,25 +609,18 @@ export interface ShareholderRegistry extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<string>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<boolean>;
-
     increaseAllowance(
       spender: PromiseOrValue<string>,
       addedValue: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    initialize(name: PromiseOrValue<string>, symbol: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    initialize(
+      roles: PromiseOrValue<string>,
+      name: PromiseOrValue<string>,
+      symbol: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
     isAtLeast(
       status: PromiseOrValue<BytesLike>,
@@ -755,17 +643,7 @@ export interface ShareholderRegistry extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
+    setRoles(roles: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     setStatus(
       status: PromiseOrValue<BytesLike>,
@@ -776,8 +654,6 @@ export interface ShareholderRegistry extends BaseContract {
     setVoting(voting: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     snapshot(overrides?: CallOverrides): Promise<BigNumber>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -814,39 +690,6 @@ export interface ShareholderRegistry extends BaseContract {
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
 
-    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-    RoleAdminChanged(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-
-    "RoleGranted(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-    RoleGranted(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-
-    "RoleRevoked(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
-    RoleRevoked(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
-
     "Snapshot(uint256)"(id?: null): SnapshotEventFilter;
     Snapshot(id?: null): SnapshotEventFilter;
 
@@ -871,8 +714,6 @@ export interface ShareholderRegistry extends BaseContract {
 
   estimateGas: {
     CONTRIBUTOR_STATUS(overrides?: CallOverrides): Promise<BigNumber>;
-
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     INVESTOR_STATUS(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -927,25 +768,13 @@ export interface ShareholderRegistry extends BaseContract {
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    getRoles(overrides?: CallOverrides): Promise<BigNumber>;
 
     getStatus(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
     getStatusAt(
       account: PromiseOrValue<string>,
       snapshotId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
@@ -956,6 +785,7 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<BigNumber>;
 
     initialize(
+      roles: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -982,15 +812,8 @@ export interface ShareholderRegistry extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<BigNumber>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -1006,8 +829,6 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<BigNumber>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<BigNumber>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1031,8 +852,6 @@ export interface ShareholderRegistry extends BaseContract {
 
   populateTransaction: {
     CONTRIBUTOR_STATUS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     INVESTOR_STATUS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1087,25 +906,13 @@ export interface ShareholderRegistry extends BaseContract {
 
     getCurrentSnapshotId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getStatus(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getStatusAt(
       account: PromiseOrValue<string>,
       snapshotId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
@@ -1116,6 +923,7 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
+      roles: PromiseOrValue<string>,
       name: PromiseOrValue<string>,
       symbol: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
@@ -1142,15 +950,8 @@ export interface ShareholderRegistry extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> },
-    ): Promise<PopulatedTransaction>;
-
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    setRoles(
+      roles: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -1166,8 +967,6 @@ export interface ShareholderRegistry extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     snapshot(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<PopulatedTransaction>;
-
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

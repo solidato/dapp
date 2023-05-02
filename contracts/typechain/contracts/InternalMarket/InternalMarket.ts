@@ -22,113 +22,134 @@ import type { OnEvent, PromiseOrValue, TypedEvent, TypedEventFilter, TypedListen
 
 export interface InternalMarketInterface extends utils.Interface {
   functions: {
-    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "erc20()": FunctionFragment;
-    "getRoleAdmin(bytes32)": FunctionFragment;
-    "grantRole(bytes32,address)": FunctionFragment;
-    "hasRole(bytes32,address)": FunctionFragment;
+    "deposit(uint256)": FunctionFragment;
+    "exchangeToken()": FunctionFragment;
+    "getRoles()": FunctionFragment;
+    "initialize(address,address)": FunctionFragment;
     "makeOffer(uint256)": FunctionFragment;
-    "matchOffer(address,address,uint256)": FunctionFragment;
+    "matchOffer(address,uint256)": FunctionFragment;
     "offerDuration()": FunctionFragment;
     "offeredBalanceOf(address)": FunctionFragment;
-    "renounceRole(bytes32,address)": FunctionFragment;
-    "revokeRole(bytes32,address)": FunctionFragment;
-    "setERC20(address)": FunctionFragment;
+    "priceOracle()": FunctionFragment;
+    "redeem(uint256)": FunctionFragment;
+    "redemptionController()": FunctionFragment;
+    "reserve()": FunctionFragment;
+    "setExchangePair(address,address)": FunctionFragment;
+    "setInternalToken(address)": FunctionFragment;
     "setOfferDuration(uint256)": FunctionFragment;
-    "supportsInterface(bytes4)": FunctionFragment;
+    "setRedemptionController(address)": FunctionFragment;
+    "setReserve(address)": FunctionFragment;
+    "setRoles(address)": FunctionFragment;
+    "setShareholderRegistry(address)": FunctionFragment;
+    "tokenInternal()": FunctionFragment;
     "withdraw(address,uint256)": FunctionFragment;
     "withdrawableBalanceOf(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "DEFAULT_ADMIN_ROLE"
-      | "erc20"
-      | "getRoleAdmin"
-      | "grantRole"
-      | "hasRole"
+      | "deposit"
+      | "exchangeToken"
+      | "getRoles"
+      | "initialize"
       | "makeOffer"
       | "matchOffer"
       | "offerDuration"
       | "offeredBalanceOf"
-      | "renounceRole"
-      | "revokeRole"
-      | "setERC20"
+      | "priceOracle"
+      | "redeem"
+      | "redemptionController"
+      | "reserve"
+      | "setExchangePair"
+      | "setInternalToken"
       | "setOfferDuration"
-      | "supportsInterface"
+      | "setRedemptionController"
+      | "setReserve"
+      | "setRoles"
+      | "setShareholderRegistry"
+      | "tokenInternal"
       | "withdraw"
       | "withdrawableBalanceOf",
   ): FunctionFragment;
 
-  encodeFunctionData(functionFragment: "DEFAULT_ADMIN_ROLE", values?: undefined): string;
-  encodeFunctionData(functionFragment: "erc20", values?: undefined): string;
-  encodeFunctionData(functionFragment: "getRoleAdmin", values: [PromiseOrValue<BytesLike>]): string;
-  encodeFunctionData(
-    functionFragment: "grantRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(functionFragment: "hasRole", values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "deposit", values: [PromiseOrValue<BigNumberish>]): string;
+  encodeFunctionData(functionFragment: "exchangeToken", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getRoles", values?: undefined): string;
+  encodeFunctionData(functionFragment: "initialize", values: [PromiseOrValue<string>, PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "makeOffer", values: [PromiseOrValue<BigNumberish>]): string;
   encodeFunctionData(
     functionFragment: "matchOffer",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "offerDuration", values?: undefined): string;
   encodeFunctionData(functionFragment: "offeredBalanceOf", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "priceOracle", values?: undefined): string;
+  encodeFunctionData(functionFragment: "redeem", values: [PromiseOrValue<BigNumberish>]): string;
+  encodeFunctionData(functionFragment: "redemptionController", values?: undefined): string;
+  encodeFunctionData(functionFragment: "reserve", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "renounceRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
+    functionFragment: "setExchangePair",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
   ): string;
-  encodeFunctionData(
-    functionFragment: "revokeRole",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<string>],
-  ): string;
-  encodeFunctionData(functionFragment: "setERC20", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setInternalToken", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(functionFragment: "setOfferDuration", values: [PromiseOrValue<BigNumberish>]): string;
-  encodeFunctionData(functionFragment: "supportsInterface", values: [PromiseOrValue<BytesLike>]): string;
+  encodeFunctionData(functionFragment: "setRedemptionController", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setReserve", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setRoles", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "setShareholderRegistry", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(functionFragment: "tokenInternal", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "withdraw",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "withdrawableBalanceOf", values: [PromiseOrValue<string>]): string;
 
-  decodeFunctionResult(functionFragment: "DEFAULT_ADMIN_ROLE", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "erc20", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "getRoleAdmin", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "exchangeToken", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getRoles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "makeOffer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "matchOffer", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "offerDuration", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "offeredBalanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "renounceRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "setERC20", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "priceOracle", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redeem", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "redemptionController", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "reserve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setExchangePair", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setInternalToken", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "setOfferDuration", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "supportsInterface", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRedemptionController", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setReserve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setRoles", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "setShareholderRegistry", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenInternal", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "withdrawableBalanceOf", data: BytesLike): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "OfferCreated(uint128,address,uint256,uint256)": EventFragment;
     "OfferMatched(uint128,address,address,uint256)": EventFragment;
-    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
-    "RoleGranted(bytes32,address,address)": EventFragment;
-    "RoleRevoked(bytes32,address,address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OfferCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OfferMatched"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface OfferCreatedEventObject {
   id: BigNumber;
   from: string;
   amount: BigNumber;
-  createdAt: BigNumber;
+  expiredAt: BigNumber;
 }
 export type OfferCreatedEvent = TypedEvent<[BigNumber, string, BigNumber, BigNumber], OfferCreatedEventObject>;
 
@@ -143,33 +164,6 @@ export interface OfferMatchedEventObject {
 export type OfferMatchedEvent = TypedEvent<[BigNumber, string, string, BigNumber], OfferMatchedEventObject>;
 
 export type OfferMatchedEventFilter = TypedEventFilter<OfferMatchedEvent>;
-
-export interface RoleAdminChangedEventObject {
-  role: string;
-  previousAdminRole: string;
-  newAdminRole: string;
-}
-export type RoleAdminChangedEvent = TypedEvent<[string, string, string], RoleAdminChangedEventObject>;
-
-export type RoleAdminChangedEventFilter = TypedEventFilter<RoleAdminChangedEvent>;
-
-export interface RoleGrantedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleGrantedEvent = TypedEvent<[string, string, string], RoleGrantedEventObject>;
-
-export type RoleGrantedEventFilter = TypedEventFilter<RoleGrantedEvent>;
-
-export interface RoleRevokedEventObject {
-  role: string;
-  account: string;
-  sender: string;
-}
-export type RoleRevokedEvent = TypedEvent<[string, string, string], RoleRevokedEventObject>;
-
-export type RoleRevokedEventFilter = TypedEventFilter<RoleRevokedEvent>;
 
 export interface InternalMarket extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -194,23 +188,20 @@ export interface InternalMarket extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
-
-    erc20(overrides?: CallOverrides): Promise<[string]>;
-
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[string]>;
-
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    deposit(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<[boolean]>;
+    exchangeToken(overrides?: CallOverrides): Promise<[string]>;
+
+    getRoles(overrides?: CallOverrides): Promise<[string]>;
+
+    initialize(
+      roles: PromiseOrValue<string>,
+      tokenInternal: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
 
     makeOffer(
       amount: PromiseOrValue<BigNumberish>,
@@ -218,8 +209,7 @@ export interface InternalMarket extends BaseContract {
     ): Promise<ContractTransaction>;
 
     matchOffer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+      account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
@@ -228,20 +218,25 @@ export interface InternalMarket extends BaseContract {
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    priceOracle(overrides?: CallOverrides): Promise<[string]>;
+
+    redeem(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    redemptionController(overrides?: CallOverrides): Promise<[string]>;
+
+    reserve(overrides?: CallOverrides): Promise<[string]>;
+
+    setExchangePair(
+      token: PromiseOrValue<string>,
+      oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    setERC20(
-      erc20: PromiseOrValue<string>,
+    setInternalToken(
+      token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
@@ -250,7 +245,27 @@ export interface InternalMarket extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<[boolean]>;
+    setRedemptionController(
+      redemptionController_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setReserve(
+      reserve_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setRoles(
+      roles: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<[string]>;
 
     withdraw(
       to: PromiseOrValue<string>,
@@ -261,23 +276,20 @@ export interface InternalMarket extends BaseContract {
     withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[BigNumber]>;
   };
 
-  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
-
-  erc20(overrides?: CallOverrides): Promise<string>;
-
-  getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
-
-  grantRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  deposit(
+    amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  hasRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
-    overrides?: CallOverrides,
-  ): Promise<boolean>;
+  exchangeToken(overrides?: CallOverrides): Promise<string>;
+
+  getRoles(overrides?: CallOverrides): Promise<string>;
+
+  initialize(
+    roles: PromiseOrValue<string>,
+    tokenInternal: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
 
   makeOffer(
     amount: PromiseOrValue<BigNumberish>,
@@ -285,8 +297,7 @@ export interface InternalMarket extends BaseContract {
   ): Promise<ContractTransaction>;
 
   matchOffer(
-    from: PromiseOrValue<string>,
-    to: PromiseOrValue<string>,
+    account: PromiseOrValue<string>,
     amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
@@ -295,20 +306,25 @@ export interface InternalMarket extends BaseContract {
 
   offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
-  renounceRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  priceOracle(overrides?: CallOverrides): Promise<string>;
+
+  redeem(
+    amount: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  revokeRole(
-    role: PromiseOrValue<BytesLike>,
-    account: PromiseOrValue<string>,
+  redemptionController(overrides?: CallOverrides): Promise<string>;
+
+  reserve(overrides?: CallOverrides): Promise<string>;
+
+  setExchangePair(
+    token: PromiseOrValue<string>,
+    oracle: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  setERC20(
-    erc20: PromiseOrValue<string>,
+  setInternalToken(
+    token: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
@@ -317,7 +333,27 @@ export interface InternalMarket extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
-  supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
+  setRedemptionController(
+    redemptionController_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setReserve(
+    reserve_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setRoles(
+    roles: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  setShareholderRegistry(
+    shareholderRegistry: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
+  tokenInternal(overrides?: CallOverrides): Promise<string>;
 
   withdraw(
     to: PromiseOrValue<string>,
@@ -328,29 +364,22 @@ export interface InternalMarket extends BaseContract {
   withdrawableBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
   callStatic: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+    deposit(amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
 
-    erc20(overrides?: CallOverrides): Promise<string>;
+    exchangeToken(overrides?: CallOverrides): Promise<string>;
 
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<string>;
+    getRoles(overrides?: CallOverrides): Promise<string>;
 
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    initialize(
+      roles: PromiseOrValue<string>,
+      tokenInternal: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>;
-
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<boolean>;
 
     makeOffer(amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
 
     matchOffer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+      account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides,
     ): Promise<void>;
@@ -359,23 +388,33 @@ export interface InternalMarket extends BaseContract {
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    priceOracle(overrides?: CallOverrides): Promise<string>;
+
+    redeem(amount: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
+
+    redemptionController(overrides?: CallOverrides): Promise<string>;
+
+    reserve(overrides?: CallOverrides): Promise<string>;
+
+    setExchangePair(
+      token: PromiseOrValue<string>,
+      oracle: PromiseOrValue<string>,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    setERC20(erc20: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+    setInternalToken(token: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
 
     setOfferDuration(duration: PromiseOrValue<BigNumberish>, overrides?: CallOverrides): Promise<void>;
 
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<boolean>;
+    setRedemptionController(redemptionController_: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    setReserve(reserve_: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    setRoles(roles: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    setShareholderRegistry(shareholderRegistry: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<string>;
 
     withdraw(
       to: PromiseOrValue<string>,
@@ -387,13 +426,16 @@ export interface InternalMarket extends BaseContract {
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "OfferCreated(uint128,address,uint256,uint256)"(
       id?: null,
       from?: null,
       amount?: null,
-      createdAt?: null,
+      expiredAt?: null,
     ): OfferCreatedEventFilter;
-    OfferCreated(id?: null, from?: null, amount?: null, createdAt?: null): OfferCreatedEventFilter;
+    OfferCreated(id?: null, from?: null, amount?: null, expiredAt?: null): OfferCreatedEventFilter;
 
     "OfferMatched(uint128,address,address,uint256)"(
       id?: null,
@@ -402,58 +444,22 @@ export interface InternalMarket extends BaseContract {
       amount?: null,
     ): OfferMatchedEventFilter;
     OfferMatched(id?: null, from?: null, to?: null, amount?: null): OfferMatchedEventFilter;
-
-    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-    RoleAdminChanged(
-      role?: PromiseOrValue<BytesLike> | null,
-      previousAdminRole?: PromiseOrValue<BytesLike> | null,
-      newAdminRole?: PromiseOrValue<BytesLike> | null,
-    ): RoleAdminChangedEventFilter;
-
-    "RoleGranted(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-    RoleGranted(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleGrantedEventFilter;
-
-    "RoleRevoked(bytes32,address,address)"(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
-    RoleRevoked(
-      role?: PromiseOrValue<BytesLike> | null,
-      account?: PromiseOrValue<string> | null,
-      sender?: PromiseOrValue<string> | null,
-    ): RoleRevokedEventFilter;
   };
 
   estimateGas: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
-
-    erc20(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
-
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    deposit(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
+    exchangeToken(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getRoles(overrides?: CallOverrides): Promise<BigNumber>;
+
+    initialize(
+      roles: PromiseOrValue<string>,
+      tokenInternal: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
     makeOffer(
@@ -462,8 +468,7 @@ export interface InternalMarket extends BaseContract {
     ): Promise<BigNumber>;
 
     matchOffer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+      account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
@@ -472,20 +477,25 @@ export interface InternalMarket extends BaseContract {
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    priceOracle(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeem(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    redemptionController(overrides?: CallOverrides): Promise<BigNumber>;
+
+    reserve(overrides?: CallOverrides): Promise<BigNumber>;
+
+    setExchangePair(
+      token: PromiseOrValue<string>,
+      oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    setERC20(
-      erc20: PromiseOrValue<string>,
+    setInternalToken(
+      token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
@@ -494,7 +504,27 @@ export interface InternalMarket extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<BigNumber>;
+    setRedemptionController(
+      redemptionController_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setReserve(
+      reserve_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setRoles(
+      roles: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdraw(
       to: PromiseOrValue<string>,
@@ -506,22 +536,19 @@ export interface InternalMarket extends BaseContract {
   };
 
   populateTransaction: {
-    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    erc20(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getRoleAdmin(role: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    grantRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    deposit(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    hasRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
-      overrides?: CallOverrides,
+    exchangeToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getRoles(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    initialize(
+      roles: PromiseOrValue<string>,
+      tokenInternal: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
     makeOffer(
@@ -530,8 +557,7 @@ export interface InternalMarket extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     matchOffer(
-      from: PromiseOrValue<string>,
-      to: PromiseOrValue<string>,
+      account: PromiseOrValue<string>,
       amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
@@ -540,20 +566,25 @@ export interface InternalMarket extends BaseContract {
 
     offeredBalanceOf(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    renounceRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    priceOracle(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    redeem(
+      amount: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    revokeRole(
-      role: PromiseOrValue<BytesLike>,
-      account: PromiseOrValue<string>,
+    redemptionController(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    reserve(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    setExchangePair(
+      token: PromiseOrValue<string>,
+      oracle: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    setERC20(
-      erc20: PromiseOrValue<string>,
+    setInternalToken(
+      token: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -562,7 +593,27 @@ export interface InternalMarket extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;
 
-    supportsInterface(interfaceId: PromiseOrValue<BytesLike>, overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    setRedemptionController(
+      redemptionController_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setReserve(
+      reserve_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setRoles(
+      roles: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    setShareholderRegistry(
+      shareholderRegistry: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    tokenInternal(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdraw(
       to: PromiseOrValue<string>,

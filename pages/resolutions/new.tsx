@@ -1,3 +1,4 @@
+import { NeokingdomToken } from "@contracts/typechain";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
@@ -11,10 +12,9 @@ import { getExecutionPayload } from "@lib/resolutions/common";
 
 import NewResolution from "@components/NewResolution";
 
+import { useContracts } from "@hooks/useContracts";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 
-import { useContractsContext } from "../../contexts/ContractsContext";
-import { TelediskoToken } from "../../contracts/typechain";
 import { MonthlyRewardsUserData } from "../../types";
 
 NewResolutionPage.title = "New resolution";
@@ -31,19 +31,19 @@ export default function NewResolutionPage() {
     isMonthlyRewards ? process.env.NEXT_PUBLIC_LAST_MONTH_REWARDS_ENDPOINT : null,
     fetcher,
   );
-  const { tokenContract } = useContractsContext();
+  const { neokingdomTokenContract } = useContracts();
 
   const [executionPayload, setExecutionPayload] = useState<MonthlyRewardsUserData[] | null>(null);
 
   useEffect(() => {
-    if (monthlyRewardsData && tokenContract) {
+    if (monthlyRewardsData && neokingdomTokenContract) {
       const getFn = async () => {
-        const payload = await getExecutionPayload(tokenContract as TelediskoToken, monthlyRewardsData);
+        const payload = await getExecutionPayload(neokingdomTokenContract as NeokingdomToken, monthlyRewardsData);
         setExecutionPayload(payload);
       };
       getFn();
     }
-  }, [monthlyRewardsData, tokenContract]);
+  }, [monthlyRewardsData, neokingdomTokenContract]);
 
   if (!isConnected) {
     return <Alert severity="warning">Please connect your wallet first</Alert>;

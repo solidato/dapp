@@ -2,3 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ResolutionManager } from "./ResolutionManager";
+export type { ResolutionManagerBase } from "./ResolutionManagerBase";

@@ -7,5 +7,6 @@ export const daoManagerFragment = gql`
     contributorsAddresses
     investorsAddresses
     shareholdersAddresses
+    totalVotingPower
   }
 `;

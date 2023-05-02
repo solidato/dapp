@@ -1,16 +1,18 @@
+import { SnackbarKey } from "notistack";
 import { useAccount } from "wagmi";
 
-import { ReactElement } from "react";
+import { ReactElement, useCallback } from "react";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import { useSnackbar } from "@hooks/useSnackbar";
 
-const MAX_TX_WAIT = 60000; // 1 minute
+const NOTIFY_CONTRACT_ERROR_TIMEOUT = 30000;
+const NOTIFY_TX_STUCK_TIMEOUT = 40000;
 
-type ExecuteTxParams = {
-  contractMethod: any;
-  params: any[];
+type ExecuteTxParams<TC, TP> = {
+  contractMethod: TC | undefined;
+  params: TP;
   onSuccessMessage: string | ReactElement;
   onErrorMessage: string | ReactElement;
   stateKey?: string;
@@ -21,43 +23,69 @@ export default function useBlockhainTransaction() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { address } = useAccount();
 
+  const notifyContractError = useCallback(() => {
+    enqueueSnackbar(
+      "It looks there's an error with the network, please try reloading the page, or disconnect and reconnect your wallet",
+      { variant: "error" },
+    );
+    reset();
+  }, []);
+
+  const notifyTxStuckError = useCallback((snackbar: SnackbarKey) => {
+    closeSnackbar(snackbar);
+    enqueueSnackbar("It looks the transaction is hanging, feel free to navigate away. It will eventually complete.", {
+      variant: "error",
+    });
+    reset();
+  }, []);
+
+  async function executeTx<TC = never, TP = never, TIC extends TC = TC, TIP extends TP = TP>({
+    contractMethod,
+    params,
+    onSuccessMessage,
+    onErrorMessage,
+    stateKey,
+  }: ExecuteTxParams<TIC, TIP>): Promise<boolean> {
+    if (!address || !contractMethod || typeof contractMethod !== "function") {
+      enqueueSnackbar("Please connect your wallet", { variant: "error" });
+      return false;
+    }
+    set(true, false, stateKey);
+    let txAlert: any;
+    let timeoutTx: any;
+    let timeoutTxStuck: any;
+    try {
+      timeoutTx = setTimeout(notifyContractError, NOTIFY_CONTRACT_ERROR_TIMEOUT);
+      const tx = await contractMethod.apply(null, params);
+      clearTimeout(timeoutTx);
+      txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
+        variant: "info",
+        autoHideDuration: NOTIFY_TX_STUCK_TIMEOUT,
+      });
+      timeoutTxStuck = setTimeout(() => notifyTxStuckError(txAlert), NOTIFY_TX_STUCK_TIMEOUT);
+      set(true, true);
+      await tx?.wait();
+      clearTimeout(timeoutTxStuck);
+      set(true, false);
+      closeSnackbar(txAlert);
+      enqueueSnackbar(onSuccessMessage, { variant: "success" });
+      reset();
+      return true;
+    } catch (err) {
+      if (timeoutTx) clearTimeout(timeoutTx);
+      if (timeoutTxStuck) clearTimeout(timeoutTxStuck);
+      closeSnackbar(txAlert);
+      enqueueSnackbar(onErrorMessage, { variant: "error" });
+      console.error(err);
+      reset();
+      return false;
+    }
+  }
+
   return {
     set,
     reset,
     isLoading,
-    executeTx: async ({
-      contractMethod,
-      params,
-      onSuccessMessage,
-      onErrorMessage,
-      stateKey,
-    }: ExecuteTxParams): Promise<boolean> => {
-      if (!address) {
-        enqueueSnackbar("Please connect your wallet", { variant: "error" });
-        return false;
-      }
-      set(true, false, stateKey);
-      let txAlert;
-      try {
-        const tx = await contractMethod.apply(null, params);
-        txAlert = enqueueSnackbar("Transaction is being executed, hold tight", {
-          variant: "info",
-          autoHideDuration: MAX_TX_WAIT,
-        });
-        set(true, true);
-        await tx?.wait();
-        set(true, false);
-        closeSnackbar(txAlert);
-        enqueueSnackbar(onSuccessMessage, { variant: "success" });
-        reset();
-        return true;
-      } catch (err) {
-        closeSnackbar(txAlert);
-        enqueueSnackbar(onErrorMessage, { variant: "error" });
-        console.error(err);
-        reset();
-        return false;
-      }
-    },
+    executeTx,
   };
 }

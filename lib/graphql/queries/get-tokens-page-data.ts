@@ -4,16 +4,27 @@ export const getTokensPageData = gql`
   query GetTokensPageData($userId: String!) {
     daoUser(id: $userId) {
       id
-      address
-      totalBalance
-      vestingBalance
-      unlockedTempBalance
+      governanceBalance
+      governanceOfferedTempBalance
+      governanceVestingBalance
+      governanceVaultedBalance
+      governanceWithdrawableTempBalance
+      votingPower
+      shareholderRegistryBalance
+      neokigdomTokenBalance
+      activeOffers {
+        id
+        amount
+        expiredOnTransfer
+        expirationTimestamp
+      }
     }
     offers(orderBy: createTimestamp, orderDirection: desc) {
       id
       from
-      expirationTimestamp
       amount
+      expirationTimestamp
+      expiredOnTransfer
     }
   }
 `;

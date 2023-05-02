@@ -9,31 +9,42 @@ import Fade from "@mui/material/Fade";
 import MUIModal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-const style = {
+const sizeToWidth: Record<string, number> = {
+  small: 400,
+  medium: 600,
+  large: 800,
+};
+
+const style = (size: string) => ({
   position: "absolute" as "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: {
+    xs: "90%",
+    sm: sizeToWidth[size],
+  },
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-};
+});
 
 export default function Modal({
   open,
-  setOpen,
+  onClose,
   children,
   title,
+  size = "medium",
 }: {
   open: boolean;
-  setOpen?: (o: boolean) => void;
+  onClose?: () => void;
   children: ReactElement;
   title?: string;
+  size?: "small" | "medium" | "large";
 }) {
   const handleClose = () => {
-    typeof setOpen === "function" && setOpen(false);
+    typeof onClose === "function" && onClose();
   };
   const theme = useTheme();
 
@@ -57,7 +68,7 @@ export default function Modal({
       }}
     >
       <Fade in={open}>
-        <Box sx={style}>
+        <Box sx={style(size)}>
           <IconButton
             color="primary"
             aria-label="info"
@@ -68,7 +79,7 @@ export default function Modal({
             <Close />
           </IconButton>
           {title && (
-            <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
+            <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}>
               {title}
             </Typography>
           )}

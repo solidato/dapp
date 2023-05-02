@@ -151,10 +151,16 @@ export const getDateFromOdooTimestamp = (timestamp: number) => {
 
 export const TOKEN_SYMBOL = {
   teledisko: "TT",
-  neokingdom: "NKDT",
+  neokingdom: "NEOK",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const PDF_SIGNER = {
   teledisko: "Benjamin Gregor Uphues",
   neokingdom: "Benjamin Gregor Uphues",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
+export const calculateSteps = (value: number) => {
+  if (value >= 10000) return 100;
+  if (value >= 100) return 10;
+  return 1;
+};

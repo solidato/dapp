@@ -28,6 +28,7 @@ export interface IVotingInterface extends utils.Interface {
     "canVote(address)": FunctionFragment;
     "canVoteAt(address,uint256)": FunctionFragment;
     "delegate(address)": FunctionFragment;
+    "delegateFrom(address,address)": FunctionFragment;
     "getDelegate(address)": FunctionFragment;
     "getDelegateAt(address,uint256)": FunctionFragment;
     "getTotalVotingPower()": FunctionFragment;
@@ -45,6 +46,7 @@ export interface IVotingInterface extends utils.Interface {
       | "canVote"
       | "canVoteAt"
       | "delegate"
+      | "delegateFrom"
       | "getDelegate"
       | "getDelegateAt"
       | "getTotalVotingPower"
@@ -66,6 +68,10 @@ export interface IVotingInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>],
   ): string;
   encodeFunctionData(functionFragment: "delegate", values: [PromiseOrValue<string>]): string;
+  encodeFunctionData(
+    functionFragment: "delegateFrom",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>],
+  ): string;
   encodeFunctionData(functionFragment: "getDelegate", values: [PromiseOrValue<string>]): string;
   encodeFunctionData(
     functionFragment: "getDelegateAt",
@@ -86,6 +92,7 @@ export interface IVotingInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "canVote", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "canVoteAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "delegate", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delegateFrom", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegate", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getDelegateAt", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "getTotalVotingPower", data: BytesLike): Result;
@@ -150,6 +157,12 @@ export interface IVoting extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<ContractTransaction>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<ContractTransaction>;
+
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<[string]>;
 
     getDelegateAt(
@@ -203,6 +216,12 @@ export interface IVoting extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> },
   ): Promise<ContractTransaction>;
 
+  delegateFrom(
+    delegator: PromiseOrValue<string>,
+    newDelegate: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> },
+  ): Promise<ContractTransaction>;
+
   getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
 
   getDelegateAt(
@@ -246,6 +265,12 @@ export interface IVoting extends BaseContract {
     ): Promise<boolean>;
 
     delegate(newDelegate: PromiseOrValue<string>, overrides?: CallOverrides): Promise<void>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: CallOverrides,
+    ): Promise<void>;
 
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<string>;
 
@@ -303,6 +328,12 @@ export interface IVoting extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<BigNumber>;
 
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<BigNumber>;
+
     getDelegate(account: PromiseOrValue<string>, overrides?: CallOverrides): Promise<BigNumber>;
 
     getDelegateAt(
@@ -353,6 +384,12 @@ export interface IVoting extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     delegate(
+      newDelegate: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> },
+    ): Promise<PopulatedTransaction>;
+
+    delegateFrom(
+      delegator: PromiseOrValue<string>,
       newDelegate: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> },
     ): Promise<PopulatedTransaction>;

@@ -10,13 +10,11 @@ import User from "@components/User";
 
 export default function UserCard({
   address,
-  balance,
   power,
   statuses,
   cta,
 }: {
   address: string;
-  balance: number;
   power: number;
   statuses: string[];
   cta?: ReactElement;
@@ -41,10 +39,6 @@ export default function UserCard({
           spacing={2}
           sx={{ textAlign: "center", mt: 2 }}
         >
-          <Box>
-            <Typography variant="body2">Tokens</Typography>
-            <Typography variant="caption">{balance}</Typography>
-          </Box>
           <Box>
             <Typography variant="body2">Voting power</Typography>
             <Typography variant="caption">{power}%</Typography>

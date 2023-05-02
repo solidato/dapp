@@ -76,6 +76,19 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "afterAddContributor",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "from",
         type: "address",
       },
@@ -91,6 +104,19 @@ const _abi = [
       },
     ],
     name: "afterTokenTransfer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "beforeRemoveContributor",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -147,6 +173,24 @@ const _abi = [
       },
     ],
     name: "delegate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "delegator",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "newDelegate",
+        type: "address",
+      },
+    ],
+    name: "delegateFrom",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -280,6 +324,32 @@ const _abi = [
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract IShareholderRegistry",
+        name: "shareholderRegistry",
+        type: "address",
+      },
+    ],
+    name: "setShareholderRegistry",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract IERC20Upgradeable",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "setToken",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

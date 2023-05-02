@@ -1,3 +1,5 @@
+import { ResolutionManager } from "@contracts/typechain";
+
 import { useContext } from "react";
 
 import { ContractsContext } from "../contexts/ContractsContext";
@@ -13,7 +15,7 @@ export default function useResolutionReject() {
 
   return {
     onSubmit: async ({ resolutionId }: SubmitParams) =>
-      executeTx({
+      executeTx<ResolutionManager["rejectResolution"], Parameters<ResolutionManager["rejectResolution"]>>({
         contractMethod: resolutionContract?.rejectResolution,
         params: [resolutionId],
         onSuccessMessage: "Pre draft resolution correctly rejected",
