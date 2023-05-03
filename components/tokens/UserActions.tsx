@@ -1,4 +1,10 @@
-import { Box, Paper, SxProps, Typography } from "@mui/material";
+import useSWR from "swr";
+import { useAccount } from "wagmi";
+
+import { Box, CircularProgress, Paper, SxProps, Typography } from "@mui/material";
+
+import { fetcher } from "@graphql/client";
+import { getDaoManagerQuery } from "@graphql/queries/get-dao-manager.query";
 
 import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
 
@@ -18,7 +24,21 @@ const Row = ({ children, sx = {} }: { children: React.ReactNode; sx?: SxProps })
 );
 
 export default function UserActions() {
-  const { data } = useUserBalanceAndOffers();
+  const { data, isLoading } = useUserBalanceAndOffers();
+  const { data: daoManagerData, isLoading: isLoadingDaoManagerData } = useSWR<any>(getDaoManagerQuery, fetcher);
+  const { address } = useAccount();
+
+  const loading = isLoading || isLoadingDaoManagerData;
+
+  if (loading) {
+    return <CircularProgress />;
+  }
+
+  const isInvestor = daoManagerData?.daoManager?.investorsAddresses?.includes(address?.toLowerCase());
+  const withdrawableBalance = isInvestor
+    ? (data?.balance.governanceTokens || 0) - (data?.balance.vestingTokens || 0)
+    : data?.balance.unlockedTokens;
+
   return (
     <>
       <Row sx={{ pt: 3 }}>
@@ -29,8 +49,8 @@ export default function UserActions() {
         <TokenPaper title="Offered" total={data?.balance.offeredTokens} />
       </Row>
       <Row>
-        <TokenPaper title="Unlocked" total={data?.balance.unlockedTokens} />
-        <WithdrawTokens />
+        <TokenPaper title="Unlocked" total={withdrawableBalance} />
+        <WithdrawTokens withdrawableBalance={withdrawableBalance || 0} />
       </Row>
       <Row>
         <TokenPaper title="NEOK Balance" total={data?.balance.neokTokens} />
