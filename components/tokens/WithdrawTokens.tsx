@@ -12,10 +12,9 @@ import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
 import Modal from "@components/Modal";
 
-import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
 import useWithdrawTokens from "@hooks/useWithdrawTokens";
 
-export default function WithdrawTokens() {
+export default function WithdrawTokens({ withdrawableBalance }: { withdrawableBalance: number }) {
   const { address } = useAccount();
   const [modalOpen, setModalOpen] = useState(false);
   const [withdrawing, setWithdrawing] = useState(0);
@@ -23,7 +22,6 @@ export default function WithdrawTokens() {
   const [changeAddress, setChangeAddress] = useState(false);
   const { isAwaitingConfirmation, isLoading } = useBlockchainTransactionStore();
 
-  const { data } = useUserBalanceAndOffers();
   const { onSubmit } = useWithdrawTokens();
 
   const handlePlaceOffer = async () => {
@@ -52,7 +50,7 @@ export default function WithdrawTokens() {
     setWithdrawalAddress(String(address));
   };
 
-  const maxToWithdraw = data?.balance.unlockedTokens || 0;
+  const maxToWithdraw = withdrawableBalance;
 
   return (
     <>
