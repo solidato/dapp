@@ -34,7 +34,7 @@ export default function UserActions() {
     return <CircularProgress />;
   }
 
-  const isInvestor = daoManagerData.daoManager.investorsAddresses.includes(address?.toLowerCase());
+  const isInvestor = daoManagerData?.daoManager?.investorsAddresses?.includes(address?.toLowerCase());
   const withdrawableBalance = isInvestor
     ? (data?.balance.governanceTokens || 0) - (data?.balance.vestingTokens || 0)
     : data?.balance.unlockedTokens;
