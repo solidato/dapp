@@ -20,7 +20,7 @@ import { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 import OfferCard from "./OfferCard";
 
-export default function OffersList({ offers }: { offers: Offer[] }) {
+export default function OffersList({ offers, noOffersMessage }: { offers: Offer[]; noOffersMessage: string }) {
   const [matchingOfferOpen, setMatchingOfferOpen] = useState<Offer | null>(null);
   const [matchingTokens, setMatchingTokens] = useState(0);
 
@@ -140,13 +140,19 @@ export default function OffersList({ offers }: { offers: Offer[] }) {
           )}
         </>
       </Modal>
-      <Grid container spacing={2}>
-        {offers.map((offer) => (
-          <Grid key={offer.id} item xs={12} md={6} lg={4}>
-            <OfferCard offer={offer} onMatchClicked={handleOnMatch} />
-          </Grid>
-        ))}
-      </Grid>
+      {offers.length === 0 ? (
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
+          {noOffersMessage}
+        </Typography>
+      ) : (
+        <Grid container spacing={2}>
+          {offers.map((offer) => (
+            <Grid key={offer.id} item xs={12} md={6} lg={4}>
+              <OfferCard offer={offer} onMatchClicked={handleOnMatch} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 }

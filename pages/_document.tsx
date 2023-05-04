@@ -12,7 +12,8 @@ export const META = {
     keywords: "DAO, Teledisko, Blockchain",
   },
   neokingdom: {
-    description: "Neokingdom DAO description",
+    description:
+      "Neokingdom DAO is an innovative Estonian company committed to developing a comprehensive ecosystem for legally compliant DAOs",
     title: "Neokingdom DAO",
     keywords: "DAO, NEOKINGDOM, Blockchain",
   },

@@ -56,7 +56,7 @@ export default function DepositTokens() {
   return (
     <>
       <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} disabled={neokTokens === 0}>
-        I want to deposit tokens
+        Deposit tokens
       </Button>
       <Modal open={modalOpen} onClose={handleModalClose} size="medium">
         <>

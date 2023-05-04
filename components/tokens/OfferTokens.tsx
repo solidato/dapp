@@ -54,7 +54,7 @@ export default function OfferTokens() {
   return (
     <>
       <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} disabled={lockedTokens === 0}>
-        I want to offer my tokens
+        Offer tokens
       </Button>
       <Modal open={modalOpen} onClose={() => setModalOpen(false)} size="medium">
         <>

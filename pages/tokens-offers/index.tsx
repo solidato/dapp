@@ -9,7 +9,7 @@ import OffersList from "@components/tokens/OffersList";
 import UserActions from "@components/tokens/UserActions";
 import UserBalance from "@components/tokens/UserBalance";
 
-import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
+import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 Tokens.title = "Tokens";
 Tokens.requireLogin = true;
@@ -60,20 +60,21 @@ export default function Tokens() {
     return <Alert severity="warning">Please connect your wallet to be able to visit this page</Alert>;
   }
 
-  const activeOffersCount = (data?.activeOffers || []).length;
+  const activeOffersCount = (data?.activeOffers || []).filter((offer) => bigIntToNum(offer.amount) > 0).length;
   const expiredOffersCount = (data?.expiredOffers || []).length;
 
   return (
     <>
       <UserBalance />
       <Alert severity="info" sx={{ mb: 2 }}>
-        <strong>Governance Tokens</strong>provide holders with voting and dividend rights, but must be offered to
-        contributors before becoming available for trading in the secondary market. <strong>NEOK Tokens</strong> do not
-        possess these rights or limitations, allowing for unrestricted trading on the secondary market at any time.
+        <strong>Governance Tokens</strong> provide holders with voting and dividend rights, but must be offered to
+        contributors before becoming available for trading in the secondary market. <br />
+        <strong>NEOK Tokens</strong> do not possess these rights or limitations, allowing for unrestricted trading on
+        the secondary market at any time.
       </Alert>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
-          <Tab label="Actions" {...a11yProps(0)} />
+          <Tab label="Tokens" {...a11yProps(0)} />
           <Tab
             label={
               <Badge badgeContent={activeOffersCount} color="primary">
@@ -81,13 +82,8 @@ export default function Tokens() {
               </Badge>
             }
             {...a11yProps(1)}
-            disabled={activeOffersCount === 0}
           />
-          <Tab
-            label={`Expired offers${expiredOffersCount > 0 ? ` (${expiredOffersCount})` : ""}`}
-            {...a11yProps(1)}
-            disabled={(data?.expiredOffers || []).length === 0}
-          />
+          <Tab label="Expired offers" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
@@ -95,10 +91,18 @@ export default function Tokens() {
           <UserActions />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          {isLoading ? <CircularProgress /> : <OffersList offers={data?.activeOffers || []} />}
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <OffersList offers={data?.activeOffers || []} noOffersMessage="No active offers" />
+          )}
         </TabPanel>
         <TabPanel value={value} index={2}>
-          {isLoading ? <CircularProgress /> : <OffersList offers={data?.expiredOffers || []} />}
+          {isLoading ? (
+            <CircularProgress />
+          ) : (
+            <OffersList offers={data?.expiredOffers || []} noOffersMessage="No expired offers" />
+          )}
         </TabPanel>
       </SwipeableViews>
     </>

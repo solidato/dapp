@@ -19,7 +19,7 @@ export default function OfferCard({ offer, onMatchClicked }: { offer: Offer; onM
         <Typography variant="h6" component="h3" gutterBottom>
           Created by
         </Typography>
-        <User address={offer.from} sx={{ mb: 2 }} />
+        <User address={offer.from} sx={{ mb: 2 }} shortAddress />
         {expired ? (
           <Alert severity="info">Offer expired on {expirationDate}</Alert>
         ) : (

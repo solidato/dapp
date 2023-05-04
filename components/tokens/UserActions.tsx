@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import { Box, CircularProgress, Paper, SxProps, Typography } from "@mui/material";
+import { Box, CircularProgress, Divider, Grid, Paper, SxProps, Typography } from "@mui/material";
 
 import { fetcher } from "@graphql/client";
 import { getDaoManagerQuery } from "@graphql/queries/get-dao-manager.query";
@@ -12,16 +12,15 @@ import DepositTokens from "./DepositTokens";
 import OfferTokens from "./OfferTokens";
 import WithdrawTokens from "./WithdrawTokens";
 
-const TokenPaper = ({ title, total }: { title: string; total: number | undefined }) => (
-  <Paper sx={{ p: 4, textAlign: "center", br: 3, width: 200, mr: 4 }}>
-    <Typography variant="h6">{title}</Typography>
-    <Typography variant="h5">{total}</Typography>
-  </Paper>
-);
-
-const Row = ({ children, sx = {} }: { children: React.ReactNode; sx?: SxProps }) => (
-  <Box sx={{ display: "flex", alignItems: "center", pt: 6, ...sx }}>{children}</Box>
-);
+const paperSx = {
+  p: 4,
+  textAlign: "center",
+  width: "100%",
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
 
 export default function UserActions() {
   const { data, isLoading } = useUserBalanceAndOffers();
@@ -41,24 +40,43 @@ export default function UserActions() {
 
   return (
     <>
-      <Row sx={{ pt: 3 }}>
-        <TokenPaper title="Locked" total={data?.balance.lockedTokens} />
-        <OfferTokens />
-      </Row>
-      <Row>
-        <TokenPaper title="Offered" total={data?.balance.offeredTokens} />
-      </Row>
-      <Row>
-        <TokenPaper title="Unlocked" total={withdrawableBalance} />
-        <WithdrawTokens withdrawableBalance={withdrawableBalance || 0} />
-      </Row>
-      <Row>
-        <TokenPaper title="NEOK Balance" total={data?.balance.neokTokens} />
-        <DepositTokens />
-      </Row>
-      <Row>
-        <TokenPaper title="Vesting" total={data?.balance.vestingTokens} />
-      </Row>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6} lg={4}>
+          <Paper sx={paperSx}>
+            <div>
+              <Typography variant="h5">Locked: {data?.balance.lockedTokens}</Typography>
+              <Typography variant="h6" sx={{ mb: 2 }}>
+                Offered: {data?.balance.offeredTokens}
+              </Typography>
+              <OfferTokens />
+            </div>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <Paper sx={paperSx}>
+            <div>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Unlocked: {withdrawableBalance}
+              </Typography>
+              <WithdrawTokens withdrawableBalance={withdrawableBalance || 0} />
+            </div>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          <Paper sx={paperSx}>
+            <div>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                NEOK Balance: {data?.balance.neokTokens}
+              </Typography>
+              <DepositTokens />
+            </div>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Divider sx={{ mt: 4, mb: 4 }} />
+      <Paper sx={paperSx}>
+        <Typography variant="h5">Vesting: {data?.balance.vestingTokens}</Typography>
+      </Paper>
     </>
   );
 }
