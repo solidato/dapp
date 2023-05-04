@@ -69,8 +69,8 @@ export default function OfferTokens() {
             sx={{ mt: 2 }}
           >
             {allowance === 0 && "Before offering, you need to add allowance for your tokens"}
-            {allowance > 0 && allowance < lockedTokens && `You can deposit max ${maxToOffer} tokens`}
-            {allowance > 0 && allowance >= lockedTokens && `You can deposit up to your tokens balance`}
+            {allowance > 0 && allowance < lockedTokens && `You can offer max ${maxToOffer} tokens`}
+            {allowance > 0 && allowance >= lockedTokens && `You can offer up to your tokens balance`}
           </Alert>
           {allowance > 0 && (
             <>
