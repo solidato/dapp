@@ -77,15 +77,36 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
             </Toolbar>
           </Slide>
           <Divider />
-          <Toolbar variant="dense">
+          <Toolbar
+            variant="dense"
+            sx={{
+              position: "relative",
+              "&:after": {
+                content: '""',
+                position: "absolute",
+                right: 16,
+                top: 0,
+                width: 50,
+                height: "100%",
+                pointerEvents: "none",
+                background: "linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1) 100%)",
+                ['[data-mui-color-scheme="dark"] &']: {
+                  background: "linear-gradient(to right, rgba(33,33,33,0), rgba(33,33,33,1) 100%)",
+                },
+                // background: "",
+              },
+            }}
+          >
             <Stack
               direction="row"
               spacing={1}
               sx={{
+                position: "relative",
                 overflow: "auto",
                 "&::-webkit-scrollbar": { display: "none" },
                 msOverflowStyle: "none",
                 scrollbarWidth: "none",
+                pr: "30px",
               }}
             >
               {user?.isLoggedIn && (
