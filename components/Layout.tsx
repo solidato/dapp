@@ -93,7 +93,6 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
                 ['[data-mui-color-scheme="dark"] &']: {
                   background: "linear-gradient(to right, rgba(33,33,33,0), rgba(33,33,33,1) 100%)",
                 },
-                // background: "",
               },
             }}
           >
