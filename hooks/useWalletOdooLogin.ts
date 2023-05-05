@@ -12,30 +12,43 @@ export default function useWalletOdooLogin() {
 
   const { mutateUser } = useUser();
 
+  const getChallange = async () => {
+    const response = await fetch("/api/walletLogin", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const resBody = await response.json();
+    if (!response.ok) throw resBody;
+    return resBody;
+  };
+
+  const getAuthUser = async (payload: { address: `0x${string}`; sig: string; signingToken: string }) => {
+    const response = await fetch("/api/walletLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const resBody = await response.json();
+    if (!response.ok) throw resBody;
+    return resBody;
+  };
+
   const handleWalletOdooLogin = useCallback(
     async function () {
-      try {
-        const challenge = await fetch("/api/walletLogin", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const json = await challenge.json();
-        const sig = await signMessageAsync({ message: json.message });
-
-        const data = await fetch("/api/walletLogin", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+      if (address) {
+        try {
+          const { message, signingToken } = await getChallange();
+          const sig = await signMessageAsync({ message });
+          const authUser = await getAuthUser({
             address,
             sig,
-            signingToken: json.signingToken,
-          }),
-        });
-        const resUser = await data.json();
-        mutateUser(resUser);
-      } catch (_) {
-        enqueueSnackbar("There was an error signing in", { variant: "error" });
+            signingToken,
+          });
+          mutateUser(authUser);
+        } catch (err: any) {
+          console.error("Login Failed:", err);
+          enqueueSnackbar(`Login Failed: ${err.error}`, { variant: "error" });
+        }
       }
     },
     [address], // eslint-disable-line
