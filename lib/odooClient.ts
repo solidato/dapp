@@ -22,10 +22,8 @@ async function jsonRpc(url: string, method: string, params: any) {
   });
   const json = await response.json();
   if (json.result !== undefined) {
-    console.log("🐞 > json.result:", json.result);
     return json.result;
   } else if (json.error.data.message !== undefined) {
-    console.log("🐞 > json.error.data.message:", json.error.data.message);
     throw new Error(json.error.data.message);
   } else {
     console.error(response);
