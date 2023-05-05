@@ -17,7 +17,7 @@ type SubmitParams = {
 };
 
 export default function useResolutionCreate() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
@@ -25,7 +25,7 @@ export default function useResolutionCreate() {
       const ipfsId = await addToIpfs(currentResolution);
       const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
       return executeTx<ResolutionManager["createResolution"], Parameters<ResolutionManager["createResolution"]>>({
-        contractMethod: resolutionContract?.createResolution,
+        contractMethod: resolutionManagerContract?.createResolution,
         params: [ipfsId, resolutionTypeId, !!vetoTypeId, executionTo, executionData],
         onSuccessMessage: "Pre draft resolution correctly created",
         onErrorMessage: "Error creating pre draft resolution",

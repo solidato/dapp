@@ -10,13 +10,13 @@ type SubmitParams = {
 };
 
 export default function useResolutionReject() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
     onSubmit: async ({ resolutionId }: SubmitParams) =>
       executeTx<ResolutionManager["rejectResolution"], Parameters<ResolutionManager["rejectResolution"]>>({
-        contractMethod: resolutionContract?.rejectResolution,
+        contractMethod: resolutionManagerContract?.rejectResolution,
         params: [resolutionId],
         onSuccessMessage: "Pre draft resolution correctly rejected",
         onErrorMessage: "Error rejecting pre draft resolution",

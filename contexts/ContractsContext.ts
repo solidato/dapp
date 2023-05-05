@@ -10,7 +10,7 @@ import {
 } from "../contracts/typechain";
 
 export type ContractsContextType = {
-  resolutionContract?: ResolutionManager;
+  resolutionManagerContract?: ResolutionManager;
   neokingdomTokenContract?: NeokingdomToken;
   internalMarketContract?: InternalMarket;
   internalMarketContractAddress?: string;

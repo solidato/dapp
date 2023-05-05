@@ -26,7 +26,7 @@ import networksTeledisko from "../networks/teledisko.json";
 const networks: Record<string, any> =
   process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? networksNeoKingdom : networksTeledisko;
 
-const getResolutionContract = (chainId: string, signer: Signer): ResolutionManager => {
+const getResolutionManagerContract = (chainId: string, signer: Signer): ResolutionManager => {
   const address = networks[chainId]["ResolutionManager"]?.address;
   return ResolutionManager__factory.connect(address, signer);
 };
@@ -80,7 +80,7 @@ export function useContracts() {
         const chainId = String(chain?.id);
 
         setContracts({
-          resolutionContract: getResolutionContract(chainId, signer),
+          resolutionManagerContract: getResolutionManagerContract(chainId, signer),
           neokingdomTokenContract: getNeokingdomTokenContract(chainId, signer),
           votingContract: getVotingContract(chainId, signer),
           internalMarketContract: getInternalMarketContract(chainId, signer),

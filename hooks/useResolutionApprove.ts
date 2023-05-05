@@ -12,13 +12,13 @@ type SubmitParams = {
 export const BLOCKCHAIN_TX_STATE_KEY = "approve-resolution";
 
 export default function useResolutionApprove() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
     onSubmit: async ({ resolutionId }: SubmitParams) =>
       executeTx<ResolutionManager["approveResolution"], Parameters<ResolutionManager["approveResolution"]>>({
-        contractMethod: resolutionContract?.approveResolution,
+        contractMethod: resolutionManagerContract?.approveResolution,
         params: [resolutionId],
         onSuccessMessage: "Pre draft resolution correctly approved",
         onErrorMessage: "Error approving pre draft resolution",
