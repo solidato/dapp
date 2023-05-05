@@ -16,7 +16,7 @@ type SubmitParams = {
 };
 
 export default function useResolutionUpdate() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
@@ -24,7 +24,7 @@ export default function useResolutionUpdate() {
       const ipfsId = await addToIpfs(currentResolution);
       const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
       return executeTx<ResolutionManager["updateResolution"], Parameters<ResolutionManager["updateResolution"]>>({
-        contractMethod: resolutionContract?.updateResolution,
+        contractMethod: resolutionManagerContract?.updateResolution,
         params: [resolutionId, ipfsId, resolutionTypeId, !!vetoTypeId, [], []],
         onSuccessMessage: "Pre draft resolution correctly updated",
         onErrorMessage: "Error updating pre draft resolution",

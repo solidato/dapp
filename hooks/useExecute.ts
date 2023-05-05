@@ -10,13 +10,13 @@ type SubmitParams = {
 };
 
 export default function useExecute() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx, isLoading } = useBlockhainTransaction();
 
   return {
     onSubmit: async ({ resolutionId }: SubmitParams) => {
       return executeTx<ResolutionManager["executeResolution"], Parameters<ResolutionManager["executeResolution"]>>({
-        contractMethod: resolutionContract?.executeResolution,
+        contractMethod: resolutionManagerContract?.executeResolution,
         params: [resolutionId],
         onSuccessMessage: `Resolution ${resolutionId} correctly executed`,
         onErrorMessage: `Error executing resolution ${resolutionId}`,

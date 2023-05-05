@@ -11,13 +11,13 @@ type SubmitParams = {
 };
 
 export default function useResolutionVote() {
-  const { resolutionContract } = useContext(ContractsContext);
+  const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockhainTransaction();
 
   return {
     onSubmit: async ({ resolutionId, votedYes }: SubmitParams) => {
       return executeTx<ResolutionManager["vote"], Parameters<ResolutionManager["vote"]>>({
-        contractMethod: resolutionContract?.vote,
+        contractMethod: resolutionManagerContract?.vote,
         params: [resolutionId, votedYes],
         onSuccessMessage: `Correctly voted ${votedYes ? "Yes" : "No"}`,
         onErrorMessage: "Error voting resolution",

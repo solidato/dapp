@@ -6,7 +6,7 @@ import { Box, CircularProgress, Divider, Grid, Paper, SxProps, Typography } from
 import { fetcher } from "@graphql/client";
 import { getDaoManagerQuery } from "@graphql/queries/get-dao-manager.query";
 
-import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
+import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 import DepositTokens from "./DepositTokens";
 import OfferTokens from "./OfferTokens";
@@ -41,17 +41,19 @@ export default function UserActions() {
   return (
     <>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6} lg={4}>
-          <Paper sx={paperSx}>
-            <div>
-              <Typography variant="h5">Locked: {data?.balance.lockedTokens}</Typography>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Offered: {data?.balance.offeredTokens}
-              </Typography>
-              <OfferTokens />
-            </div>
-          </Paper>
-        </Grid>
+        {!isInvestor && (
+          <Grid item xs={12} md={6} lg={4}>
+            <Paper sx={paperSx}>
+              <div>
+                <Typography variant="h5">Locked: {data?.balance.lockedTokens}</Typography>
+                <Typography variant="h6" sx={{ mb: 2 }}>
+                  Offered: {data?.balance.offeredTokens}
+                </Typography>
+                <OfferTokens />
+              </div>
+            </Paper>
+          </Grid>
+        )}
         <Grid item xs={12} md={6} lg={4}>
           <Paper sx={paperSx}>
             <div>
@@ -73,10 +75,14 @@ export default function UserActions() {
           </Paper>
         </Grid>
       </Grid>
-      <Divider sx={{ mt: 4, mb: 4 }} />
-      <Paper sx={paperSx}>
-        <Typography variant="h5">Vesting: {data?.balance.vestingTokens}</Typography>
-      </Paper>
+      {(data?.balance?.vestingTokens || 0) > 0 && (
+        <>
+          <Divider sx={{ mt: 4, mb: 4 }} />
+          <Paper sx={paperSx}>
+            <Typography variant="h5">Vesting: {data?.balance.vestingTokens}</Typography>
+          </Paper>
+        </>
+      )}
     </>
   );
 }
