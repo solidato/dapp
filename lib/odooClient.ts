@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 export const ODOO_ENDPOINT = "https://odoo.neokingdom.org/jsonrpc";
+export const ODOO_AUTH_ENDPOINT = "https://odoo.neokingdom.org/web/session/authenticate";
 export const ODOO_DB_NAME = "neokingdomdao";
 
 async function jsonRpc(url: string, method: string, params: any) {
@@ -21,8 +22,10 @@ async function jsonRpc(url: string, method: string, params: any) {
   });
   const json = await response.json();
   if (json.result !== undefined) {
+    console.log("🐞 > json.result:", json.result);
     return json.result;
   } else if (json.error.data.message !== undefined) {
+    console.log("🐞 > json.error.data.message:", json.error.data.message);
     throw new Error(json.error.data.message);
   } else {
     console.error(response);
@@ -58,14 +61,14 @@ function tuplify(query: Record<string, string> | string[] = {}) {
 }
 
 export async function getSession(url: string, db: string, username: string, password: string) {
-  const uid: number = await call(url, "common", "login", db, username, password);
-  const model = (...args: any[]) => call(url, "object", "execute_kw", db, uid, password, ...args);
+  const user = await jsonRpc(ODOO_AUTH_ENDPOINT, "call", { db, login: username, password });
+  const model = (...args: any[]) => call(url, "object", "execute_kw", db, user.uid, password, ...args);
   return {
     create: async (name: string, object: any) => model(name, "create", [object]),
     read: async (name: string, ids: number[]) => model(name, "read", [ids]),
     search: async (name: string, query: any, fields?: any) => model(name, "search_read", [tuplify(query)], fields),
     update: async (name: string, id: number, object: any) => model(name, "write", [[id], object]),
     remove: async (name: string, ids: number[]) => model(name, "unlink", [ids]),
-    uid,
+    uid: user.uid,
   };
 }
