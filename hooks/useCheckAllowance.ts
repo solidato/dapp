@@ -26,7 +26,7 @@ export default function useCheckAllowance(
         const allowance = await contract?.allowance(address as string, contractAddress as string);
         if (allowance) {
           try {
-            setAllowance(allowance.toNumber());
+            setAllowance(Number(formatEther(allowance)));
           } catch (error) {
             setAllowance(Number.MAX_SAFE_INTEGER);
           }

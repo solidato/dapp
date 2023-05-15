@@ -139,9 +139,6 @@ export default function AccountMenu() {
         {/* <MenuItem href="/faq" component={Link}>
           FAQ
         </MenuItem> */}
-        <MenuItem href="/settings" component={Link}>
-          Settings
-        </MenuItem>
         {(user?.isLoggedIn || isConnected) && [
           <Divider key="divider" />,
           user?.isLoggedIn ? (

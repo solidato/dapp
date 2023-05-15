@@ -26,7 +26,6 @@ export default function OffersList({ offers, noOffersMessage }: { offers: Offer[
 
   const { usdcContract, internalMarketContractAddress } = useContractsContext();
   const { allowance, refreshAllowanceFromContract } = useCheckAllowance(usdcContract, internalMarketContractAddress);
-  console.log("allowance: ", allowance);
   const { isLoading, isAwaitingConfirmation, type } = useBlockchainTransactionStore();
   const { onSubmit } = useMatchTokens();
   const { onSubmit: onSubmitApproveUsdc } = useApproveToMatchOffer();
