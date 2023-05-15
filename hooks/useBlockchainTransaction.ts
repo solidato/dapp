@@ -77,7 +77,7 @@ export default function useBlockhainTransaction() {
       enqueueSnackbar(onSuccessMessage, { variant: "success" });
       reset();
       return true;
-    } catch (err) {
+    } catch (err: any) {
       // @ts-ignore
       const networkError = CORRECT_NETWORK[err?.network?.chainId];
       if (timeoutTx) clearTimeout(timeoutTx);
@@ -94,7 +94,7 @@ export default function useBlockhainTransaction() {
           },
         });
       } else {
-        enqueueSnackbar(onErrorMessage, {
+        enqueueSnackbar(`${onErrorMessage}. ${err.reason}`, {
           variant: "error",
         });
       }
