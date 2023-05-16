@@ -1,5 +1,5 @@
 import { GovernanceToken, NeokingdomToken, TokenMock } from "@contracts/typechain";
-import { formatEther } from "ethers/lib/utils.js";
+import { formatUnits } from "ethers/lib/utils.js";
 import { SnackbarKey } from "notistack";
 import { useAccount, useDisconnect, useProvider } from "wagmi";
 
@@ -23,10 +23,11 @@ export default function useCheckAllowance(
   const refreshAllowanceFromContract = useCallback(async () => {
     if (contract) {
       try {
-        const allowance = await contract?.allowance(address as string, contractAddress as string);
+        const decimals = await contract.decimals();
+        const allowance = await contract.allowance(address as string, contractAddress as string);
         if (allowance) {
           try {
-            setAllowance(Number(formatEther(allowance)));
+            setAllowance(Number(formatUnits(allowance, decimals)));
           } catch (error) {
             setAllowance(Number.MAX_SAFE_INTEGER);
           }
