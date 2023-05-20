@@ -7,12 +7,14 @@ export function useSnackbar() {
   const enhancedSnackbar: EnqueueSnackbar = useCallback((message: SnackbarMessage, options?: any) => {
     const key: SnackbarKey = enqueueSnackbar(message, {
       ...options,
-      SnackbarProps: {
-        onClick: () => closeSnackbar(key),
-        style: {
-          cursor: "pointer",
-        },
-      },
+      SnackbarProps: options.persist
+        ? {}
+        : {
+            onClick: () => closeSnackbar(key),
+            style: {
+              cursor: "pointer",
+            },
+          },
     });
     return key;
   }, []); // eslint-disable-line
