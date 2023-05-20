@@ -4,19 +4,19 @@ import { ethers } from "ethers";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
 
-import useBlockhainTransaction from "./useBlockchainTransaction";
+import useBlockchainTransaction from "./useBlockchainTransaction";
 
 export default function useApproveToMatchOffer() {
   const { usdcContract, internalMarketContractAddress } = useContractsContext();
-  const { executeTx } = useBlockhainTransaction();
+  const { executeTx } = useBlockchainTransaction();
 
   return {
     onSubmit: async () => {
       return executeTx<TokenMock["approve"], Parameters<TokenMock["approve"]>>({
         contractMethod: usdcContract?.approve,
         params: [internalMarketContractAddress as string, ethers.constants.MaxUint256],
-        onSuccessMessage: `USDC to match offer approved`,
-        onErrorMessage: `Error approving USDC to match offer`,
+        onSuccessMessage: `Approval successful`,
+        onErrorMessage: `Approval failed`,
         stateKey: BLOCKCHAIN_TRANSACTION_KEYS.APPROVE_TO_MATCH_OFFER,
       });
     },

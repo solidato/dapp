@@ -7,7 +7,7 @@ import { addToIpfs } from "@lib/ipfs";
 import { ResolutionFormBase } from "@store/resolutionFormStore";
 
 import { ContractsContext } from "../contexts/ContractsContext";
-import useBlockhainTransaction from "./useBlockchainTransaction";
+import useBlockchainTransaction from "./useBlockchainTransaction";
 
 type SubmitParams = {
   vetoTypeId: string | null;
@@ -18,7 +18,7 @@ type SubmitParams = {
 
 export default function useResolutionCreate() {
   const { resolutionManagerContract } = useContext(ContractsContext);
-  const { executeTx } = useBlockhainTransaction();
+  const { executeTx } = useBlockchainTransaction();
 
   return {
     onSubmit: async ({ vetoTypeId, currentResolution, executionTo = [], executionData = [] }: SubmitParams) => {
@@ -27,8 +27,8 @@ export default function useResolutionCreate() {
       return executeTx<ResolutionManager["createResolution"], Parameters<ResolutionManager["createResolution"]>>({
         contractMethod: resolutionManagerContract?.createResolution,
         params: [ipfsId, resolutionTypeId, !!vetoTypeId, executionTo, executionData],
-        onSuccessMessage: "Pre draft resolution correctly created",
-        onErrorMessage: "Error creating pre draft resolution",
+        onSuccessMessage: "Preliminary draft resolution successfully created",
+        onErrorMessage: "Error while creating preliminary draft resolution",
       });
     },
   };

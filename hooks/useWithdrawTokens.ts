@@ -3,7 +3,7 @@ import { useContractsContext } from "contexts/ContractsContext";
 import { parseEther } from "ethers/lib/utils.js";
 import { useAccount } from "wagmi";
 
-import useBlockhainTransaction from "./useBlockchainTransaction";
+import useBlockchainTransaction from "./useBlockchainTransaction";
 
 type SubmitParams = {
   amount: number;
@@ -12,7 +12,7 @@ type SubmitParams = {
 
 export default function useWithdrawTokens() {
   const { internalMarketContract } = useContractsContext();
-  const { executeTx } = useBlockhainTransaction();
+  const { executeTx } = useBlockchainTransaction();
   const { address } = useAccount();
 
   return {
@@ -20,11 +20,11 @@ export default function useWithdrawTokens() {
       return executeTx<InternalMarket["withdraw"], Parameters<InternalMarket["withdraw"]>>({
         contractMethod: internalMarketContract?.withdraw,
         params: [toAddress, parseEther(String(amount))],
-        onSuccessMessage: "Tokens correctly withdrew",
+        onSuccessMessage: "Tokens successfully withdrawn",
         onErrorMessage:
           address !== toAddress
-            ? "Error withdrawing tokens. Check the withdrawal address!"
-            : "Error withdrawing tokens. Please try again later",
+            ? "Error withdrawing tokens. Please check the withdrawal address!"
+            : "Error withdrawing tokens. Try again later",
       });
     },
   };
