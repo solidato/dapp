@@ -3,7 +3,7 @@ import { ResolutionManager } from "@contracts/typechain";
 import { useContext } from "react";
 
 import { ContractsContext } from "../contexts/ContractsContext";
-import useBlockhainTransaction from "./useBlockchainTransaction";
+import useBlockchainTransaction from "./useBlockchainTransaction";
 
 type SubmitParams = {
   votedYes: boolean;
@@ -12,15 +12,15 @@ type SubmitParams = {
 
 export default function useResolutionVote() {
   const { resolutionManagerContract } = useContext(ContractsContext);
-  const { executeTx } = useBlockhainTransaction();
+  const { executeTx } = useBlockchainTransaction();
 
   return {
     onSubmit: async ({ resolutionId, votedYes }: SubmitParams) => {
       return executeTx<ResolutionManager["vote"], Parameters<ResolutionManager["vote"]>>({
         contractMethod: resolutionManagerContract?.vote,
         params: [resolutionId, votedYes],
-        onSuccessMessage: `Correctly voted ${votedYes ? "Yes" : "No"}`,
-        onErrorMessage: "Error voting resolution",
+        onSuccessMessage: `Successfully voted ${votedYes ? "Yes" : "No"}`,
+        onErrorMessage: "Error while voting for resolution",
       });
     },
   };

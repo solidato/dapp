@@ -97,7 +97,7 @@ export default function ResolutionCard({
           )}
           {resolution.state === RESOLUTION_STATES.VOTING && resolution.isLegacy && (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              This resolution can be voted on{" "}
+              This resolution can be voted on in{" "}
               <Link target="_blank" href={`https://dao.legacy.neokingdom.org/#/resolutions/${resolution.id}`}>
                 the old dapp
               </Link>
@@ -121,7 +121,7 @@ export default function ResolutionCard({
             <Alert severity="error">This resolution has been rejected</Alert>
           )}
           {resolution.state === RESOLUTION_STATES.PRE_DRAFT && (
-            <Alert severity="info">Resolution is in draft and needs to be approved</Alert>
+            <Alert severity="info">Resolution is in draft and awaiting approval</Alert>
           )}
           {resolution.state === RESOLUTION_STATES.NOTICE && (
             <Alert severity="info">
