@@ -83,6 +83,7 @@ export default function App({ Component, pageProps }: DappProps) {
             maxSnack={3}
             autoHideDuration={3000}
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            preventDuplicate
           >
             <Layout fullWidth={!!Component.fullWidth}>
               {(isLoading || !mounted) && (

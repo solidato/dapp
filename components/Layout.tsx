@@ -4,7 +4,18 @@ import { useRouter } from "next/router";
 
 import React, { useMemo } from "react";
 
-import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
+import {
+  Alert,
+  Badge,
+  Chip,
+  Container,
+  Divider,
+  Slide,
+  SlideProps,
+  Snackbar,
+  Stack,
+  useScrollTrigger,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -22,11 +33,15 @@ import NkdLogo from "./svg-logos/NkdLogo";
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction="left" />;
+}
+
 export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
   const { user } = useUser();
   const router = useRouter();
   const trigger = useScrollTrigger();
-  useCheckSubgraphState();
+  const { difference, shouldNotifyMismatch } = useCheckSubgraphState();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
   const { data, isLoading } = useDelegationStatus();
 
@@ -34,6 +49,16 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
 
   return (
     <>
+      <Snackbar
+        open={shouldNotifyMismatch}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        TransitionComponent={SlideTransition}
+      >
+        <Alert severity="warning" sx={{ width: "100%" }}>
+          Dapp data has a mismatch of {difference} {difference === 1 ? "block" : "blocks"} with the blockchain.
+          Synchronization in progress, please wait. If this persists please contact the engineers via discord.
+        </Alert>
+      </Snackbar>
       <LoginModal />
       <CssBaseline />
       <Box

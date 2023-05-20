@@ -1,4 +1,3 @@
-import { SnackbarKey } from "notistack";
 import useSWR from "swr";
 import { useBlockNumber } from "wagmi";
 
@@ -14,9 +13,9 @@ const REFETCH_AFTER_MS = 3000;
 
 export function useCheckSubgraphState() {
   const { data, isLoading } = useSWR<any>(getSubgraphState, fetcher, { refreshInterval: REFETCH_AFTER_MS });
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [mismatch, setMismatch] = useState(false);
-  const [snackbarKey, setSnackbarKey] = useState<SnackbarKey | null>(null);
+  const [shouldNotifyMismatch, setShouldNotifyMismatch] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   const graphBlockNumber = data?.state?.block?.number;
   const {
     data: blockNumber,
@@ -40,11 +39,7 @@ export function useCheckSubgraphState() {
   useEffect(() => {
     if (mismatch) {
       const timeout = setTimeout(() => {
-        const key = enqueueSnackbar("Data currently out of sync with blockchain. Refresh in progress", {
-          variant: "warning",
-          persist: true,
-        });
-        setSnackbarKey(key);
+        setShouldNotifyMismatch(true);
       }, NOTIFY_MISMATCH_AFTER_MS);
 
       return () => {
@@ -52,10 +47,20 @@ export function useCheckSubgraphState() {
       };
     }
 
-    if (snackbarKey) {
-      closeSnackbar(snackbarKey);
-      setSnackbarKey(null);
-      enqueueSnackbar("Synchronization complete", { variant: "success" });
-    }
+    setShouldNotifyMismatch(false);
   }, [mismatch]);
+
+  useEffect(() => {
+    // so, when it actually became true we need to notify when it becomes false again (when it's synced)
+    if (shouldNotifyMismatch) {
+      return () => {
+        enqueueSnackbar("Synchronization complete", { variant: "success", autoHideDuration: 3000 });
+      };
+    }
+  }, [shouldNotifyMismatch]);
+
+  return {
+    shouldNotifyMismatch,
+    difference: Math.abs((blockNumber || 0) - graphBlockNumber),
+  };
 }
