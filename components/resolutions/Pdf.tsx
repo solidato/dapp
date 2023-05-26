@@ -7,7 +7,7 @@ import React from "react";
 import Html from "react-pdf-html";
 
 import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
-import { PDF_SIGNER } from "@lib/utils";
+import { getPdfSigner } from "@lib/utils";
 
 import ShareholdersPdf from "./ShareholdersPdf";
 import VotingPdf from "./VotingPdf";
@@ -142,7 +142,7 @@ const ResolutionPdf = ({
                   <Bold>Place of voting:</Bold> <Link src={resolutionUrl}>{resolutionUrl}</Link>
                 </Text>
                 <Text>
-                  <Bold>Recording secretary:</Bold> Benjamin Gregor Uphues
+                  <Bold>Recording secretary:</Bold> {getPdfSigner(resolution)}
                 </Text>
               </>
             )}
@@ -207,7 +207,7 @@ const ResolutionPdf = ({
         <View fixed style={styles.signature}>
           <Text style={styles.note}>/signed digitally/</Text>
           <Text style={styles.note}>--------------------------------------</Text>
-          <Text style={styles.note}>{PDF_SIGNER}</Text>
+          <Text style={styles.note}>{getPdfSigner(resolution)}</Text>
           <Text style={styles.note}>Member of management board</Text>
         </View>
       </Page>

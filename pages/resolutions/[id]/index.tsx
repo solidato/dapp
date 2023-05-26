@@ -1,19 +1,14 @@
 import { NeokingdomToken__factory } from "@contracts/typechain";
 import { Interface } from "@ethersproject/abi";
 import { formatEther } from "ethers/lib/utils";
-import { useRouter } from "next/router";
 import showdown from "showdown";
-import useSWR from "swr";
 
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
 
-import { fetcherWithParams } from "@graphql/client";
-import { getResolutionQuery } from "@graphql/queries/get-resolution.query";
-
 import { RESOLUTION_STATES, getEnhancedResolutionMapper } from "@lib/resolutions/common";
-import { PDF_SIGNER } from "@lib/utils";
+import { getPdfSigner } from "@lib/utils";
 
 import Section from "@components/Section";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
@@ -148,7 +143,7 @@ export default function ResolutionView() {
         <>
           <Typography variant="body2">/signed digitally/</Typography>
           <Typography variant="body2">--------------------------------------</Typography>
-          <Typography variant="body2">{PDF_SIGNER}</Typography>
+          <Typography variant="body2">{getPdfSigner(resolution)}</Typography>
           <Typography variant="body2">Member of management board</Typography>
         </>
       </Section>
