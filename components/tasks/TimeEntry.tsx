@@ -104,7 +104,7 @@ export default function TimeEntry({ task, timeEntry }: { task: ProjectTask; time
             {renderMenu()}
           </Box>
           <Box sx={{ p: 1, pt: 0 }}>
-            <Typography variant="body2" component="h6">
+            <Typography sx={{ whiteSpace: "pre-wrap" }} variant="body2" component="h6">
               {timeEntry.name}
             </Typography>
           </Box>
