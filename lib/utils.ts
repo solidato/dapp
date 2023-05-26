@@ -1,10 +1,12 @@
 import { format, isSameDay } from "date-fns";
 import produce from "immer";
+import { ResolutionEntityEnhanced } from "types";
 
 import { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 
 import { META } from "../pages/_document";
 import { STAGE_NAME, STAGE_TO_COLOR_MAP } from "./constants";
+import { getDateFromUnixTimestamp } from "./resolutions/common";
 
 export const getLettersFromName = (name: string) =>
   name
@@ -155,9 +157,31 @@ export const TOKEN_SYMBOL = {
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const PDF_SIGNER = {
-  teledisko: "Benjamin Gregor Uphues",
-  neokingdom: "Benjamin Gregor Uphues",
+  teledisko: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
+    },
+  ],
+  neokingdom: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
+    },
+    {
+      name: "Ragnar Reindoff",
+      from: new Date("5/26/2023").getTime(),
+    },
+  ],
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
+export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
+  const resolutionApprovedTs = getDateFromUnixTimestamp(resolution.approveTimestamp).getTime();
+  return (
+    PDF_SIGNER.sort((a, b) => b.from - a.from).find((signer) => signer.from <= resolutionApprovedTs)?.name ||
+    "Benjamin Gregor Uphues"
+  );
+};
 
 export const calculateSteps = (value: number) => {
   if (value >= 10000) return 100;

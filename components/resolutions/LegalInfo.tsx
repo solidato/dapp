@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { Divider, Link, Paper, Stack, Typography } from "@mui/material";
 
 import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
+import { getPdfSigner } from "@lib/utils";
 
 import { ResolutionEntityEnhanced } from "../../types";
 
@@ -65,7 +66,7 @@ export default function LegalInfo({ resolution }: { resolution: ResolutionEntity
               <b>Place of voting:</b> <Link href={window.location.href}>{window.location.href}</Link>
             </Typography>
             <Typography variant="body2">
-              <b>Recording secretary:</b> Benjamin Gregor Uphues
+              <b>Recording secretary:</b> {getPdfSigner(resolution)}
             </Typography>
           </Paper>
         )}
