@@ -157,7 +157,7 @@ export default function AccountMenu() {
             </MenuItem>
           ),
         ]}
-        <Divider></Divider>
+        <Divider />
         <MenuItem onClick={() => setMode(mode === "light" ? "dark" : "light")}>
           Turn {mode === "light" ? "dark" : "light"}
           <IconButton sx={{ ml: 1 }} color="inherit">
