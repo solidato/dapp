@@ -6,7 +6,9 @@ export default function Login() {
   return (
     <Container maxWidth="sm">
       <Typography variant="h4">Welcome back!</Typography>
-      <Typography variant="body2">Please sign in to continue.</Typography>
+      <Typography variant="body2" sx={{ mb: 4 }}>
+        Please sign in to continue.
+      </Typography>
       <LoginForm />
     </Container>
   );
