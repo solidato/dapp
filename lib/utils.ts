@@ -162,6 +162,10 @@ export const PDF_SIGNER = {
       name: "Benjamin Gregor Uphues",
       from: new Date("1/1/2020").getTime(),
     },
+    {
+      name: "Ragnar Reindoff",
+      from: new Date("6/8/2023").getTime(),
+    },
   ],
   neokingdom: [
     {
