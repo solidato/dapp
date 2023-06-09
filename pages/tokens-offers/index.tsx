@@ -1,11 +1,11 @@
+import NextLink from "next/link";
 import { useAccount } from "wagmi";
 
 import { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
-import { Alert, Badge, Box, CircularProgress, Tab, Tabs } from "@mui/material";
+import { Alert, Badge, Box, CircularProgress, Link, Tab, Tabs } from "@mui/material";
 
-import IBC from "@components/tokens/IBC";
 import OffersList from "@components/tokens/OffersList";
 import UserActions from "@components/tokens/UserActions";
 import UserBalance from "@components/tokens/UserBalance";
@@ -62,7 +62,6 @@ export default function Tokens() {
   }
 
   const activeOffersCount = (data?.activeOffers || []).filter((offer) => bigIntToNum(offer.amount) > 0).length;
-  const expiredOffersCount = (data?.expiredOffers || []).length;
 
   return (
     <>
@@ -72,6 +71,12 @@ export default function Tokens() {
         contributors before becoming available for trading in the secondary market. <br />
         <strong>NEOK Tokens</strong> do not possess these rights or limitations, allowing for unrestricted trading on
         the secondary market at any time.
+        <br />
+        <br />
+        For IBC specific tools, please visit the{" "}
+        <Link component={NextLink} href="/ibc">
+          dedicated page
+        </Link>
       </Alert>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
@@ -85,7 +90,6 @@ export default function Tokens() {
             {...a11yProps(1)}
           />
           <Tab label="Expired offers" {...a11yProps(1)} />
-          <Tab label="IBC" {...a11yProps(1)} />
         </Tabs>
       </Box>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
@@ -105,9 +109,6 @@ export default function Tokens() {
           ) : (
             <OffersList offers={data?.expiredOffers || []} noOffersMessage="No expired offers" />
           )}
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <IBC />
         </TabPanel>
       </SwipeableViews>
     </>
