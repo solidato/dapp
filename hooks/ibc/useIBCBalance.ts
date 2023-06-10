@@ -1,7 +1,9 @@
+import { NeokingdomToken } from "@contracts/typechain";
 import { evmosToEth } from "@evmos/address-converter";
 import { BalanceByDenomResponse, generateEndpointBalanceByDenom } from "@evmos/provider";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { formatEther } from "ethers/lib/utils.js";
+import { useProvider } from "wagmi";
 
 import { useEffect, useState } from "react";
 
@@ -18,8 +20,12 @@ type Balance = {
   ercFloat?: number;
 };
 
+const erc20Abi = ["function balanceOf(address) view returns (uint)"];
+
+const tokenContractAddress = "0x655ecB57432CC1370f65e5dc2309588b71b473A9";
+
 export default function useIBCBalance({ address }: { address?: string | undefined }) {
-  const { neokingdomTokenContract } = useContracts();
+  const provider = useProvider({ chainId: 9001 });
   const [balance, setBalance] = useState<Balance>({});
   const [error, setError] = useState<string>();
 
@@ -28,9 +34,11 @@ export default function useIBCBalance({ address }: { address?: string | undefine
     let denom: string;
     let ethAddress: string;
 
-    if (!address) {
+    if (!address || !provider) {
       return;
     }
+
+    let neokingdomTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, provider) as NeokingdomToken;
 
     if (address.startsWith("evmos")) {
       nodeUrl = COSMOS_NODE_URL["evmos"];
@@ -54,6 +62,7 @@ export default function useIBCBalance({ address }: { address?: string | undefine
       try {
         rawResult = await fetch(queryEndpoint, restOptions);
       } catch (e) {
+        console.error(e);
         setError((e as any).toString());
         setBalance({});
         return;
@@ -80,7 +89,7 @@ export default function useIBCBalance({ address }: { address?: string | undefine
     reload();
     const interval = setInterval(reload, 5000);
     return () => clearInterval(interval);
-  }, [address, neokingdomTokenContract]);
+  }, [address, provider]);
 
   return { ...balance, error };
 }
