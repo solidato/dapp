@@ -90,13 +90,15 @@ export const findActiveTimeEntry = (task: ProjectTask): [Timesheet | null, Proje
 export const findActiveProjectTask = (projects: Project[]): ProjectTask | null => {
   let activeProjectTask = null;
   projects.find((project) => {
-    return project.tasks.find((task: ProjectTask) => {
-      const [activeTimeEntry, activeTask] = findActiveTimeEntry(task);
-      if (activeTimeEntry) {
-        activeProjectTask = activeTask;
-        return true;
-      }
-    });
+    return project.tasks
+      .filter((task) => task !== null)
+      .find((task: ProjectTask) => {
+        const [activeTimeEntry, activeTask] = findActiveTimeEntry(task);
+        if (activeTimeEntry) {
+          activeProjectTask = activeTask;
+          return true;
+        }
+      });
   });
   return activeProjectTask;
 };
@@ -192,3 +194,12 @@ export const calculateSteps = (value: number) => {
   if (value >= 100) return 10;
   return 1;
 };
+
+export const moneyFormatter = new Intl.NumberFormat("de-DE", {
+  style: "currency",
+  currency: "EUR",
+
+  // These options are needed to round to whole numbers if that's what you want.
+  //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+});
