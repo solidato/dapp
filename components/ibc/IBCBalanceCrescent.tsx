@@ -242,17 +242,19 @@ export default function IBCBalanceCrescent() {
         />
         {showAddress && (
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Address: {crescentAddress}
-              <IconButton
-                aria-label="open in Mintscan"
-                size="small"
-                href={`https://www.mintscan.io/${chain}/account/${crescentAddress}`}
-                target="_new"
-              >
-                <LaunchIcon fontSize="inherit" />
-              </IconButton>
-            </Typography>
+            <Alert severity="info" onClick={(event) => event.stopPropagation()}>
+              <Typography variant="body2" color="text.secondary">
+                Address: {crescentAddress}
+                <IconButton
+                  aria-label="open in Mintscan"
+                  size="small"
+                  href={`https://www.mintscan.io/${chain}/account/${crescentAddress}`}
+                  target="_new"
+                >
+                  <LaunchIcon fontSize="inherit" />
+                </IconButton>
+              </Typography>
+            </Alert>
           </CardContent>
         )}
       </Card>

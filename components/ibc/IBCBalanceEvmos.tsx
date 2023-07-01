@@ -85,6 +85,14 @@ export default function IBCBalanceEvmos() {
   }, [crescentAddress]);
 
   useEffect(() => {
+    if (!cosmosAccount?.base_account.pub_key) {
+      setShowAddress(true);
+    } else {
+      setShowAddress(false);
+    }
+  }, [cosmosAccount]);
+
+  useEffect(() => {
     if (balanceFloat !== undefined) {
       setIsLoadingBalance(false);
       setEvmosBalance(balanceFloat);
@@ -246,42 +254,44 @@ export default function IBCBalanceEvmos() {
         />
         {showAddress && (
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Address: {evmosAddress}
-              <IconButton
-                aria-label="open in Mintscan"
-                size="small"
-                href={`https://www.mintscan.io/${chain}/account/${evmosAddress}`}
-                target="_new"
-              >
-                <LaunchIcon fontSize="inherit" />
-              </IconButton>
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {ethAddress && (
-                <>
-                  EVM Address: {ethAddress}
-                  <IconButton
-                    aria-label="open in EVMOS block explorer"
-                    size="small"
-                    href={`https://escan.live/address/${ethAddress}`}
-                    target="_new"
-                  >
-                    <LaunchIcon fontSize="inherit" />
-                  </IconButton>
-                </>
-              )}
-            </Typography>
+            <Alert severity="info" onClick={(event) => event.stopPropagation()}>
+              <Typography variant="body2" color="text.secondary">
+                Address: {evmosAddress}
+                <IconButton
+                  aria-label="open in Mintscan"
+                  size="small"
+                  href={`https://www.mintscan.io/${chain}/account/${evmosAddress}`}
+                  target="_new"
+                >
+                  <LaunchIcon fontSize="inherit" />
+                </IconButton>
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {ethAddress && (
+                  <>
+                    EVM Address: {ethAddress}
+                    <IconButton
+                      aria-label="open in EVMOS block explorer"
+                      size="small"
+                      href={`https://escan.live/address/${ethAddress}`}
+                      target="_new"
+                    >
+                      <LaunchIcon fontSize="inherit" />
+                    </IconButton>
+                  </>
+                )}
+              </Typography>
+            </Alert>
+
+            {!cosmosAccount?.base_account.pub_key && (
+              <Alert sx={{ mt: 2 }} severity="warning">
+                It seems that you don&apos;t have a Public Key associated to this account. <br />
+                You should do at least one transaction before sending Evmos to Crescent.
+              </Alert>
+            )}
           </CardContent>
         )}
       </Card>
-
-      {!cosmosAccount?.base_account.pub_key && (
-        <Alert sx={{ mt: 2 }} severity="warning">
-          It seems that you don&apos;t have a Public Key associated to this account. <br />
-          You should do at least one transaction before sending Evmos to Crescent.
-        </Alert>
-      )}
 
       <Modal open={modalOpen} onClose={handleModalClose}>
         {renderToSendForm()}
