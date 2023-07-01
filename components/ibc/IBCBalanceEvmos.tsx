@@ -211,7 +211,10 @@ export default function IBCBalanceEvmos() {
 
   return (
     <>
-      <Card sx={{ cursor: "pointer" }} onClick={() => setShowAddress(!showAddress)}>
+      <Card
+        sx={{ cursor: "pointer", height: showAddress ? "100%" : "auto" }}
+        onClick={() => setShowAddress(!showAddress)}
+      >
         <CardHeader
           avatar={<Image src={EvmosLogo} alt="Evmos" height={40} />}
           action={

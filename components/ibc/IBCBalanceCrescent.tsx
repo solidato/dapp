@@ -207,7 +207,10 @@ export default function IBCBalanceCrescent() {
 
   return (
     <>
-      <Card sx={{ cursor: "pointer" }} onClick={() => setShowAddress(!showAddress)}>
+      <Card
+        sx={{ cursor: "pointer", height: showAddress ? "100%" : "auto" }}
+        onClick={() => setShowAddress(!showAddress)}
+      >
         <CardHeader
           avatar={<Image src={CrescentLogo} alt="Crescent" height={40} />}
           action={
