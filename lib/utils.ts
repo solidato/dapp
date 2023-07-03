@@ -182,9 +182,9 @@ export const PDF_SIGNER = {
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
-  const resolutionApprovedTs = getDateFromUnixTimestamp(resolution.approveTimestamp).getTime();
+  const resolutionCreatedTs = getDateFromUnixTimestamp(resolution.createTimestamp).getTime();
   return (
-    PDF_SIGNER.sort((a, b) => b.from - a.from).find((signer) => signer.from <= resolutionApprovedTs)?.name ||
+    PDF_SIGNER.sort((a, b) => b.from - a.from).find((signer) => signer.from <= resolutionCreatedTs)?.name ||
     "Benjamin Gregor Uphues"
   );
 };
