@@ -65,54 +65,7 @@ const getBalance = async () => {
 
   if (balance) {
     const value = BigNumber.from(balance.balance?.amount);
-    console.log(`I have ${formatEther(value)} porcodio!`);
   }
-};
-
-export const sendFromCrescent = async (senderAddress: string, receiverAddress: string, amount: string) => {
-  const chainId = CHAIN_TO_ID["crescent"];
-  const url = COSMOS_NODE_URL["crescent"];
-  if (!window.keplr) {
-    return;
-  }
-
-  await window.keplr.enable(chainId);
-
-  const keplrOfflineSigner = window.keplr.getOfflineSignerOnlyAmino(chainId);
-  const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
-
-  const secretjs = new SecretNetworkClient({
-    url,
-    chainId,
-    wallet: keplrOfflineSigner,
-    walletAddress: myAddress,
-    // Only used in Secret
-    // encryptionUtils: window.keplr.getEnigmaUtils(chainId),
-  });
-
-  const tx = await secretjs.tx.ibc.transfer(
-    {
-      sender: senderAddress,
-      receiver: receiverAddress,
-      source_channel: "channel-7",
-      source_port: "transfer",
-      token: {
-        amount,
-        denom: DENOMS["crescent"],
-      },
-      timeout_timestamp: String(Math.floor(Date.now() / 1000) + 10 * 60), // 10 minutes
-      memo: "Complaining is silly. Either act or forget",
-    },
-    {
-      broadcastCheckIntervalMs: 100,
-      gasLimit: 200_000,
-      ibcTxsOptions: {
-        resolveResponsesCheckIntervalMs: 250,
-      },
-    },
-  );
-  // https://www.mintscan.io/evmos/txs/2AF50D0BA7925878F24FD26D9ADE29B22A267D7AD27D5BC5A15ED296F55F89F7
-  return { snackbarId: null, response: tx };
 };
 
 const fetchLastBlock = async (chain: CosmosChains) => {
@@ -131,14 +84,14 @@ const fetchAccount = async (address: string, nodeUrl: string) => {
   // https://docs.evmos.org/develop/api/networks.
   const queryEndpoint = `${nodeUrl}${generateEndpointAccount(address)}`;
 
-  const restOptions = {
+  // Note that the node will return a 400 status code if the account does not exist.
+  const rawResult = await fetch(queryEndpoint, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
-  };
-
-  // Note that the node will return a 400 status code if the account does not exist.
-  const rawResult = await fetch(queryEndpoint, restOptions);
-
+  });
+  if (!rawResult.ok) {
+    console.log("error fetching account", rawResult);
+  }
   const result = await rawResult.json();
   return result as AccountResponse;
 };
@@ -239,20 +192,16 @@ export const sendFromCrescent2 = async (senderAddress: string, receiverAddress: 
 };
 
 export const sendFromEvmos = async (
-  senderAddress: string,
+  account: AccountResponse["account"],
   receiverAddress: string,
   amount: string,
   enqueueSnackbar: EnqueueSnackbar,
 ) => {
-  const nodeUrl = COSMOS_NODE_URL["evmos"];
-
-  const account = await fetchAccount(senderAddress, nodeUrl);
-
   const sender: Sender = {
-    accountAddress: senderAddress,
-    sequence: parseInt(account.account.base_account.sequence),
-    accountNumber: parseInt(account.account.base_account.account_number),
-    pubkey: account.account.base_account.pub_key!.key,
+    accountAddress: account.base_account.address,
+    sequence: parseInt(account.base_account.sequence),
+    accountNumber: parseInt(account.base_account.account_number),
+    pubkey: account.base_account.pub_key!.key,
   };
 
   const fee: Fee = {
@@ -321,10 +270,57 @@ export const sendFromEvmos = async (
     body: generatePostBodyBroadcast(signedTx),
   };
 
+  const nodeUrl = COSMOS_NODE_URL["evmos"];
   const broadcastEndpoint = `${nodeUrl}${generateEndpointBroadcast()}`;
   const broadcastPost = await fetch(broadcastEndpoint, postOptions);
 
   const response = await broadcastPost.json();
 
   return { response, snackbarId };
+};
+
+export const sendFromCrescent = async (senderAddress: string, receiverAddress: string, amount: string) => {
+  const chainId = CHAIN_TO_ID["crescent"];
+  const url = COSMOS_NODE_URL["crescent"];
+  if (!window.keplr) {
+    return;
+  }
+
+  await window.keplr.enable(chainId);
+
+  const keplrOfflineSigner = window.keplr.getOfflineSignerOnlyAmino(chainId);
+  const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
+
+  const secretjs = new SecretNetworkClient({
+    url,
+    chainId,
+    wallet: keplrOfflineSigner,
+    walletAddress: myAddress,
+    // Only used in Secret
+    // encryptionUtils: window.keplr.getEnigmaUtils(chainId),
+  });
+
+  const tx = await secretjs.tx.ibc.transfer(
+    {
+      sender: senderAddress,
+      receiver: receiverAddress,
+      source_channel: "channel-7",
+      source_port: "transfer",
+      token: {
+        amount,
+        denom: DENOMS["crescent"],
+      },
+      timeout_timestamp: String(Math.floor(Date.now() / 1000) + 10 * 60), // 10 minutes
+      memo: "Complaining is silly. Either act or forget",
+    },
+    {
+      broadcastCheckIntervalMs: 100,
+      gasLimit: 200_000,
+      ibcTxsOptions: {
+        resolveResponsesCheckIntervalMs: 250,
+      },
+    },
+  );
+  // https://www.mintscan.io/evmos/txs/2AF50D0BA7925878F24FD26D9ADE29B22A267D7AD27D5BC5A15ED296F55F89F7
+  return { snackbarId: null, response: tx };
 };

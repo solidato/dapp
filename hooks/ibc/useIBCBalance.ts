@@ -1,14 +1,16 @@
-import { NeokingdomToken } from "@contracts/typechain";
+import { NeokingdomToken, NeokingdomToken__factory } from "@contracts/typechain";
+import { Provider } from "@ethersproject/providers";
 import { evmosToEth } from "@evmos/address-converter";
 import { BalanceByDenomResponse, generateEndpointBalanceByDenom } from "@evmos/provider";
 import { BigNumber, ethers } from "ethers";
 import { formatEther } from "ethers/lib/utils.js";
 import { useProvider } from "wagmi";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-import { useContracts } from "@hooks/useContracts";
-
+import networksNeoKingdom from "../../networks/neokingdom.json";
+import networksTeledisko from "../../networks/teledisko.json";
+import useIbcStore from "../../store/ibcStore";
 import { COSMOS_NODE_URL, DENOMS, restOptions } from "./utils";
 
 type Balance = {
@@ -20,76 +22,87 @@ type Balance = {
   ercFloat?: number;
 };
 
-const erc20Abi = ["function balanceOf(address) view returns (uint)"];
+const networks: Record<string, any> =
+  process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? networksNeoKingdom : networksTeledisko;
 
-const tokenContractAddress = "0x655ecB57432CC1370f65e5dc2309588b71b473A9";
+const getNeokingdomTokenContract = (chainId: string, provider: Provider): NeokingdomToken => {
+  const address = networks[chainId]["NeokingdomToken"]?.address;
+  return NeokingdomToken__factory.connect(address, provider);
+};
 
 export default function useIBCBalance({ address }: { address?: string | undefined }) {
-  const provider = useProvider({ chainId: 9001 });
+  const provider = useProvider();
   const [balance, setBalance] = useState<Balance>({});
   const [error, setError] = useState<string>();
+  const setEvmosBalance = useIbcStore(({ setEvmosBalance }) => setEvmosBalance);
+  const setCrescentBalance = useIbcStore(({ setEvmosBalance }) => setEvmosBalance);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
+  const getQueryEndpoint = (address: string) => {
     let nodeUrl: string;
     let denom: string;
-    let ethAddress: string;
-
-    if (!address || !provider) {
-      return;
-    }
-
-    let neokingdomTokenContract = new ethers.Contract(tokenContractAddress, erc20Abi, provider) as NeokingdomToken;
-
     if (address.startsWith("evmos")) {
       nodeUrl = COSMOS_NODE_URL["evmos"];
       denom = DENOMS["evmos"];
-      ethAddress = evmosToEth(address);
     } else if (address.startsWith("cre")) {
       nodeUrl = COSMOS_NODE_URL["crescent"];
       denom = DENOMS["crescent"];
     } else {
       setError("Invalid address");
-      return;
+      return null;
     }
-    const queryEndpoint = `${nodeUrl}${generateEndpointBalanceByDenom(address, denom)}`;
+    return `${nodeUrl}${generateEndpointBalanceByDenom(address, denom)}`;
+  };
 
-    const reload = async () => {
-      let b: Balance = {};
+  const reload = useCallback(
+    async (address?: string) => {
+      if (!address) return null;
+      const balance: Balance = {};
+      const neokingdomTokenContract = getNeokingdomTokenContract("9001", provider);
       if (!neokingdomTokenContract) {
+        setError("No contract found!");
         return;
       }
-      let rawResult: Response;
-      try {
-        rawResult = await fetch(queryEndpoint, restOptions);
-      } catch (e) {
-        console.error(e);
-        setError((e as any).toString());
+
+      const queryEndpoint = getQueryEndpoint(address);
+      if (!queryEndpoint) return null;
+
+      setIsLoading(true);
+      const res = await fetch(queryEndpoint, restOptions);
+      if (!res.ok) {
+        setError("Unable to fetch balance");
         setBalance({});
+        setIsLoading(false);
         return;
       }
-      const result = (await rawResult.json()) as BalanceByDenomResponse;
+      const result: BalanceByDenomResponse = await res.json();
       const amount = result.balance.amount;
-      b.ibc = BigNumber.from(amount);
-      b.ibcFloat = parseFloat(formatEther(amount));
+      balance.ibc = BigNumber.from(amount);
+      balance.ibcFloat = parseFloat(formatEther(amount));
 
-      b.erc = BigNumber.from(0);
-      b.ercFloat = 0;
+      balance.erc = BigNumber.from(0);
+      balance.ercFloat = 0;
 
-      if (ethAddress) {
+      if (address.startsWith("evmos")) {
+        const ethAddress = evmosToEth(address);
         const balanceErc20 = (await neokingdomTokenContract?.balanceOf(ethAddress)) as BigNumber;
-        b.erc = balanceErc20;
-        b.ercFloat = parseFloat(formatEther(b.erc));
+        balance.erc = balanceErc20;
+        balance.ercFloat = parseFloat(formatEther(balance.erc));
       }
 
-      b.balance = b.ibc.add(b.erc);
-      b.balanceFloat = parseFloat(formatEther(b.balance));
-      setBalance(b);
-    };
+      balance.balance = balance.ibc.add(balance.erc);
+      balance.balanceFloat = parseFloat(formatEther(balance.balance));
+      console.log(`🐞 > Reload ${address.startsWith("evmos") ? "evmos" : "crescent"} balance:`, balance.balanceFloat);
+      setBalance(balance);
+      setIsLoading(false);
+      setError("");
+    },
+    [provider],
+  );
 
-    reload();
-    const interval = setInterval(reload, 5000);
-    return () => clearInterval(interval);
-  }, [address, provider]);
+  useEffect(() => {
+    reload(address);
+  }, [address, reload]);
 
-  return { ...balance, error };
+  return { ...balance, error, reload, isLoading };
 }

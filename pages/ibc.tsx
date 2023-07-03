@@ -1,11 +1,15 @@
 import { useKeplrContext } from "contexts/KeplrContext";
 
+import { useState } from "react";
+
 import { Alert, Button, Grid, Paper } from "@mui/material";
 
-import IBCBalance from "@components/ibc/IBCBalance";
+import IBCBalanceEvmos from "@components/ibc/IBCBalanceEvmos";
+
+import IBCBalanceCrescent from "../components/ibc/IBCBalanceCrescent";
 
 export default function IBC() {
-  const { hasKeplr, disconnect } = useKeplrContext();
+  const { networks, hasKeplr, connect, disconnect } = useKeplrContext();
 
   if (!hasKeplr)
     return (
@@ -21,29 +25,52 @@ export default function IBC() {
       </Alert>
     );
 
-  return (
-    <>
+  const connectKeplr = () => {
+    if (typeof connect === "function") {
+      connect("crescent");
+      connect("evmos");
+    }
+  };
+
+  if (!networks?.evmos?.address && !networks?.crescent?.address) {
+    return (
       <Alert
         severity="info"
         action={
-          <Button size="small" variant="outlined" onClick={() => typeof disconnect === "function" && disconnect()}>
-            Disconnect Keplr
+          <Button size="small" variant="outlined" onClick={connectKeplr}>
+            Connect Keplr
           </Button>
         }
         sx={{ mb: 2 }}
       >
-        You&apos;re now connected to Keplr
+        Please connect your Keplr wallet
       </Alert>
+    );
+  }
 
-      <Grid item xs={12} sx={{ mb: 2 }}>
-        <Paper sx={paperSx}>
-          <IBCBalance chain="evmos" />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sx={{ mb: 2 }}>
-        <Paper sx={paperSx}>
-          <IBCBalance chain="crescent" />
-        </Paper>
+  return (
+    <>
+      {networks?.evmos?.address && networks?.crescent?.address && (
+        <Alert
+          severity="info"
+          action={
+            <Button size="small" variant="outlined" onClick={() => typeof disconnect === "function" && disconnect()}>
+              Disconnect Keplr
+            </Button>
+          }
+          sx={{ mb: 2 }}
+        >
+          You&apos;re connected to Keplr
+        </Alert>
+      )}
+
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <IBCBalanceEvmos />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <IBCBalanceCrescent />
+        </Grid>
       </Grid>
     </>
   );
