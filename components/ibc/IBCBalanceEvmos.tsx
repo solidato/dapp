@@ -10,11 +10,9 @@ import LaunchIcon from "@mui/icons-material/Launch";
 import { LoadingButton } from "@mui/lab";
 import {
   Alert,
-  Avatar,
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -22,6 +20,7 @@ import {
   Slider,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 
 import { calculateSteps } from "@lib/utils";
@@ -37,7 +36,20 @@ import useIBCSend from "@hooks/ibc/useIBCSend";
 
 import EvmosLogo from "../../images/evmos.png";
 
+function EvmosCardLoader() {
+  return (
+    <Card>
+      <CardHeader
+        avatar={<Image src={EvmosLogo} alt="Evmos" height={40} />}
+        action={<CircularProgress />}
+        title={<Typography sx={{ color: "rgb(237, 78, 51)" }}>EVMOS</Typography>}
+      />
+    </Card>
+  );
+}
+
 export default function IBCBalanceEvmos() {
+  const theme = useTheme();
   const { connect, networks, isConnecting } = useKeplrContext();
   const {
     isLoadingBalanceAfterSend,
@@ -69,7 +81,6 @@ export default function IBCBalanceEvmos() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const [showAddress, setShowAddress] = useState(false);
 
   const [targetAddress, setTargetAddress] = useState<string | undefined>();
   const [tokenToSend, setTokenToSend] = useState(0);
@@ -83,14 +94,6 @@ export default function IBCBalanceEvmos() {
   useEffect(() => {
     setTargetAddress(crescentAddress);
   }, [crescentAddress]);
-
-  useEffect(() => {
-    if (!cosmosAccount?.base_account.pub_key) {
-      setShowAddress(true);
-    } else {
-      setShowAddress(false);
-    }
-  }, [cosmosAccount]);
 
   useEffect(() => {
     if (balanceFloat !== undefined) {
@@ -121,7 +124,7 @@ export default function IBCBalanceEvmos() {
   };
 
   if (isConnecting || isLoadingBalance || isLoadingCosmosAccount) {
-    return <CircularProgress />;
+    return <EvmosCardLoader />;
   }
 
   if (!evmosAddress) {
@@ -219,10 +222,7 @@ export default function IBCBalanceEvmos() {
 
   return (
     <>
-      <Card
-        sx={{ cursor: "pointer", height: showAddress ? "100%" : "auto" }}
-        onClick={() => setShowAddress(!showAddress)}
-      >
+      <Card>
         <CardHeader
           avatar={<Image src={EvmosLogo} alt="Evmos" height={40} />}
           action={
@@ -252,45 +252,43 @@ export default function IBCBalanceEvmos() {
             </Box>
           }
         />
-        {showAddress && (
-          <CardContent>
-            <Alert severity="info" onClick={(event) => event.stopPropagation()}>
-              <Typography variant="body2" color="text.secondary">
-                Address: {evmosAddress}
-                <IconButton
-                  aria-label="open in Mintscan"
-                  size="small"
-                  href={`https://www.mintscan.io/${chain}/account/${evmosAddress}`}
-                  target="_new"
-                >
-                  <LaunchIcon fontSize="inherit" />
-                </IconButton>
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {ethAddress && (
-                  <>
-                    EVM Address: {ethAddress}
-                    <IconButton
-                      aria-label="open in EVMOS block explorer"
-                      size="small"
-                      href={`https://escan.live/address/${ethAddress}`}
-                      target="_new"
-                    >
-                      <LaunchIcon fontSize="inherit" />
-                    </IconButton>
-                  </>
-                )}
-              </Typography>
-            </Alert>
+        <CardContent sx={{ pt: 1 }}>
+          <Box sx={{ border: `1px solid ${theme.palette.divider}`, p: 2, borderRadius: "4px" }}>
+            <Typography variant="body2" color="text.secondary">
+              Address: {evmosAddress}
+              <IconButton
+                aria-label="open in Mintscan"
+                size="small"
+                href={`https://www.mintscan.io/${chain}/account/${evmosAddress}`}
+                target="_new"
+              >
+                <LaunchIcon fontSize="inherit" />
+              </IconButton>
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {ethAddress && (
+                <>
+                  EVM Address: {ethAddress}
+                  <IconButton
+                    aria-label="open in EVMOS block explorer"
+                    size="small"
+                    href={`https://escan.live/address/${ethAddress}`}
+                    target="_new"
+                  >
+                    <LaunchIcon fontSize="inherit" />
+                  </IconButton>
+                </>
+              )}
+            </Typography>
+          </Box>
 
-            {!cosmosAccount?.base_account.pub_key && (
-              <Alert sx={{ mt: 2 }} severity="warning">
-                It seems that you don&apos;t have a Public Key associated to this account. <br />
-                You should do at least one transaction before sending Evmos to Crescent.
-              </Alert>
-            )}
-          </CardContent>
-        )}
+          {!cosmosAccount?.base_account.pub_key && (
+            <Alert sx={{ mt: 2 }} severity="warning">
+              It seems that you don&apos;t have a Public Key associated to this account. <br />
+              You should do at least one transaction before sending Evmos to Crescent.
+            </Alert>
+          )}
+        </CardContent>
       </Card>
 
       <Modal open={modalOpen} onClose={handleModalClose}>

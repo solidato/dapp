@@ -13,7 +13,6 @@ import {
   Box,
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -21,6 +20,7 @@ import {
   Slider,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 
 import { calculateSteps } from "@lib/utils";
@@ -35,7 +35,20 @@ import useIBCSend from "@hooks/ibc/useIBCSend";
 
 import CrescentLogo from "../../images/crescent.svg";
 
+function CrescentCardLoader() {
+  return (
+    <Card>
+      <CardHeader
+        avatar={<Image src={CrescentLogo} alt="Crescent" height={40} />}
+        action={<CircularProgress />}
+        title={<Typography sx={{ color: "rgb(235, 175, 118)" }}>Crescent</Typography>}
+      />
+    </Card>
+  );
+}
+
 export default function IBCBalanceCrescent() {
+  const theme = useTheme();
   const { connect, networks, isConnecting } = useKeplrContext();
   const {
     stopCrescentInterval,
@@ -65,7 +78,6 @@ export default function IBCBalanceCrescent() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
-  const [showAddress, setShowAddress] = useState(false);
 
   const [targetAddress, setTargetAddress] = useState<string | undefined>();
   const [tokenToSend, setTokenToSend] = useState(0);
@@ -109,7 +121,7 @@ export default function IBCBalanceCrescent() {
   };
 
   if (isConnecting || isLoadingBalance) {
-    return <CircularProgress />;
+    return <CrescentCardLoader />;
   }
 
   if (!evmosAddress) {
@@ -207,10 +219,7 @@ export default function IBCBalanceCrescent() {
 
   return (
     <>
-      <Card
-        sx={{ cursor: "pointer", height: showAddress ? "100%" : "auto" }}
-        onClick={() => setShowAddress(!showAddress)}
-      >
+      <Card>
         <CardHeader
           avatar={<Image src={CrescentLogo} alt="Crescent" height={40} />}
           action={
@@ -240,23 +249,22 @@ export default function IBCBalanceCrescent() {
             </Box>
           }
         />
-        {showAddress && (
-          <CardContent>
-            <Alert severity="info" onClick={(event) => event.stopPropagation()}>
-              <Typography variant="body2" color="text.secondary">
-                Address: {crescentAddress}
-                <IconButton
-                  aria-label="open in Mintscan"
-                  size="small"
-                  href={`https://www.mintscan.io/${chain}/account/${crescentAddress}`}
-                  target="_new"
-                >
-                  <LaunchIcon fontSize="inherit" />
-                </IconButton>
-              </Typography>
-            </Alert>
-          </CardContent>
-        )}
+
+        <CardContent sx={{ pt: 1 }}>
+          <Box sx={{ border: `1px solid ${theme.palette.divider}`, p: 2, borderRadius: "4px" }}>
+            <Typography variant="body2" color="text.secondary">
+              Address: {crescentAddress}
+              <IconButton
+                aria-label="open in Mintscan"
+                size="small"
+                href={`https://www.mintscan.io/${chain}/account/${crescentAddress}`}
+                target="_new"
+              >
+                <LaunchIcon fontSize="inherit" />
+              </IconButton>
+            </Typography>
+          </Box>
+        </CardContent>
       </Card>
       <Modal open={modalOpen} onClose={handleModalClose}>
         {renderToSendForm()}
