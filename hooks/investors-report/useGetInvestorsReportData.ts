@@ -52,15 +52,40 @@ export default function useGetInvestorsReportData(): {
     .map((item: any) => ({
       minted: Number(formatEther(item.minted)),
       month: item.month,
-      monthIndex: item.monthIndex,
+      monthIndex: item.sortIndex,
     })) as DATA_POINT[];
 
+  const initialMonthsData = [
+    {
+      minted: 730,
+      month: "Jan",
+      monthIndex: 2023,
+    },
+    {
+      minted: 55294.8313,
+      month: "Feb",
+      monthIndex: 2024,
+    },
+    {
+      minted: 44581.361,
+      month: "Mar",
+      monthIndex: 2025,
+    },
+    {
+      minted: 39986.6669,
+      month: "Apr",
+      monthIndex: 2026,
+    },
+  ];
+
+  const results = initialMonthsData.concat(finalData.slice(1));
+
   return {
-    data: finalData,
-    dataAccumulated: finalData.map((item, index) => {
+    data: results,
+    dataAccumulated: results.map((item, index) => {
       return {
         ...item,
-        minted: finalData.slice(0, index + 1).reduce((acc, item) => acc + item.minted, 0),
+        minted: results.slice(0, index + 1).reduce((acc, item) => acc + item.minted, 0),
       };
     }),
     isLoading,
