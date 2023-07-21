@@ -175,26 +175,40 @@ const ResolutionPdf = ({
           <Html style={styles.content}>{contentHtml}</Html>
         </View>
         {resolution.state === RESOLUTION_STATES.PRE_DRAFT && (
-          <View>
-            <Text>Voting conditions:</Text>
-            <Br />
-            <Text>
-              <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
-            </Text>
-          </View>
+          <>
+            <View>
+              <Text>Voting conditions:</Text>
+              <Br />
+              <Text>
+                <Bold>{resolution.resolutionType.quorum}% of votes</Bold> are needed to approve the motion
+              </Text>
+            </View>
+            {!/^0x0+$/.test(resolution.addressedContributor) && (
+              <View style={{ ...styles.subTitle, marginTop: "8px" }}>
+                <Text>The following contributor is excluded from voting:</Text>
+                <Br />
+                <Text>
+                  {getUserName(resolution.addressedContributor)}{" "}
+                  <Text style={{ color: "#999", fontSize: "10px" }}>{resolution.addressedContributor}</Text>
+                </Text>
+              </View>
+            )}
+          </>
         )}
         {resolution.state === RESOLUTION_STATES.ENDED && (
           <View>
             <View style={{ padding: "12px", backgroundColor: resolution.hasQuorum ? "green" : "red", color: "white" }}>
               {resolution.hasQuorum ? (
                 <Text style={{ fontSize: "14px" }}>
-                  The resolution of shareholders <Bold inverse>HAS BEEN ADOPTED</Bold> on{" "}
+                  The resolution of shareholders{" "}
+                  <Bold inverse>{resolution.isNegative ? "HAS NOT BEEN REJECTED" : "HAS BEEN ADOPTED"}</Bold> on{" "}
                   {resolution.resolutionTypeInfo.votingEndsAt}.
                 </Text>
               ) : (
                 <Text style={{ fontSize: "14px" }}>
-                  The resolution of shareholders <Bold inverse>HAS NOT BEEN ADOPTED</Bold>. Voting ended on{" "}
-                  {resolution.resolutionTypeInfo.votingEndsAt}.
+                  The resolution of shareholders{" "}
+                  <Bold inverse>{resolution.isNegative ? "HAS BEEN REJECTED" : "HAS NOT BEEN ADOPTED"}</Bold>. Voting
+                  ended on {resolution.resolutionTypeInfo.votingEndsAt}.
                 </Text>
               )}
               <Br />
