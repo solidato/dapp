@@ -16,15 +16,15 @@ export default function UsersAutocomplete({
   onChange: (address: string) => void;
   exclusionAddress: string;
 }) {
-  const { users, isLoading } = useOdooUsers();
+  const { allOdooUsers, isLoading } = useOdooUsers();
 
   const options = useMemo(() => {
-    return users.map((user) => ({
+    return allOdooUsers.map((user) => ({
       name: user.display_name,
       value: user.ethereum_address,
       image: user.image,
     }));
-  }, [users]);
+  }, [allOdooUsers]);
 
   if (isLoading) return <CircularProgress />;
 

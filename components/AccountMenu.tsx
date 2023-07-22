@@ -36,9 +36,7 @@ export default function AccountMenu() {
   const [mounted, setMounted] = React.useState(false);
   const isConnected = mounted && isWalletConnected;
 
-  const {
-    users: [currentOdooUser],
-  } = useOdooUsers(user?.ethereum_address);
+  const { currentOdooUser } = useOdooUsers();
 
   useEffect(() => {
     setMounted(true);
