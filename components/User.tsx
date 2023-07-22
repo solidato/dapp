@@ -8,6 +8,7 @@ import { Variant } from "@mui/material/styles/createTypography";
 import { getLettersFromName } from "@lib/utils";
 
 import useOdooUsers from "@hooks/useOdooUsers";
+import useUser from "@hooks/useUser";
 
 import { isSameAddress } from "../lib/utils";
 
@@ -29,8 +30,8 @@ export default function User({
   sx?: SxProps;
 }) {
   const { address: connectedAddress } = useAccount();
-  const { users, isLoading: isLoadingUsers } = useOdooUsers(address);
-  const [currentUser] = users.length > 0 ? users : [{ display_name: "unknown", image: "" }];
+  const { user } = useUser();
+  const { filteredOdooUser, isLoading: isLoadingUsers } = useOdooUsers(address);
 
   const isLoading = isLoadingUsers || isSkeleton;
 
@@ -45,12 +46,13 @@ export default function User({
   if (isInline && !isLoading) {
     return (
       <Typography component="span" variant={inlineVariant}>
-        <b>{`${currentUser?.display_name} (${address?.slice(0, 8)}...)`}</b>
+        <b>{`${filteredOdooUser?.display_name} (${address?.slice(0, 8)}...)`}</b>
       </Typography>
     );
   }
 
-  const markCurrentUser = isSameAddress(connectedAddress as string, address as string) && shouldMarkCurrentUser;
+  const markCurrentUser =
+    isSameAddress(connectedAddress || (user?.ethereum_address as string), address as string) && shouldMarkCurrentUser;
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", ...sx }}>
@@ -61,8 +63,8 @@ export default function User({
       ) : (
         <Tooltip title={markCurrentUser ? "you" : ""} placement="top" arrow TransitionComponent={Zoom}>
           <Avatar
-            alt={currentUser?.display_name}
-            src={`data:image/jpeg;charset=utf-8;base64,${currentUser?.image || ""}`}
+            alt={filteredOdooUser?.display_name}
+            src={`data:image/jpeg;charset=utf-8;base64,${filteredOdooUser?.image || ""}`}
             sx={
               markCurrentUser
                 ? {
@@ -72,7 +74,7 @@ export default function User({
                 : {}
             }
           >
-            {getLettersFromName(currentUser?.display_name)}
+            {getLettersFromName(filteredOdooUser?.display_name || "")}
           </Avatar>
         </Tooltip>
       )}
@@ -88,9 +90,9 @@ export default function User({
           </>
         ) : (
           <>
-            {currentUser?.display_name && (
+            {filteredOdooUser?.display_name && (
               <Typography variant="h6" sx={{ mb: -1 }}>
-                {currentUser?.display_name}{" "}
+                {filteredOdooUser?.display_name}{" "}
               </Typography>
             )}
             <Typography
@@ -107,7 +109,7 @@ export default function User({
                   : {}),
               }}
             >
-              {address}
+              {address || user?.ethereum_address}
             </Typography>
           </>
         )}

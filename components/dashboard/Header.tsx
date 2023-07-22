@@ -13,6 +13,7 @@ import User from "@components/User";
 import useCurrentTasks from "@hooks/useCurrentTasks";
 import useShareholderStatus from "@hooks/useShareholderStatus";
 import useTimestamp from "@hooks/useTimestamp";
+import useUser from "@hooks/useUser";
 
 import Modal from "../Modal";
 
@@ -26,6 +27,7 @@ const messages: [number, string][] = [
 
 export default function Header() {
   const { address } = useAccount();
+  const { user } = useUser();
   const { isLoading, totalTime } = useCurrentTasks();
   const { currentTimestamp } = useTimestamp();
   const [infoOpen, setInfoOpen] = useState(false);
@@ -48,9 +50,9 @@ export default function Header() {
         <Typography variant="h3" sx={{ pb: 2 }}>
           {welcomeMessage}
         </Typography>
-        <User address={address as string} shouldMarkCurrentUser={false} />
+        <User address={address || (user?.ethereum_address as string)} shouldMarkCurrentUser={false} />
         <Stack sx={{ pt: 2 }} spacing={1} direction="row">
-          {getShareholderStatus(address as string).map((status) => (
+          {getShareholderStatus(address || (user?.ethereum_address as string)).map((status) => (
             <Chip key={status} size="small" label={status} />
           ))}
         </Stack>

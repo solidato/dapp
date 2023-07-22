@@ -43,9 +43,7 @@ export default function Settings() {
   const { logout } = useLogout();
   const { user } = useUser();
   const { isConnected: isWalletConnected, address } = useAccount();
-  const {
-    users: [currentOdooUser],
-  } = useOdooUsers(user?.ethereum_address);
+  const { currentOdooUser } = useOdooUsers();
   const { chain } = useNetwork();
   const { data } = useBalance({
     address,
