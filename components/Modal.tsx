@@ -40,7 +40,7 @@ export default function Modal({
   open: boolean;
   onClose?: (event?: {}, reason?: string) => void;
   children: ReactElement;
-  title?: string;
+  title?: string | ReactElement;
   size?: "small" | "medium" | "large";
 }) {
   const handleClose = (event?: {}, reason?: string) => {

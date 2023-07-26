@@ -16,5 +16,5 @@ export default function useCosmosAccount(senderAddress: string) {
     fetcher,
   );
   if (!data || error) console.log("Error fetching account", data, error);
-  return { account: data?.account as AccountResponse["account"] | null, isLoading };
+  return { account: data?.account as AccountResponse["account"] | null, isLoading, error };
 }

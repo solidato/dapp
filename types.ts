@@ -229,5 +229,7 @@ export type Task = {
 };
 
 declare global {
-  interface Window extends KeplrWindow {}
+  interface Window extends KeplrWindow {
+    leap?: KeplrWindow["keplr"];
+  }
 }

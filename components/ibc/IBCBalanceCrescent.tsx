@@ -1,4 +1,4 @@
-import { useKeplrContext } from "contexts/KeplrContext";
+import { useChain } from "@cosmos-kit/react";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import Image from "next/image";
 import { shallow } from "zustand/shallow";
@@ -49,7 +49,7 @@ function CrescentCardLoader() {
 
 export default function IBCBalanceCrescent() {
   const theme = useTheme();
-  const { connect, networks, isConnecting } = useKeplrContext();
+
   const {
     stopCrescentInterval,
     isLoadingBalanceAfterSend,
@@ -70,8 +70,8 @@ export default function IBCBalanceCrescent() {
   );
 
   const chain = "crescent";
-  const evmosAddress = networks?.evmos.address;
-  const crescentAddress = networks?.crescent.address;
+  const { address: evmosAddress } = useChain("evmos");
+  const { connect, address: crescentAddress, isWalletConnecting, isWalletError } = useChain("crescent");
 
   const { balance, balanceFloat, error: balanceError, reload } = useIBCBalance({ address: crescentAddress });
   const { sendTokens, isLoading } = useIBCSend(crescentAddress as string);
@@ -80,12 +80,12 @@ export default function IBCBalanceCrescent() {
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
 
   const [targetAddress, setTargetAddress] = useState<string | undefined>();
-  const [tokenToSend, setTokenToSend] = useState(0);
+  const [tokenToSend, setTokenToSend] = useState<string>("0");
 
   const handleModalClose = () => {
     setModalOpen(false);
     setTargetAddress(evmosAddress);
-    setTokenToSend(0);
+    setTokenToSend("0");
   };
 
   useEffect(() => {
@@ -120,29 +120,29 @@ export default function IBCBalanceCrescent() {
     }
   };
 
-  if (isConnecting || isLoadingBalance) {
+  if (isWalletConnecting || isLoadingBalance) {
     return <CrescentCardLoader />;
   }
 
-  if (!evmosAddress) {
+  if (!crescentAddress) {
     return (
       <Alert
         severity="warning"
         action={
-          <Button size="small" variant="outlined" onClick={() => typeof connect === "function" && connect(chain)}>
+          <Button size="small" variant="outlined" onClick={() => connect()}>
             Connect
           </Button>
         }
       >
-        Please connect your Keplr wallet to the {chain} network
+        Please connect your Wallet to the {chain} network
       </Alert>
     );
   }
 
-  if (networks?.[chain].error) {
+  if (isWalletError) {
     return (
       <Alert severity="warning">
-        It looks {chain} couldn&apos;t connect to Keplr. Please try again later, reloading the page. If the problem
+        It looks {chain} couldn&apos;t connect to the Wallet. Please try again later, reloading the page. If the problem
         persists, please contact the engineers.
       </Alert>
     );
@@ -164,7 +164,7 @@ export default function IBCBalanceCrescent() {
         <Box sx={{ p: 4 }}>
           <Slider
             size="small"
-            value={tokenToSend}
+            value={Number(tokenToSend) || 0}
             max={balanceFloat}
             aria-label="Small"
             valueLabelDisplay="auto"
@@ -175,7 +175,7 @@ export default function IBCBalanceCrescent() {
                 label: "Max Tokens",
               },
             ]}
-            onChange={(_, value) => setTokenToSend(value as number)}
+            onChange={(_, value) => setTokenToSend(String(value))}
           />
         </Box>
         <Box sx={{ textAlign: "center" }} mb={5}>
@@ -187,10 +187,7 @@ export default function IBCBalanceCrescent() {
               shrink: true,
             }}
             value={tokenToSend}
-            onChange={(e) => {
-              const inputValue = Number(e.target.value) < 0 ? 0 : Number(e.target.value);
-              setTokenToSend(Math.min(inputValue, balanceFloat));
-            }}
+            onChange={(e) => setTokenToSend(e.target.value)}
           />
         </Box>
 
@@ -206,7 +203,7 @@ export default function IBCBalanceCrescent() {
             variant="contained"
             color="primary"
             sx={{ mt: 2 }}
-            disabled={tokenToSend === 0}
+            disabled={!tokenToSend || tokenToSend === "0"}
             onClick={handleSendTokens}
             loading={isLoading}
           >

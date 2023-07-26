@@ -287,7 +287,6 @@ export const sendFromCrescent = async (senderAddress: string, receiverAddress: s
   }
 
   await window.keplr.enable(chainId);
-
   const keplrOfflineSigner = window.keplr.getOfflineSignerOnlyAmino(chainId);
   const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
 

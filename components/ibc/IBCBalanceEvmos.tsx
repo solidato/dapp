@@ -1,4 +1,5 @@
-import { useKeplrContext } from "contexts/KeplrContext";
+import { useChain } from "@cosmos-kit/react";
+import { evmosToEth } from "@evmos/address-converter";
 import { formatEther, parseEther } from "ethers/lib/utils";
 import Image from "next/image";
 import { shallow } from "zustand/shallow";
@@ -50,7 +51,7 @@ function EvmosCardLoader() {
 
 export default function IBCBalanceEvmos() {
   const theme = useTheme();
-  const { connect, networks, isConnecting } = useKeplrContext();
+
   const {
     isLoadingBalanceAfterSend,
     stopEvmosInterval,
@@ -71,11 +72,15 @@ export default function IBCBalanceEvmos() {
   );
 
   const chain = "evmos";
-  const evmosAddress = networks?.evmos.address;
-  const ethAddress = networks?.evmos.ethAddress;
-  const crescentAddress = networks?.crescent.address;
+  const { address: crescentAddress } = useChain("crescent");
+  const { connect, address: evmosAddress, isWalletConnecting, isWalletError } = useChain("evmos");
+  const ethAddress = evmosAddress && evmosToEth(evmosAddress);
 
-  const { account: cosmosAccount, isLoading: isLoadingCosmosAccount } = useCosmosAccount(evmosAddress as string);
+  const {
+    account: cosmosAccount,
+    isLoading: isLoadingCosmosAccount,
+    error: cosmosError,
+  } = useCosmosAccount(evmosAddress as string);
   const { balance, balanceFloat, error: balanceError, reload } = useIBCBalance({ address: evmosAddress });
   const { sendTokens, isLoading } = useIBCSend(evmosAddress as string);
 
@@ -83,12 +88,12 @@ export default function IBCBalanceEvmos() {
   const [isLoadingBalance, setIsLoadingBalance] = useState(true);
 
   const [targetAddress, setTargetAddress] = useState<string | undefined>();
-  const [tokenToSend, setTokenToSend] = useState(0);
+  const [tokenToSend, setTokenToSend] = useState<string>("0");
 
   const handleModalClose = () => {
     setModalOpen(false);
     setTargetAddress(crescentAddress);
-    setTokenToSend(0);
+    setTokenToSend("0");
   };
 
   useEffect(() => {
@@ -115,7 +120,7 @@ export default function IBCBalanceEvmos() {
 
   const handleSendTokens = async () => {
     setPrevEvmosBalance(balanceFloat || 0);
-    const amount = parseEther(tokenToSend.toString()).toString();
+    const amount = parseEther(tokenToSend).toString();
     const success = await sendTokens(targetAddress!, amount, cosmosAccount);
     if (success) {
       setIsLoadingBalanceAfterSend(true);
@@ -123,7 +128,15 @@ export default function IBCBalanceEvmos() {
     }
   };
 
-  if (isConnecting || isLoadingBalance || isLoadingCosmosAccount) {
+  if (cosmosError) {
+    return (
+      <Alert severity="error">
+        {cosmosError.error}: {cosmosError.message}
+      </Alert>
+    );
+  }
+
+  if (isWalletConnecting || isLoadingBalance || isLoadingCosmosAccount) {
     return <EvmosCardLoader />;
   }
 
@@ -132,20 +145,20 @@ export default function IBCBalanceEvmos() {
       <Alert
         severity="warning"
         action={
-          <Button size="small" variant="outlined" onClick={() => typeof connect === "function" && connect(chain)}>
+          <Button size="small" variant="outlined" onClick={() => connect()}>
             Connect
           </Button>
         }
       >
-        Please connect your Keplr wallet to the {chain} network
+        Please connect your Wallet to the {chain} network
       </Alert>
     );
   }
 
-  if (networks?.[chain].error) {
+  if (isWalletError) {
     return (
       <Alert severity="warning">
-        It looks {chain} couldn&apos;t connect to Keplr. Please try again later, reloading the page. If the problem
+        It looks {chain} couldn&apos;t connect to the Wallet. Please try again later, reloading the page. If the problem
         persists, please contact the engineers.
       </Alert>
     );
@@ -167,7 +180,7 @@ export default function IBCBalanceEvmos() {
         <Box sx={{ p: 4 }}>
           <Slider
             size="small"
-            value={tokenToSend}
+            value={Number(tokenToSend) || 0}
             max={balanceFloat}
             aria-label="Small"
             valueLabelDisplay="auto"
@@ -178,7 +191,7 @@ export default function IBCBalanceEvmos() {
                 label: "Max Tokens",
               },
             ]}
-            onChange={(_, value) => setTokenToSend(value as number)}
+            onChange={(_, value) => setTokenToSend(String(value))}
           />
         </Box>
         <Box sx={{ textAlign: "center" }} mb={5}>
@@ -190,10 +203,7 @@ export default function IBCBalanceEvmos() {
               shrink: true,
             }}
             value={tokenToSend}
-            onChange={(e) => {
-              const inputValue = Number(e.target.value) < 0 ? 0 : Number(e.target.value);
-              setTokenToSend(Math.min(inputValue, balanceFloat));
-            }}
+            onChange={(e) => setTokenToSend(e.target.value)}
           />
         </Box>
 
@@ -209,7 +219,7 @@ export default function IBCBalanceEvmos() {
             variant="contained"
             color="primary"
             sx={{ mt: 2 }}
-            disabled={tokenToSend === 0}
+            disabled={!tokenToSend || tokenToSend === "0"}
             onClick={handleSendTokens}
             loading={isLoading}
           >

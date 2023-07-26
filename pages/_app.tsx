@@ -1,5 +1,10 @@
+import { wallets as keplrWallets } from "@cosmos-kit/keplr";
+import { wallets as leapWallets } from "@cosmos-kit/leap";
+import { ChainProvider } from "@cosmos-kit/react";
+import "@interchain-ui/react/styles";
 import { EthereumClient, w3mConnectors, w3mProvider } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
+import { assets, chains } from "chain-registry";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import Head from "next/head";
@@ -22,7 +27,6 @@ import Layout from "@components/Layout";
 import useUser from "@hooks/useUser";
 
 import ContractsProvider from "../components/ContractsProvider";
-import KeplrProvider from "../components/ibc/KeplrProvider";
 import { newTheme } from "../styles/theme";
 import { META } from "./_document";
 
@@ -82,35 +86,57 @@ export default function App({ Component, pageProps }: DappProps) {
     <CssVarsProvider theme={newTheme} defaultMode="system">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <WagmiConfig client={wagmiClient}>
-          <StyledSnackbarProvider
-            maxSnack={3}
-            autoHideDuration={3000}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            preventDuplicate
+          <ChainProvider
+            chains={[...chains]}
+            assetLists={[...assets]}
+            wallets={[...keplrWallets, ...leapWallets]}
+            throwErrors={false}
+            defaultNameService={"neokingdom"}
+            logLevel={"DEBUG"}
+            wrappedWithChakra={true} // required if `ChainProvider` is imported from `@cosmos-kit/react`
+            walletConnectOptions={{
+              signClient: {
+                projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+                relayUrl: "wss://relay.walletconnect.org",
+                metadata: {
+                  name: "Neokingdom DAO",
+                  description: "Neokingdom DAO dapp",
+                  url: "https://dao.neokingdom.org/",
+                  icons: [
+                    "https://raw.githubusercontent.com/cosmology-tech/cosmos-kit/main/packages/docs/public/favicon-96x96.png",
+                  ],
+                },
+              },
+            }}
           >
-            <CssBaseline />
-            {Component.noLayout ? (
-              <Component {...pageProps} />
-            ) : (
-              <Layout fullWidth={!!Component.fullWidth}>
-                {(isLoading || !mounted) && (
-                  <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                    <CircularProgress />
-                  </Box>
-                )}
-                {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-                  <KeplrProvider>
+            <StyledSnackbarProvider
+              maxSnack={3}
+              autoHideDuration={3000}
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              preventDuplicate
+            >
+              <CssBaseline />
+              {Component.noLayout ? (
+                <Component {...pageProps} />
+              ) : (
+                <Layout fullWidth={!!Component.fullWidth}>
+                  {(isLoading || !mounted) && (
+                    <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                      <CircularProgress />
+                    </Box>
+                  )}
+                  {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
                     <ContractsProvider>
                       <>
                         <CheckConnected fullWidth={!!Component.fullWidth} />
                         <Component {...pageProps} />
                       </>
                     </ContractsProvider>
-                  </KeplrProvider>
-                )}
-              </Layout>
-            )}
-          </StyledSnackbarProvider>
+                  )}
+                </Layout>
+              )}
+            </StyledSnackbarProvider>
+          </ChainProvider>
         </WagmiConfig>
       </LocalizationProvider>
     </CssVarsProvider>
