@@ -3,7 +3,7 @@ import { useContractsContext } from "contexts/ContractsContext";
 import { useState } from "react";
 
 import { LoadingButton } from "@mui/lab";
-import { Alert, Box, Button, Slider, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Slider, TextField, Typography } from "@mui/material";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
 import { calculateSteps } from "@lib/utils";
@@ -29,7 +29,11 @@ export default function DepositTokens() {
   const { onSubmit } = useDeposit();
   const { isAwaitingConfirmation, isLoading, type } = useBlockchainTransactionStore();
 
-  const { data } = useUserBalanceAndOffers();
+  const { data, isLoading: isLoadingBalance } = useUserBalanceAndOffers();
+
+  if (isLoadingBalance) {
+    return <CircularProgress />;
+  }
 
   const handleDepositTokens = async () => {
     const submitted = await onSubmit({ amount: depositing });

@@ -3,7 +3,7 @@ import { useContractsContext } from "contexts/ContractsContext";
 import { useState } from "react";
 
 import { LoadingButton } from "@mui/lab";
-import { Alert, Box, Button, Slider, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Slider, TextField, Typography } from "@mui/material";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
 import { calculateSteps } from "@lib/utils";
@@ -27,10 +27,14 @@ export default function OfferTokens() {
   );
   const { isAwaitingConfirmation, isLoading, type } = useBlockchainTransactionStore();
 
-  const { data } = useUserBalanceAndOffers();
+  const { data, isLoading: isLoadingBalances } = useUserBalanceAndOffers();
   const { onSubmit } = useOfferTokens();
 
   const { onSubmit: onSubmitApproveNeok } = useApproveToOffer();
+
+  if (isLoadingBalances) {
+    return <CircularProgress />;
+  }
 
   const handlePlaceOffer = async () => {
     const submitted = await onSubmit({ amount: offered });

@@ -1,5 +1,5 @@
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 
 import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
 
@@ -25,7 +25,11 @@ const ELLIPSIS_SX = {
 };
 
 export default function UserBalance() {
-  const { data } = useUserBalanceAndOffers();
+  const { data, isLoading } = useUserBalanceAndOffers();
+
+  if (isLoading) {
+    return <CircularProgress />;
+  }
 
   return (
     <Box sx={{ position: "relative" }}>
