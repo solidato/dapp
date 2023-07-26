@@ -16,7 +16,7 @@ export function useCheckSubgraphState() {
   const [mismatch, setMismatch] = useState(false);
   const [shouldNotifyMismatch, setShouldNotifyMismatch] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-  const graphBlockNumber = data?.state?.block?.number;
+  const graphBlockNumber = data?.state?.block?.number || 0;
   const {
     data: blockNumber,
     isLoading: isLoadingBlockNumber,
