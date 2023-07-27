@@ -1,5 +1,4 @@
 import { useChain, useWallet } from "@cosmos-kit/react";
-import { useKeplrContext } from "contexts/KeplrContext";
 
 import { useEffect } from "react";
 
@@ -8,29 +7,17 @@ import { Alert, Button, Grid } from "@mui/material";
 import IBCBalanceCrescent from "@components/ibc/IBCBalanceCrescent";
 import IBCBalanceEvmos from "@components/ibc/IBCBalanceEvmos";
 
-const chainNames = ["evmos", "crescent"];
-
 export default function IBC() {
-  const isKeplrWallet = !!window.keplr;
-  const isLeapWallet = !!window.leap;
-
   const {
+    wallet: evmosWallet,
     username: evmosAccountName,
     connect: connectEvmosWallet,
     disconnect: disconnectEvmosWallet,
-    address: evmosAddress,
-    wallet: evmosWallet,
-  } = useChain(chainNames[0]);
+  } = useChain("evmos");
 
-  const {
-    username: crescentAccountName,
-    connect: connectCrescentWallet,
-    disconnect: disconnectCrescentWallet,
-    address: crescentAddress,
-    wallet: crescentWallet,
-  } = useChain(chainNames[1]);
+  const { connect: connectCrescentWallet, disconnect: disconnectCrescentWallet } = useChain("crescent");
 
-  const { status: walletStatus, mainWallet } = useWallet();
+  const { status: walletStatus, mainWallet, message } = useWallet();
 
   useEffect(() => {
     const fn = async () => {
@@ -39,27 +26,7 @@ export default function IBC() {
     fn();
   }, [mainWallet]);
 
-  if (!isKeplrWallet && !isLeapWallet)
-    return (
-      <Alert
-        severity="warning"
-        action={
-          <>
-            <Button size="small" variant="outlined" href="https://www.keplr.app/" target="_blank">
-              Install Keplr
-            </Button>
-            <Button sx={{ ml: 2 }} size="small" variant="outlined" href="https://www.keplr.app/" target="_blank">
-              Install Leap
-            </Button>
-          </>
-        }
-      >
-        It looks you don&apos;t have a supported wallet installed. Please install Keplr or Leap wallet to use this
-        feature.
-      </Alert>
-    );
-
-  if (walletStatus === "Disconnected") {
+  if (walletStatus === "Disconnected" || walletStatus === "NotExist") {
     return (
       <Alert
         severity="info"
@@ -90,9 +57,17 @@ export default function IBC() {
     );
   }
 
-  return (
-    <>
-      {walletStatus === "Connected" && (
+  if (walletStatus === "Error") {
+    return (
+      <Alert sx={{ width: "100%" }} severity="error">
+        Error connecting to your wallet: {message}
+      </Alert>
+    );
+  }
+
+  if (walletStatus === "Connected") {
+    return (
+      <>
         <Alert
           severity="info"
           action={
@@ -112,15 +87,15 @@ export default function IBC() {
           You&apos;re connected to <strong>{evmosWallet?.prettyName} Wallet</strong>. Account Name:{" "}
           <strong>{evmosAccountName}</strong>.
         </Alert>
-      )}
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <IBCBalanceEvmos />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <IBCBalanceEvmos />
+          </Grid>
+          <Grid item xs={12}>
+            <IBCBalanceCrescent />
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <IBCBalanceCrescent />
-        </Grid>
-      </Grid>
-    </>
-  );
+      </>
+    );
+  }
 }
