@@ -71,7 +71,7 @@ export default function IBCBalanceCrescent() {
 
   const chain = "crescent";
   const { address: evmosAddress } = useChain("evmos");
-  const { connect, address: crescentAddress, isWalletConnecting, isWalletError } = useChain("crescent");
+  const { connect, address: crescentAddress, wallet, isWalletConnecting, isWalletError } = useChain("crescent");
 
   const { balance, balanceFloat, error: balanceError, reload } = useIBCBalance({ address: crescentAddress });
   const { sendTokens, isLoading } = useIBCSend(crescentAddress as string);
@@ -113,7 +113,7 @@ export default function IBCBalanceCrescent() {
   const handleSendTokens = async () => {
     setPrevCrescentBalance(balanceFloat || 0);
     const amount = parseEther(tokenToSend.toString()).toString();
-    const success = await sendTokens(targetAddress!, amount);
+    const success = await sendTokens(targetAddress!, amount, { walletName: wallet?.prettyName });
     if (success) {
       setIsLoadingBalanceAfterSend(true);
       handleModalClose();

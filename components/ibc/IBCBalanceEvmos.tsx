@@ -73,7 +73,7 @@ export default function IBCBalanceEvmos() {
 
   const chain = "evmos";
   const { address: crescentAddress } = useChain("crescent");
-  const { connect, address: evmosAddress, isWalletConnecting, isWalletError } = useChain("evmos");
+  const { connect, address: evmosAddress, getAccount, wallet, isWalletConnecting, isWalletError } = useChain("evmos");
   const ethAddress = evmosAddress && evmosToEth(evmosAddress);
 
   const {
@@ -81,6 +81,7 @@ export default function IBCBalanceEvmos() {
     isLoading: isLoadingCosmosAccount,
     error: cosmosError,
   } = useCosmosAccount(evmosAddress as string);
+
   const { balance, balanceFloat, error: balanceError, reload } = useIBCBalance({ address: evmosAddress });
   const { sendTokens, isLoading } = useIBCSend(evmosAddress as string);
 
@@ -121,7 +122,13 @@ export default function IBCBalanceEvmos() {
   const handleSendTokens = async () => {
     setPrevEvmosBalance(balanceFloat || 0);
     const amount = parseEther(tokenToSend).toString();
-    const success = await sendTokens(targetAddress!, amount, cosmosAccount);
+    const account = await getAccount();
+    const success = await sendTokens(
+      targetAddress!,
+      amount,
+      { account, walletName: wallet?.prettyName },
+      cosmosAccount,
+    );
     if (success) {
       setIsLoadingBalanceAfterSend(true);
       handleModalClose();
@@ -240,7 +247,7 @@ export default function IBCBalanceEvmos() {
               sx={{ mt: 1 }}
               variant="outlined"
               endIcon={<Send />}
-              disabled={!balanceFloat || !cosmosAccount?.base_account.pub_key || isLoadingBalanceAfterSend}
+              disabled={!balanceFloat || isLoadingBalanceAfterSend}
               onClick={(event) => {
                 event.stopPropagation();
                 setModalOpen(true);
@@ -291,13 +298,6 @@ export default function IBCBalanceEvmos() {
               )}
             </Typography>
           </Box>
-
-          {!cosmosAccount?.base_account.pub_key && (
-            <Alert sx={{ mt: 2 }} severity="warning">
-              It seems that you don&apos;t have a Public Key associated to this account. <br />
-              You should do at least one transaction before sending Evmos to Crescent.
-            </Alert>
-          )}
         </CardContent>
       </Card>
 

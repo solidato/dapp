@@ -12,6 +12,14 @@ import { formatEther } from "ethers/lib/utils.js";
 import { EnqueueSnackbar } from "notistack";
 import { SecretNetworkClient, stringToCoin } from "secretjs";
 
+export function Uint8ArrayToString(array: Uint8Array) {
+  const bin = [];
+  for (let i = 0; i < array.length; i++) {
+    bin.push(String.fromCharCode(array[i]));
+  }
+  return window.btoa(bin.join(""));
+}
+
 export const CHAIN_TO_ID = {
   evmos: "evmos_9001-2",
   crescent: "crescent-1",
@@ -192,6 +200,7 @@ export const sendFromCrescent2 = async (senderAddress: string, receiverAddress: 
 };
 
 export const sendFromEvmos = async (
+  wallet: { account?: any; walletName?: string },
   account: AccountResponse["account"],
   receiverAddress: string,
   amount: string,
@@ -201,7 +210,7 @@ export const sendFromEvmos = async (
     accountAddress: account.base_account.address,
     sequence: parseInt(account.base_account.sequence),
     accountNumber: parseInt(account.base_account.account_number),
-    pubkey: account.base_account.pub_key!.key,
+    pubkey: Uint8ArrayToString(wallet.account?.pubkey),
   };
 
   const fee: Fee = {
@@ -242,7 +251,9 @@ export const sendFromEvmos = async (
   const tx: TxPayload = createTxIBCMsgTransfer(context, params);
   const { signDirect } = tx;
 
-  const signResponse = await window?.keplr?.signDirect(chain.cosmosChainId, sender.accountAddress, {
+  const walletClient = wallet.walletName === "Keplr" ? window.keplr : window.leap;
+
+  const signResponse = await walletClient?.signDirect(chain.cosmosChainId, sender.accountAddress, {
     bodyBytes: signDirect.body.toBinary(),
     authInfoBytes: signDirect.authInfo.toBinary(),
     chainId: chain.cosmosChainId,
@@ -279,21 +290,25 @@ export const sendFromEvmos = async (
   return { response, snackbarId };
 };
 
-export const sendFromCrescent = async (senderAddress: string, receiverAddress: string, amount: string) => {
+export const sendFromCrescent = async (
+  wallet: { account?: any; walletName?: string },
+  senderAddress: string,
+  receiverAddress: string,
+  amount: string,
+) => {
   const chainId = CHAIN_TO_ID["crescent"];
   const url = COSMOS_NODE_URL["crescent"];
-  if (!window.keplr) {
-    return;
-  }
 
-  await window.keplr.enable(chainId);
-  const keplrOfflineSigner = window.keplr.getOfflineSignerOnlyAmino(chainId);
-  const [{ address: myAddress }] = await keplrOfflineSigner.getAccounts();
+  const walletClient = wallet.walletName === "Keplr" ? window.keplr : window.leap;
+
+  await walletClient!.enable(chainId);
+  const walletOfflineSigner = walletClient!.getOfflineSignerOnlyAmino(chainId);
+  const [{ address: myAddress }] = await walletOfflineSigner.getAccounts();
 
   const secretjs = new SecretNetworkClient({
     url,
     chainId,
-    wallet: keplrOfflineSigner,
+    wallet: walletOfflineSigner,
     walletAddress: myAddress,
     // Only used in Secret
     // encryptionUtils: window.keplr.getEnigmaUtils(chainId),

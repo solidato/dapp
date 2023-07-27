@@ -82,30 +82,23 @@ export default function App({ Component, pageProps }: DappProps) {
     setMounted(true);
   }, []);
 
+  const SUPPORTED_CHAINS = ["evmos", "crescent"];
+  const supportedChains = chains.filter((chain) => SUPPORTED_CHAINS.includes(chain.chain_name));
+  const supportedAssets = assets.filter((asset) => SUPPORTED_CHAINS.includes(asset.chain_name));
+
   const appElement = (
     <CssVarsProvider theme={newTheme} defaultMode="system">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <WagmiConfig client={wagmiClient}>
           <ChainProvider
-            chains={[...chains]}
-            assetLists={[...assets]}
+            chains={supportedChains}
+            assetLists={supportedAssets}
             wallets={[...keplrWallets, ...leapWallets]}
-            throwErrors={false}
-            defaultNameService={"neokingdom"}
             logLevel={"DEBUG"}
-            wrappedWithChakra={true} // required if `ChainProvider` is imported from `@cosmos-kit/react`
             walletConnectOptions={{
+              // Required if "wallets" contains mobile wallets
               signClient: {
                 projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-                relayUrl: "wss://relay.walletconnect.org",
-                metadata: {
-                  name: "Neokingdom DAO",
-                  description: "Neokingdom DAO dapp",
-                  url: "https://dao.neokingdom.org/",
-                  icons: [
-                    "https://raw.githubusercontent.com/cosmology-tech/cosmos-kit/main/packages/docs/public/favicon-96x96.png",
-                  ],
-                },
               },
             }}
           >
