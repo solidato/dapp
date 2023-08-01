@@ -36,3 +36,37 @@ export const resolutionFragment = gql`
 
   ${resolutionTypeFragment}
 `;
+
+export const legacyResolutionFragment = gql`
+  fragment legacyResolutionFragment on Resolution {
+    id
+    title
+    content
+    isNegative
+    resolutionType {
+      ...resolutionTypeFragment
+    }
+    yesVotesTotal
+    createTimestamp
+    updateTimestamp
+    approveTimestamp
+    rejectTimestamp
+    executionTimestamp
+    createBy
+    updateBy
+    approveBy
+    rejectBy
+    hasQuorum
+    executionTo
+    executionData
+    voters {
+      address
+      votingPower
+      hasVoted
+      hasVotedYes
+      delegated
+    }
+  }
+
+  ${resolutionTypeFragment}
+`;
