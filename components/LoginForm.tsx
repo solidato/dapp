@@ -58,7 +58,9 @@ export default function LoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
       mutateUser(resUser);
       onLoggedIn && onLoggedIn();
     } else {
-      enqueueSnackbar("Login Failed: Invalid email or password", { variant: "error" });
+      enqueueSnackbar(res.status >= 500 ? (await res.json())?.error : "Login Failed: Invalid email or password", {
+        variant: "error",
+      });
     }
     setIsLoading(false);
   };

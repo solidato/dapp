@@ -16,9 +16,13 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const cookie = await getOdooCookie(username, password);
-    const data = await odooClient(cookie, getUserQuery, { email: username });
+    const userNameLowerCased = username.toLowerCase();
+    const cookie = await getOdooCookie(userNameLowerCased, password);
+    const data = await odooClient(cookie, getUserQuery, { email: userNameLowerCased });
     const userData = data.ResUsers[0] as OdooUser;
+    if (!userData || userData?.email?.toLowerCase() !== username.toLowerCase()) {
+      throw new Error("We can't log you in at the moment, odoo email doesn't match");
+    }
     const user = userFactory({ ...userData, username, password, isLoggedIn: true });
     req.session.cookie = cookie;
     req.session.user = user;
@@ -28,7 +32,7 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
     if (error.isBoom) {
       return res.status(error.output.statusCode).json(error.output.payload);
     }
-    return res.status(500).json({ error: JSON.stringify(error) });
+    return res.status(500).json({ error: error.message });
   }
 };
 

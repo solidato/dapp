@@ -14,6 +14,7 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const data = await odooClient(cookie, getUsersQuery);
   const users = data.ResUsers as OdooUser[];
+
   if (process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom") {
     return res.status(200).json(users.map((user) => ({ ...user, image: user.avatar_256 })));
   }

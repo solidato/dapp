@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import { OdooUser } from "types";
-import { useAccount } from "wagmi";
 
 import { fetcher } from "@lib/net";
 import { isSameAddress } from "@lib/utils";
@@ -18,13 +17,15 @@ export default function useOdooUsers(address?: string): {
   const { data, error, isLoading } = useSWR(user?.isLoggedIn ? "/api/users" : null, fetcher);
 
   if (data) {
+    const userEthereumAddress = user?.ethereum_address as string;
+    const allOdooUsers = data.filter((odooUser: OdooUser) => !!odooUser.ethereum_address);
     return {
-      allOdooUsers: data.filter((odooUser: OdooUser) => !!odooUser.ethereum_address),
-      currentOdooUser: data.find((odooUser: OdooUser) =>
-        isSameAddress(odooUser.ethereum_address, user?.ethereum_address as string),
+      allOdooUsers,
+      currentOdooUser: allOdooUsers.find((odooUser: OdooUser) =>
+        isSameAddress(odooUser.ethereum_address, userEthereumAddress),
       ),
-      filteredOdooUser: data.find((odooUser: OdooUser) =>
-        isSameAddress(odooUser.ethereum_address, address || (user?.ethereum_address as string)),
+      filteredOdooUser: allOdooUsers.find((odooUser: OdooUser) =>
+        isSameAddress(odooUser.ethereum_address, address || userEthereumAddress),
       ),
       isLoading: false,
       error: false,
