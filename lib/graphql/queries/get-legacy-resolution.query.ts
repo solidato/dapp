@@ -1,13 +1,13 @@
 import { gql } from "graphql-request";
 
-import { resolutionFragment } from "./resolution.fragment";
+import { legacyResolutionFragment } from "./resolution.fragment";
 
 export const getLegacyResolutionQuery = gql`
   query GetLegacyResolution($id: String!) {
     resolution(id: $id) {
-      ...resolutionFragment
+      ...legacyResolutionFragment
     }
   }
 
-  ${resolutionFragment}
+  ${legacyResolutionFragment}
 `;
