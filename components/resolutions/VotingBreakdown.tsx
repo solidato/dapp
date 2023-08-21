@@ -1,15 +1,16 @@
-import { useMemo } from "react";
-import { PieChart } from "react-minimal-pie-chart";
+import { useState } from "react";
 
 import { Alert, AlertTitle, Box, Divider, Stack, Typography, useTheme } from "@mui/material";
 
 import { RESOLUTION_STATES } from "../../lib/resolutions/common";
 import { ResolutionEntityEnhanced } from "../../types";
 import Countdown from "../Countdown";
+import PieChartComponent from "./PieChartComponent";
 import useVoting from "./hooks/useVoting";
 
 export default function VotingBreakdown({ resolution }: { resolution: ResolutionEntityEnhanced }) {
   const theme = useTheme();
+  const [activePieChartIndex, setActivePieChartIndex] = useState(0);
 
   const { voting, outcome } = useVoting(resolution);
 
@@ -21,13 +22,13 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
             <span>
               THE RESOLUTION OF SHAREHOLDERS{" "}
               <b>{resolution.isNegative ? "HAS NOT BEEN REJECTED" : "HAS BEEN ADOPTED"}</b> on{" "}
-              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit dissenting opinions
+              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit additional dissenting opinions
             </span>
           ) : (
             <span>
               THE RESOLUTION OF SHAREHOLDERS{" "}
               <b>{resolution.isNegative ? "HAS BEEN REJECTED" : "HAS NOT BEEN ADOPTED"}</b>. Voting ended on{" "}
-              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit dissenting opinions
+              {resolution.resolutionTypeInfo.votingEndsAt}. Shareholders did not submit additional dissenting opinions
             </span>
           )}
         </Alert>
@@ -42,39 +43,20 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           <Countdown targetDate={resolution.resolutionTypeInfo.votingEnds as Date} prefixLabel="Voting ends" inline />
         </Alert>
       )}
-      <Stack
-        direction="row"
-        justifyContent="center"
-        divider={<Divider orientation="vertical" flexItem />}
-        spacing={4}
-        sx={{ pb: 4 }}
-      >
-        <Box sx={{ width: "20%", textAlign: "center" }}>
-          <Typography variant="h6">Active votes</Typography>
-          <Typography variant="body2">{Number(voting.totalVotedPerc)}%</Typography>
-          <PieChart
-            data={[{ value: Number(voting.totalVotedPerc), color: theme.palette.grey[600] }]}
-            totalValue={100}
-            lineWidth={20}
-            labelPosition={0}
-            startAngle={-90}
-            animate
-          />
-        </Box>
-        <Box sx={{ width: "25%", textAlign: "center" }}>
-          <Typography variant="h6">Outcome</Typography>
-          <Typography variant="body2">{outcome}</Typography>
-          <PieChart
+      <Box sx={{ width: "100%", textAlign: "center" }}>
+        <Typography variant="h6">Outcome</Typography>
+        <Typography variant="body2">{outcome}</Typography>
+        <Box sx={{ width: "100%", height: 400, position: "relative", "& svg g": { outline: "none !important" } }}>
+          <PieChartComponent
             data={[
-              { title: "Yes", value: voting.totalVotedYes, color: theme.palette.success.main },
-              { title: "No", value: voting.totalVotedNo, color: theme.palette.error.main },
+              { name: "In Favour", value: voting.totalVotedYes, color: theme.palette.success.main },
+              { name: "Against", value: voting.totalVotedNo, color: theme.palette.error.main },
             ]}
-            lineWidth={20}
-            segmentsStyle={{ transition: "stroke .3s", cursor: "pointer" }}
-            animate
+            activeIndex={activePieChartIndex}
+            setActiveIndex={setActivePieChartIndex}
           />
         </Box>
-      </Stack>
+      </Box>
       <Typography variant="h6" sx={{ textAlign: "center", mb: 2, mt: 3 }}>
         Voting breakdown
       </Typography>
@@ -90,14 +72,22 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
           <Typography variant="body1">Total</Typography>
           <Typography variant="caption">{voting.maxVotingPower.toLocaleString()} / 100%</Typography>
         </Box>
-        <Box>
+        <Box
+          onClick={() => setActivePieChartIndex(0)}
+          onMouseEnter={() => setActivePieChartIndex(0)}
+          sx={{ cursor: "pointer" }}
+        >
           <Typography variant="body1">In favour</Typography>
           <Typography variant="caption">
             {voting.totalVotedYes.toLocaleString()} /{" "}
             {Number(((100 * voting.totalVotedYes) / voting.maxVotingPower).toFixed(2))}%
           </Typography>
         </Box>
-        <Box>
+        <Box
+          onClick={() => setActivePieChartIndex(1)}
+          onMouseEnter={() => setActivePieChartIndex(1)}
+          sx={{ cursor: "pointer" }}
+        >
           <Typography variant="body1">Against</Typography>
           <Typography variant="caption">
             {voting.totalVotedNo.toLocaleString()} /{" "}
@@ -124,7 +114,7 @@ export default function VotingBreakdown({ resolution }: { resolution: Resolution
         <Box>
           <Typography variant="body1">Votes needed to approve</Typography>
           <Typography variant="caption">
-            {Math.round((voting.maxVotingPower * Number(voting.quorum)) / 100).toLocaleString()} /{voting.quorum}%
+            {Math.round((voting.maxVotingPower * Number(voting.quorum)) / 100).toLocaleString()} / {voting.quorum}%
           </Typography>
         </Box>
         <Box>

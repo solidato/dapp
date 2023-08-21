@@ -4,20 +4,31 @@ import { useMemo } from "react";
 
 export default function useVoting(resolution: ResolutionEntityEnhanced) {
   const voting = useMemo(() => {
+    const totalVotedYes = resolution.votingStatus.votersHaveVotedYes.reduce(
+      (total, voter) => voter.votingPowerInt + total,
+      0,
+    );
+
+    const totalVotedNo = resolution.votingStatus.votersHaveVotedNo.reduce(
+      (total, voter) => voter.votingPowerInt + total,
+      0,
+    );
+
+    const totalAbstained = resolution.votingStatus.votersHaveNotVoted.reduce(
+      (total, voter) => voter.votingPowerInt + total,
+      0,
+    );
+
     const base = {
       quorum: resolution.resolutionType.quorum,
       hasQuorum: resolution.hasQuorum,
       isNegative: resolution.isNegative,
-      totalVotedYes: resolution.votingStatus.votersHaveVotedYes.reduce(
-        (total, voter) => voter.votingPowerInt + total,
-        0,
-      ),
-      totalVotedNo: resolution.votingStatus.votersHaveVotedNo.reduce((total, voter) => voter.votingPowerInt + total, 0),
-      totalAbstained: resolution.votingStatus.votersHaveNotVoted.reduce(
-        (total, voter) => voter.votingPowerInt + total,
-        0,
-      ),
-      totalVoted: resolution.votingStatus.votersHaveVoted.reduce((total, voter) => voter.votingPowerInt + total, 0),
+      totalVotedYes: totalVotedYes + (resolution.isNegative ? totalAbstained : 0),
+      totalVotedNo: totalVotedNo + (!resolution.isNegative ? totalAbstained : 0),
+      totalAbstained,
+      totalVoted:
+        resolution.votingStatus.votersHaveVoted.reduce((total, voter) => voter.votingPowerInt + total, 0) +
+        totalAbstained,
       maxVotingPower: resolution.voters.reduce((total, voter) => total + voter.votingPowerInt, 0),
       usersVotedYes: resolution.votingStatus.votersHaveVotedYes.length,
       usersVotedNo: resolution.votingStatus.votersHaveVotedNo.length,
@@ -27,7 +38,7 @@ export default function useVoting(resolution: ResolutionEntityEnhanced) {
 
     return {
       ...base,
-      totalVotedPerc: ((100 * base.totalVoted) / (base.maxVotingPower || 1)).toFixed(2),
+      totalVotedPerc: ((100 * (base.totalVoted - base.totalAbstained)) / (base.maxVotingPower || 1)).toFixed(2),
       totalVotedYesPerc: ((100 * base.totalVotedYes) / (base.totalVoted || 1)).toFixed(2),
       totalVotedNoPerc: ((100 * base.totalVotedNo) / (base.totalVoted || 1)).toFixed(2),
     };
