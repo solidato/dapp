@@ -59,7 +59,7 @@ const renderActiveShape = (theme: Theme) => (props: any) => {
   );
 };
 
-export default function PieChartComponent({
+export default function PieItem({
   data,
   activeIndex,
   setActiveIndex,
