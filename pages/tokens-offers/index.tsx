@@ -14,6 +14,7 @@ import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOf
 
 Tokens.title = "Tokens";
 Tokens.requireLogin = true;
+Tokens.checkMismatch = true;
 
 interface TabPanelProps {
   children?: React.ReactNode;

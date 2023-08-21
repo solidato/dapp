@@ -19,6 +19,7 @@ import { MonthlyRewardsUserData } from "../../types";
 
 NewResolutionPage.title = "New resolution";
 NewResolutionPage.requireLogin = false;
+NewResolutionPage.checkMismatch = true;
 
 const MONTHLY_REWARDS_TEMPLATE = "monthlyRewards";
 

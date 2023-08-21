@@ -23,6 +23,7 @@ import { ResolutionEntityEnhanced } from "../types";
 Home.renderOnServer = false;
 Home.requireLogin = true;
 Home.fullWidth = true;
+Home.checkMismatch = true;
 
 const emptyStats = {
   withQuorum: 0,

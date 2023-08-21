@@ -29,6 +29,7 @@ const converter = new showdown.Converter();
 converter.setFlavor("github");
 
 ResolutionView.fullWidth = true;
+ResolutionView.checkMismatch = true;
 
 export default function ResolutionView() {
   const { currentTimestamp } = useTimestamp();

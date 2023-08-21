@@ -1,7 +1,7 @@
 import { GovernanceToken, NeokingdomToken, TokenMock } from "@contracts/typechain";
 import { formatUnits } from "ethers/lib/utils.js";
 import { SnackbarKey } from "notistack";
-import { useAccount, useDisconnect, useProvider } from "wagmi";
+import { useAccount, useDisconnect, usePublicClient } from "wagmi";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -15,7 +15,7 @@ export default function useCheckAllowance(
 ) {
   const [allowance, setAllowance] = useState(0);
   const { disconnect } = useDisconnect();
-  const { chains } = useProvider();
+  const { chains } = usePublicClient();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { address } = useAccount();

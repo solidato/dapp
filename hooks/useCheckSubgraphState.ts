@@ -7,7 +7,6 @@ import { fetcher } from "@graphql/client";
 import { getSubgraphState } from "@graphql/queries/get-subgraph-state";
 
 import { useSnackbar } from "./useSnackbar";
-import { bigIntToNum } from "./useUserBalanceAndOffers";
 
 const NOTIFY_MISMATCH_AFTER_MS = 10000;
 const REFETCH_AFTER_MS = 3000;
@@ -18,12 +17,15 @@ export function useCheckSubgraphState() {
   const [shouldNotifyMismatch, setShouldNotifyMismatch] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const graphBlockNumber = data?.state?.block?.number || 0;
+
   const {
-    data: blockNumber,
+    data: blockNumberData,
     isLoading: isLoadingBlockNumber,
     refetch,
     isRefetching,
   } = useBlockNumber({ cacheTime: REFETCH_AFTER_MS });
+
+  const blockNumber = Number(blockNumberData || BigInt(0));
 
   useEffect(() => {
     (async () => {
@@ -62,6 +64,6 @@ export function useCheckSubgraphState() {
 
   return {
     shouldNotifyMismatch,
-    difference: Math.abs(bigIntToNum(blockNumber || BigInt(0)) - bigIntToNum(graphBlockNumber)),
+    difference: Math.abs(blockNumber - graphBlockNumber),
   };
 }

@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import InvestorsReport from "@components/dashboard/InvestorsReport";
 
 InvestorsTransparencyReport.noLayout = true;
+InvestorsTransparencyReport.checkMismatch = true;
 InvestorsTransparencyReport.customCss = `
   body {
     background-color: transparent !important;

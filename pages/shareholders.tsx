@@ -13,6 +13,7 @@ import useShareholderStatus from "@hooks/useShareholderStatus";
 import useUser from "@hooks/useUser";
 
 Shareholders.title = "Shareholders";
+Shareholders.checkMismatch = true;
 
 export default function Shareholders() {
   const { user } = useUser();

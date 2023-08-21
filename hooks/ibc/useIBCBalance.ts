@@ -2,15 +2,14 @@ import { NeokingdomToken, NeokingdomToken__factory } from "@contracts/typechain"
 import { Provider } from "@ethersproject/providers";
 import { evmosToEth } from "@evmos/address-converter";
 import { BalanceByDenomResponse, generateEndpointBalanceByDenom } from "@evmos/provider";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber, providers } from "ethers";
 import { formatEther } from "ethers/lib/utils.js";
-import { useProvider } from "wagmi";
+import { WalletClient, useWalletClient } from "wagmi";
 
 import { useCallback, useEffect, useState } from "react";
 
 import networksNeoKingdom from "../../networks/neokingdom.json";
 import networksTeledisko from "../../networks/teledisko.json";
-import useIbcStore from "../../store/ibcStore";
 import { COSMOS_NODE_URL, DENOMS, restOptions } from "./utils";
 
 type Balance = {
@@ -30,12 +29,20 @@ const getNeokingdomTokenContract = (chainId: string, provider: Provider): Neokin
   return NeokingdomToken__factory.connect(address, provider);
 };
 
+function walletClientToProvider(walletClient: WalletClient) {
+  const { chain, transport } = walletClient;
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  };
+  return new providers.Web3Provider(transport, network);
+}
+
 export default function useIBCBalance({ address }: { address?: string | undefined }) {
-  const provider = useProvider();
+  const { data: walletClient } = useWalletClient();
   const [balance, setBalance] = useState<Balance>({});
   const [error, setError] = useState<string>();
-  const setEvmosBalance = useIbcStore(({ setEvmosBalance }) => setEvmosBalance);
-  const setCrescentBalance = useIbcStore(({ setEvmosBalance }) => setEvmosBalance);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getQueryEndpoint = (address: string) => {
@@ -56,7 +63,8 @@ export default function useIBCBalance({ address }: { address?: string | undefine
 
   const reload = useCallback(
     async (address?: string) => {
-      if (!address) return null;
+      if (!address || !walletClient) return null;
+      const provider = walletClientToProvider(walletClient);
       const balance: Balance = {};
       const neokingdomTokenContract = getNeokingdomTokenContract("9001", provider);
       if (!neokingdomTokenContract) {
@@ -97,7 +105,7 @@ export default function useIBCBalance({ address }: { address?: string | undefine
       setIsLoading(false);
       setError("");
     },
-    [provider],
+    [walletClient],
   );
 
   useEffect(() => {

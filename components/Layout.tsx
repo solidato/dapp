@@ -4,43 +4,35 @@ import { useRouter } from "next/router";
 
 import React, { useMemo } from "react";
 
-import {
-  Alert,
-  Badge,
-  Chip,
-  Container,
-  Divider,
-  Slide,
-  SlideProps,
-  Snackbar,
-  Stack,
-  useScrollTrigger,
-} from "@mui/material";
+import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 
-import { useCheckSubgraphState } from "@hooks/useCheckSubgraphState";
 import useUser from "@hooks/useUser";
 
 import useDelegationStatus from "../hooks/useDelegationStatus";
 import TelediskoLogo from "../images/logo-teledisko.png";
 import AccountMenu from "./AccountMenu";
 import LoginModal from "./LoginModal";
+import MismatchNotifier from "./mismatch-notifier/MismatchNotifier";
 import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
-function SlideTransition(props: SlideProps) {
-  return <Slide {...props} direction="left" />;
-}
-
-export default function Layout({ children, fullWidth = false }: { children: React.ReactNode; fullWidth: boolean }) {
+export default function Layout({
+  children,
+  fullWidth = false,
+  checkMismatch = false,
+}: {
+  children: React.ReactNode;
+  fullWidth?: boolean;
+  checkMismatch?: boolean;
+}) {
   const { user } = useUser();
   const router = useRouter();
   const trigger = useScrollTrigger();
-  const { difference, shouldNotifyMismatch } = useCheckSubgraphState();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
   const { data, isLoading } = useDelegationStatus();
 
@@ -48,16 +40,7 @@ export default function Layout({ children, fullWidth = false }: { children: Reac
 
   return (
     <>
-      <Snackbar
-        open={shouldNotifyMismatch}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        TransitionComponent={SlideTransition}
-      >
-        <Alert severity="warning" sx={{ width: "100%" }}>
-          Dapp data has a mismatch of {difference} {difference === 1 ? "block" : "blocks"} with the blockchain.
-          Synchronization in progress, please wait. If this persists please contact the engineers via discord.
-        </Alert>
-      </Snackbar>
+      {checkMismatch && <MismatchNotifier />}
       <LoginModal />
       <Box
         sx={{

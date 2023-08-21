@@ -52,6 +52,7 @@ interface DappProps extends AppProps {
     fullWidth?: boolean;
     noLayout?: boolean;
     customCss?: string;
+    checkMismatch?: string;
   };
   pageProps: any;
 }
@@ -106,7 +107,7 @@ export default function App({ Component, pageProps }: DappProps) {
               {Component.noLayout ? (
                 <Component {...pageProps} />
               ) : (
-                <Layout fullWidth={!!Component.fullWidth}>
+                <Layout fullWidth={!!Component.fullWidth} checkMismatch={!!Component.checkMismatch}>
                   {(isLoading || !mounted) && (
                     <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
                       <CircularProgress />

@@ -43,6 +43,7 @@ const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(big
 
 Delegation.title = "Shareholders";
 Delegation.requireLogin = true;
+Delegation.checkMismatch = true;
 
 export default function Delegation() {
   const { user } = useUser();

@@ -17,6 +17,7 @@ import useTimestamp from "@hooks/useTimestamp";
 import { ResolutionEntityEnhanced } from "../../types";
 
 Resolutions.title = "Resolutions";
+Resolutions.checkMismatch = true;
 
 export default function Resolutions() {
   const { isConnected } = useAccount();
