@@ -1,6 +1,6 @@
-import { Signer } from "ethers";
+import { Signer, providers } from "ethers";
 import { SUPPORTED_CHAINS } from "pages/_app";
-import { useAccount, useDisconnect, useNetwork, useSigner } from "wagmi";
+import { WalletClient, useAccount, useDisconnect, useNetwork, useWalletClient } from "wagmi";
 
 import { useEffect, useState } from "react";
 
@@ -70,19 +70,32 @@ const getUsdcContract = (chainId: string, signer: Signer): TokenMock => {
   return TokenMock__factory.connect(address, signer);
 };
 
+function walletClientToSigner(walletClient: WalletClient) {
+  const { account, chain, transport } = walletClient;
+  const network = {
+    chainId: chain.id,
+    name: chain.name,
+    ensAddress: chain.contracts?.ensRegistry?.address,
+  };
+  const provider = new providers.Web3Provider(transport, network);
+  const signer = provider.getSigner(account.address);
+  return signer;
+}
+
 export function useContracts() {
   const { address } = useAccount();
   const { chain } = useNetwork();
-  const { data: signer } = useSigner();
+  const { data: walletClient } = useWalletClient();
   const { disconnect } = useDisconnect();
   const { enqueueSnackbar } = useSnackbar();
 
   const [contracts, setContracts] = useState<ContractsContextType>({});
 
   useEffect(() => {
-    if (address && signer) {
+    if (address && walletClient) {
       try {
         const chainId = String(chain?.id);
+        const signer = walletClientToSigner(walletClient);
 
         if (!SUPPORTED_CHAINS.map((chain) => String(chain.id)).includes(chainId)) {
           throw new Error(`You're connected to an unsupported network, please connect to ${SUPPORTED_CHAINS[0].name}`);
@@ -107,7 +120,7 @@ export function useContracts() {
         disconnect();
       }
     }
-  }, [address, signer, chain?.id]);
+  }, [address, walletClient, chain?.id]);
 
   return contracts;
 }
