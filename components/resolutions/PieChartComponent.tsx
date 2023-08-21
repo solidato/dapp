@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+
 import { Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 
 import { Theme, useTheme } from "@mui/material";
@@ -59,7 +61,7 @@ const renderActiveShape = (theme: Theme) => (props: any) => {
   );
 };
 
-export default function PieItem({
+export default function PieChartComponent({
   data,
   activeIndex,
   setActiveIndex,
