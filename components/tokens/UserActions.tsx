@@ -34,16 +34,16 @@ export default function UserActions() {
   }
 
   const isInvestor = daoManagerData?.daoManager?.investorsAddresses?.includes(address?.toLowerCase());
-  const isShareholder = daoManagerData?.daoManager?.shareholderAddresses?.includes(address?.toLowerCase());
-  const withdrawableBalance =
-    isInvestor || isShareholder
-      ? (data?.balance.governanceTokens || 0) - (data?.balance.vestingTokens || 0)
-      : data?.balance.unlockedTokens;
+  const canOffer = daoManagerData?.daoManager?.contributorsAddresses?.includes(address?.toLowerCase());
+
+  const withdrawableBalance = isInvestor
+    ? (data?.balance.governanceTokens || 0) - (data?.balance.vestingTokens || 0)
+    : data?.balance.unlockedTokens;
 
   return (
     <>
       <Grid container spacing={2}>
-        {!isInvestor && !isShareholder && (
+        {canOffer && (
           <Grid item xs={12} md={6} lg={4}>
             <Paper sx={paperSx}>
               <div>
