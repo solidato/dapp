@@ -251,7 +251,7 @@ export default function TimeEntries({
                   }}
                 >
                   <Stack direction="row" justifyContent="space-between">
-                    <Box sx={{ wordWrap: "break-word", width: "calc(100% - 140px)" }}>
+                    <Box sx={{ wordWrap: "break-word", width: !readOnly ? "calc(100% - 140px)" : "100%" }}>
                       <Typography variant="caption">
                         <b style={{ marginRight: "4px" }}>
                           {format(timeEntry.start * 1000, "H:mm")} - {format((timeEntry.end as number) * 1000, "H:mm")}
