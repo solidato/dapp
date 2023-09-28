@@ -2,74 +2,128 @@ import Link from "next/link";
 
 import { useMemo, useState } from "react";
 
-import { Add, Visibility, VisibilityOff } from "@mui/icons-material";
-import { Box, Button, Card, CardContent, CardHeader } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Box, Button, Collapse, Divider, IconButton, Stack, Typography } from "@mui/material";
 
 import { STAGE_TO_ID_MAP } from "@lib/constants";
 
-import { Project } from "@store/projectTaskStore";
+import useProjectTaskStore, { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 
-import TaskCard from "./TaskCard";
+import Modal from "@components/Modal";
+import TimeEntryFormStatic from "@components/time-entry/FormStatic";
+
+import { useSnackbar } from "@hooks/useSnackbar";
+import useUserSettings from "@hooks/useUserSettings";
+
+import Task from "./Task";
 
 export default function ProjectCard({ project }: { project: Project }) {
-  const [hideCompleted, setHideCompleted] = useState(true);
+  const [currentTaskId, setCurrentTaskId] = useState<null | number>(null);
+
+  const { openProjects, setOpenProjects } = useUserSettings();
+  const expanded = openProjects.includes(project.id);
+  const { deleteTimeEntry, setAddingTask } = useProjectTaskStore((state) => ({
+    deleteTimeEntry: state.actions.deleteTimeEntry,
+    setAddingTask: state.actions.setAddingTask,
+  }));
+  const { enqueueSnackbar } = useSnackbar();
+
   const tasks = useMemo(
     () =>
       project.tasks
         .filter((task) => task !== null)
-        .filter(
-          (task) =>
-            !task.parent_id && ![STAGE_TO_ID_MAP["approved"], STAGE_TO_ID_MAP["done"]].includes(task.stage_id.id),
-        ),
-    [project],
-  );
-  const completedTasks = useMemo(
-    () =>
-      project.tasks
-        .filter((task) => task !== null)
-        .filter((task) => !task.parent_id && task.stage_id.id === STAGE_TO_ID_MAP["done"]),
+        .filter((task) => !task.parent_id && task.stage_id.id !== STAGE_TO_ID_MAP["approved"]),
     [project],
   );
 
+  const handleAddNewEntry = (taskId: number) => {
+    setCurrentTaskId(taskId);
+  };
+
+  const handleToggle = () => {
+    const newOpenProjects = openProjects.includes(project.id)
+      ? openProjects.filter((id) => id !== project.id)
+      : [...openProjects, project.id];
+
+    setOpenProjects(newOpenProjects);
+  };
+
+  const handleDeleteTimeEntry = async (timeEntry: Timesheet, task: ProjectTask) => {
+    const { alert, error } = await deleteTimeEntry(timeEntry, task);
+    if (alert) {
+      return enqueueSnackbar(alert.message, { variant: alert.variant });
+    }
+
+    enqueueSnackbar(error.message, { variant: "error" });
+  };
+
+  const handleCreateTask = (evt: React.MouseEvent<HTMLElement>) => {
+    evt.preventDefault();
+    setAddingTask({ projectId: project.id });
+  };
+
   return (
-    <Card
-      variant="outlined"
+    <Box
       sx={{
-        height: "100%",
-        position: "relative",
-        pb: 0,
+        transition: "all .2s ease-in-out",
+        ...(expanded ? { borderLeft: "2px solid", borderColor: "divider", pl: 2 } : {}),
       }}
     >
-      <CardHeader title={project.name} sx={{ pb: 0 }} />
-      <Box sx={{ padding: "0 16px", mt: 1, display: "flex", justifyContent: "right" }}>
-        {Boolean(completedTasks.length) && (
-          <Button
-            variant="outlined"
-            size="small"
-            startIcon={hideCompleted ? <Visibility /> : <VisibilityOff />}
-            onClick={() => setHideCompleted(!hideCompleted)}
-          >
-            {hideCompleted ? "Show" : "Hide"} Completed ({completedTasks.length})
-          </Button>
-        )}
-        <Button
-          component={Link}
-          href={`/tasks/new?projectId=${project.id}`}
-          sx={{ ml: 1 }}
-          variant="outlined"
-          color="success"
-          startIcon={<Add />}
-          size="small"
+      {currentTaskId && (
+        <Modal
+          open
+          sx={{ bgcolor: (t) => (t.palette.mode === "dark" ? "#1A1A1A" : "#FAFAFA") }}
+          onClose={() => setCurrentTaskId(null)}
         >
-          New Task
-        </Button>
-      </Box>
-      <CardContent sx={{ pt: 0, pb: 0 }}>
-        {!hideCompleted && completedTasks.map((task) => <TaskCard key={task.id} task={task} />)}
+          <TimeEntryFormStatic taskId={currentTaskId} onSaved={() => setCurrentTaskId(null)} />
+        </Modal>
+      )}
+      <Stack
+        direction="row"
+        alignItems="center"
+        divider={<Divider flexItem />}
+        spacing={4}
+        justifyContent="space-between"
+      >
+        <Typography
+          variant="h6"
+          component="div"
+          role="button"
+          aria-label="open-time-entries"
+          onClick={handleToggle}
+          sx={{ cursor: "pointer", lineHeight: 1.3 }}
+        >
+          {project.name}
+        </Typography>
+        <Stack direction="row" divider={<Divider orientation="vertical" flexItem />} spacing={1} alignItems="center">
+          <Button
+            component={Link}
+            href={`/tasks/new?projectId=${project.id}`}
+            onClick={handleCreateTask}
+            variant="outlined"
+            startIcon={<Add />}
+            size="small"
+            sx={{ whiteSpace: "nowrap", ml: 1 }}
+          >
+            New Task
+          </Button>
+          <IconButton
+            aria-label="togggle"
+            color="primary"
+            size="small"
+            onClick={handleToggle}
+            sx={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform .2s ease-in" }}
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </Stack>
+      </Stack>
+      <Collapse in={expanded} timeout="auto">
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} />
+          <Task key={task.id} task={task} onAddNewEntry={handleAddNewEntry} onDeleteTimeEntry={handleDeleteTimeEntry} />
         ))}
-      </CardContent>
-    </Card>
+      </Collapse>
+    </Box>
   );
 }

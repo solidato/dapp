@@ -12,6 +12,7 @@ import Header from "@components/dashboard/Header";
 import InvestorsReport from "@components/dashboard/InvestorsReport";
 import Tasks from "@components/dashboard/Tasks";
 import Tokens from "@components/dashboard/Tokens";
+import TimeEntry from "@components/time-entry/TimeEntry";
 
 import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
@@ -46,7 +47,7 @@ export default function Home() {
     ResolutionEntityEnhanced[],
     typeof emptyStats,
   ] = useMemo(() => {
-    if (isLoading || isLoadingAcl) {
+    if ((isLoading || isLoadingAcl) && resolutions.length === 0) {
       return [[], [], emptyStats];
     }
 
@@ -82,7 +83,6 @@ export default function Home() {
 
     return [allResolutions, resolutionsToVote, statsValues];
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
-
   return (
     <>
       <Section
@@ -97,27 +97,15 @@ export default function Home() {
       >
         <Header />
       </Section>
-      {enhancedResolutionsToVote?.length > 0 && (
-        <Section inverse>
-          <>
-            <Typography variant="h4" sx={{ mb: 2 }}>
-              Resolutions to vote
-            </Typography>
-            <Grid container spacing={3}>
-              {enhancedResolutionsToVote.map((resolution) => (
-                <Grid item xs={12} md={6} lg={4} key={resolution.id}>
-                  <ResolutionCard resolution={resolution} />
-                </Grid>
-              ))}
-            </Grid>
-          </>
-        </Section>
-      )}
       <Section inverse={enhancedResolutionsToVote?.length === 0}>
         <Tasks />
       </Section>
       <Section inverse={enhancedResolutionsToVote?.length > 0}>
-        <ResolutionsStats stats={stats} isLoading={isLoading} totalResolutions={enhancedResolutions.length} />
+        <ResolutionsStats
+          stats={stats}
+          isLoading={isLoading && resolutions?.length === 0}
+          totalResolutions={enhancedResolutions.length}
+        />
       </Section>
       {isConnected && (
         <Section inverse={enhancedResolutionsToVote?.length === 0}>

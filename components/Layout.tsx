@@ -1,10 +1,12 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 import React, { useMemo } from "react";
 
-import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
+import { Alert, Badge, Button, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -22,6 +24,8 @@ import NkdLogo from "./svg-logos/NkdLogo";
 
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
+
+const TimeEntryWidget = dynamic(() => import("./time-entry/TimeEntry"), { ssr: false });
 
 export default function Layout({
   children,
@@ -47,6 +51,7 @@ export default function Layout({
     <>
       {checkMismatch && <MismatchNotifier />}
       <LoginModal />
+      {user?.isLoggedIn && <TimeEntryWidget />}
       <Box
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.9)",
