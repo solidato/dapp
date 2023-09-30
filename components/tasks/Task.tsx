@@ -282,7 +282,7 @@ export default function Task({
             </MenuItem>,
             <Divider key="divider" />,
           ]}
-        {!isDone && <MenuItem onClick={handleUpdateTask}>{isSubtask ? "Update subtask" : "Update task"}</MenuItem>}
+        {!isDone && <MenuItem onClick={handleUpdateTask}>{isSubtask ? "Edit subtask" : "Edit task"}</MenuItem>}
         <MenuItem onClick={handleBeforeDeleteTask}>{isSubtask ? "Delete subtask" : "Delete task"}</MenuItem>
         {hasTimeEntries &&
           !isDone && [

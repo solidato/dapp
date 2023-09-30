@@ -1,4 +1,3 @@
-import { formatInTimeZone } from "date-fns-tz";
 import { useRouter } from "next/router";
 import { shallow } from "zustand/shallow";
 
@@ -21,7 +20,6 @@ import {
 } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 
-import { ODOO_DATE_FORMAT } from "@lib/constants";
 import { toPrettyRange } from "@lib/utils";
 
 import useProjectTaskStore from "@store/projectTaskStore";
@@ -45,7 +43,7 @@ const ONE_MINUTE_IN_SECONDS = 60;
 const TEN_HOURS_IN_SECONDS = 10 * 60 * 60;
 
 export default function TimeEntryForm() {
-  const { startAt, stopAt, resume, reset, taskId, setTaskId } = useTimeEntryStore(
+  const { startAt, stopAt, resume, reset, taskId, setTaskId, setStartAt } = useTimeEntryStore(
     (state) => ({
       startAt: state.startAt,
       stopAt: state.stopAt,
@@ -53,6 +51,7 @@ export default function TimeEntryForm() {
       resume: state.resume,
       reset: state.reset,
       setTaskId: state.setTaskId,
+      setStartAt: state.setStartAt,
     }),
     shallow,
   );
@@ -101,6 +100,7 @@ export default function TimeEntryForm() {
       return;
     }
     setFormData((prev) => ({ ...prev, startTime: newValue }));
+    setStartAt(newValue.getTime());
   };
 
   const onChangeEndTime = (newValue: Date | null) => {
@@ -270,7 +270,7 @@ export default function TimeEntryForm() {
               Save entry
             </LoadingButton>
           </Stack>
-          {elapsedTime > TEN_HOURS_IN_SECONDS && (
+          {elapsedTime >= TEN_HOURS_IN_SECONDS && (
             <Alert severity="warning" sx={{ mt: 1, mb: 1 }}>
               <b>Heads up:</b> this time entry is a bit suspicious. You&apos;re tracking a single task of more than 10
               hour.

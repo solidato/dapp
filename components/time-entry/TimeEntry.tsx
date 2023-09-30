@@ -104,9 +104,13 @@ export default function TimeEntry() {
           bottom: 16,
           right: 16,
           bgcolor: (t) => (t.palette.mode === "dark" ? "#222" : "#FAFAFA"),
+          cursor: "pointer",
           ...(isActive ? activeSx : {}),
         }}
         elevation={12}
+        role="button"
+        aria-label={isActive ? "Stop tracking" : "Start tracking"}
+        onClick={isActive ? stop : start}
       >
         {taskId && startAt && !showStopModal && currentTask && (
           <>

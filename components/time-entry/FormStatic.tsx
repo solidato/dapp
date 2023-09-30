@@ -35,8 +35,6 @@ type StateType = {
   startTime: Date;
   endTime: Date;
   description: string;
-  disabledEditStart: boolean;
-  disabledEditEnd: boolean;
   taskId: number | null;
   timeEntryId?: number | null;
 };
@@ -69,8 +67,6 @@ export default function TimeEntryFormStatic({
   const [formData, setFormData] = useState<StateType>(() => ({
     startTime: savedFormData?.startTime || new Date(),
     endTime: savedFormData?.endTime || new Date(Date.now() + DEFAULT_TASK_DURATION),
-    disabledEditStart: true,
-    disabledEditEnd: true,
     description: savedFormData?.description || "",
     taskId,
   }));
@@ -108,30 +104,6 @@ export default function TimeEntryFormStatic({
       return;
     }
     setFormData((prev) => ({ ...prev, endTime: newValue }));
-  };
-
-  const toggleEditStart = () => {
-    setFormData((prev) => {
-      const disabledEditStart = !prev.disabledEditStart;
-      return {
-        ...prev,
-        disabledEditStart,
-        startTime: disabledEditStart ? savedFormData?.startTime || new Date() : prev.startTime,
-      };
-    });
-  };
-
-  const toggleEditEnd = () => {
-    setFormData((prev) => {
-      const disabledEditEnd = !prev.disabledEditEnd;
-      return {
-        ...prev,
-        disabledEditEnd,
-        endTime: disabledEditEnd
-          ? savedFormData?.endTime || new Date(Date.now() + DEFAULT_TASK_DURATION)
-          : prev.endTime,
-      };
-    });
   };
 
   const goToNewTask = (path?: string) => {
@@ -245,14 +217,10 @@ export default function TimeEntryFormStatic({
           value={formData.startTime}
           onChange={onChangeStartTime}
           sx={{ width: "50%" }}
-          disabled={formData.disabledEditStart}
           size="small"
           maxDateTime={formData.endTime}
           format="dd/MM/yyyy H:mm"
         />
-        <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={toggleEditStart}>
-          {formData.disabledEditStart ? "edit" : "discard"}
-        </Button>
       </Box>
 
       <Box mt={2} sx={{ display: "flex", alignItems: "center" }}>
@@ -262,14 +230,10 @@ export default function TimeEntryFormStatic({
           value={formData.endTime}
           onChange={onChangeEndTime}
           sx={{ width: "50%" }}
-          disabled={formData.disabledEditEnd}
           size="small"
           minDateTime={formData.startTime}
           format="dd/MM/yyyy H:mm"
         />
-        <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={toggleEditEnd}>
-          {formData.disabledEditEnd ? "edit" : "discard"}
-        </Button>
       </Box>
       <Typography variant="h6" sx={{ mt: 2 }}>
         Total entry time
@@ -287,7 +251,7 @@ export default function TimeEntryFormStatic({
               {!!savedFormData ? "Update" : "Save entry"}
             </LoadingButton>
           </Stack>
-          {elapsedTime > TEN_HOURS_IN_SECONDS && (
+          {elapsedTime >= TEN_HOURS_IN_SECONDS && (
             <Alert severity="warning" sx={{ mt: 1, mb: 1 }}>
               <b>Heads up:</b> this time entry is a bit suspicious. You&apos;re tracking a single task of more than 10
               hour.
