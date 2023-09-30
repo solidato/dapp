@@ -5,8 +5,9 @@ import { useEffect, useMemo } from "react";
 
 import { Add } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, CircularProgress, Divider, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 
+import { STAGE_TO_ID_MAP } from "@lib/constants";
 import { fetcher } from "@lib/net";
 
 import useProjectTaskStore, { Project, ProjectTask } from "@store/projectTaskStore";
@@ -82,7 +83,7 @@ export default function Tasks() {
     setAddingTask({});
   };
 
-  const [totalTime, projectIds, taskIds] = useMemo(() => {
+  const [totalTime, projectIds, taskIds, totalTimeNotMarkedAsDone] = useMemo(() => {
     const projectIds = projectsWithTasks.map((project) => project.id);
     const totalTime =
       projectsWithTasks.reduce((total, project) => {
@@ -92,7 +93,18 @@ export default function Tasks() {
       return [...ids, ...project.tasks.filter((task) => task.child_ids.length > 0).map((task) => task.id)];
     }, [] as number[]);
 
-    return [totalTime, projectIds, taskIds];
+    const totalTimeDone =
+      projectsWithTasks.reduce((total, project) => {
+        return (
+          total +
+          project.tasks.reduce(
+            (sub, task) => sub + (task.stage_id.id === STAGE_TO_ID_MAP["done"] ? task.effective_hours : 0),
+            0,
+          )
+        );
+      }, 0) * 3600;
+
+    return [totalTime, projectIds, taskIds, totalTime - totalTimeDone];
   }, [projectsWithTasks]);
 
   return (
