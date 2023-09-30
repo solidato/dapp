@@ -232,7 +232,7 @@ export default function TimeEntryForm() {
           label="Start time"
           value={formData.startTime}
           onChange={onChangeStartTime}
-          sx={{ width: "50%" }}
+          sx={{ width: "calc(100% - 100px)" }}
           disabled={formData.disabledEditStart}
           size="small"
           maxDateTime={formData.endTime}
@@ -249,7 +249,7 @@ export default function TimeEntryForm() {
           label="End time"
           value={formData.endTime}
           onChange={onChangeEndTime}
-          sx={{ width: "50%" }}
+          sx={{ width: "calc(100% - 100px)" }}
           disabled={formData.disabledEditEnd}
           size="small"
           minDateTime={formData.startTime}

@@ -67,7 +67,10 @@ export default function ProjectCard({ project }: { project: Project }) {
     <Box
       sx={{
         transition: "all .2s ease-in-out",
-        ...(expanded ? { borderLeft: "2px solid", borderColor: "divider", pl: 2 } : {}),
+        borderRadius: "6px",
+        ...(expanded
+          ? { border: "1px solid", borderLeft: "2px solid", borderColor: "divider", p: 1, pl: 2 }
+          : { border: "1px solid", borderColor: "divider", p: 1 }),
       }}
     >
       {currentTaskId && (
@@ -79,20 +82,19 @@ export default function ProjectCard({ project }: { project: Project }) {
           <TimeEntryFormStatic taskId={currentTaskId} onSaved={() => setCurrentTaskId(null)} />
         </Modal>
       )}
-      <Stack
-        direction="row"
-        alignItems="center"
-        divider={<Divider flexItem />}
-        spacing={4}
-        justifyContent="space-between"
-      >
+      <Stack direction="row" alignItems="center" divider={<Divider flexItem />} justifyContent="space-between">
         <Typography
           variant="h6"
           component="div"
           role="button"
           aria-label="open-time-entries"
           onClick={handleToggle}
-          sx={{ cursor: "pointer", lineHeight: 1.3 }}
+          sx={{
+            cursor: "pointer",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+          }}
         >
           {project.name}
         </Typography>
@@ -104,7 +106,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             variant="outlined"
             startIcon={<Add />}
             size="small"
-            sx={{ whiteSpace: "nowrap", ml: 1 }}
+            sx={{ whiteSpace: "nowrap", ml: 2, mr: 0.3 }}
           >
             New Task
           </Button>

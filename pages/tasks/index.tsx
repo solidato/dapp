@@ -170,9 +170,8 @@ export default function Tasks() {
               </Stack>
             )}
             {projectsWithTasks.map((project, idx) => (
-              <Box key={project.id}>
+              <Box key={project.id} sx={{ mb: 2 }}>
                 <ProjectCard project={project} />
-                {idx < projectsWithTasks.length - 1 && <Divider sx={{ mt: 2, mb: 2 }} />}
               </Box>
             ))}
           </>

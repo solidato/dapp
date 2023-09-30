@@ -216,7 +216,7 @@ export default function TimeEntryFormStatic({
           label="Start time"
           value={formData.startTime}
           onChange={onChangeStartTime}
-          sx={{ width: "50%" }}
+          sx={{ width: "100%" }}
           size="small"
           maxDateTime={formData.endTime}
           format="dd/MM/yyyy H:mm"
@@ -229,7 +229,7 @@ export default function TimeEntryFormStatic({
           label="End time"
           value={formData.endTime}
           onChange={onChangeEndTime}
-          sx={{ width: "50%" }}
+          sx={{ width: "100%" }}
           size="small"
           minDateTime={formData.startTime}
           format="dd/MM/yyyy H:mm"
