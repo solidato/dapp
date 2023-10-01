@@ -291,6 +291,7 @@ export default function Task({
           !isDone && [
             <Divider key="divider" />,
             <MenuItem key="m-a-d" onClick={handleBeforeMarkAsDone}>
+              <CheckCircleIcon sx={{ mr: 1, fill: (t) => t.palette.success.main }} />
               Mark as done
             </MenuItem>,
           ]}
