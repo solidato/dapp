@@ -144,6 +144,9 @@ export default function Settings() {
         <Box>
           <Typography variant="body1">Connected network: {chain?.name}</Typography>
           <Typography variant="body1">Balance: {data?.formatted}</Typography>
+          <Typography variant="body1">
+            Address: <pre style={{ display: "inline" }}>{address}</pre>
+          </Typography>
           <Button variant="outlined" size="small" onClick={() => disconnect()} sx={{ mt: 2 }}>
             Disconnect wallet
           </Button>
@@ -170,11 +173,6 @@ export default function Settings() {
       </Alert>
       <Paper
         sx={{
-          marginTop: "calc(10% + 60px)",
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          width: "100%",
           p: 4,
           textAlign: "center",
         }}

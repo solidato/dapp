@@ -270,13 +270,12 @@ export default function Task({
           zIndex: 10002,
         }}
       >
-        {canTrackTime &&
-          !isDone && [
-            <MenuItem onClick={handleAddTimeEntry} key="n-t-e">
-              New time entry
-            </MenuItem>,
-            <Divider key="divider" />,
-          ]}
+        {canTrackTime && [
+          <MenuItem onClick={handleAddTimeEntry} key="n-t-e">
+            New time entry
+          </MenuItem>,
+          <Divider key="divider" />,
+        ]}
         {!isSubtask &&
           !isDone &&
           (!canTrackTime || !hasTimeEntries) && [
