@@ -40,7 +40,10 @@ export const getMonthlyReward = async (req: NextApiRequest, res: NextApiResponse
       let content = `1. Object the confirmation of the contributed time by Contributors to the DAO from ${startDate} to ${endDate} or the minting of the corresponding number of tokens to them in the following manner:\n`;
       tokenAllocations.forEach((tokenAllocation, index) => {
         const { user, hours_amount, token_amount } = tokenAllocation;
-        content += `${index + 1}. ${user.name}, ${hours_amount.toFixed(2)} hours, ${token_amount.toFixed(2)} tokens;\n`;
+        // indentation needed for markdown, otherwise it keeps going with the previous list
+        content += `    ${index + 1}. ${user.name}, ${hours_amount.toFixed(2)} hours, ${token_amount.toFixed(
+          2,
+        )} tokens;\n`;
       });
       return {
         title,

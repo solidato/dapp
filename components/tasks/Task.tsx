@@ -266,6 +266,9 @@ export default function Task({
           vertical: "top",
           horizontal: "left",
         }}
+        sx={{
+          zIndex: 10002,
+        }}
       >
         {canTrackTime &&
           !isDone && [

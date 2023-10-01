@@ -40,7 +40,7 @@ type StateType = {
 };
 
 const ONE_MINUTE_IN_SECONDS = 60;
-const TEN_HOURS_IN_SECONDS = 10 * 60 * 60;
+const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 
 export default function TimeEntryForm() {
   const { startAt, stopAt, resume, reset, taskId, setTaskId, setStartAt } = useTimeEntryStore(
@@ -156,12 +156,14 @@ export default function TimeEntryForm() {
     formData.startTime && formData.endTime && formData.startTime.getTime() < formData.endTime.getTime();
 
   const elapsedTime = Math.floor((formData.endTime.getTime() - formData.startTime.getTime()) / 1000);
+  const descriptionFilled = formData.description.trim().length > 0;
   const isValid =
     taskId &&
     isValidTime &&
     !clashingEntry &&
+    descriptionFilled &&
     elapsedTime > ONE_MINUTE_IN_SECONDS &&
-    (shouldConfirm || elapsedTime < TEN_HOURS_IN_SECONDS);
+    (shouldConfirm || elapsedTime < THREE_HOURS_IN_SECONDS);
   const options = userTasks.map((userTask: any) => ({
     label: userTask.name,
     id: userTask.id,
@@ -184,7 +186,7 @@ export default function TimeEntryForm() {
           options={options}
           getOptionLabel={(option) => option.label}
           sx={{ width: "100%" }}
-          renderInput={(params) => <TextField {...params} label="Task" />}
+          renderInput={(params) => <TextField {...params} label={!taskId ? "Task *" : "Task"} />}
           renderGroup={(params) => {
             const project = userProjects?.find((p: any) => p.id === params.group);
             return (
@@ -218,7 +220,8 @@ export default function TimeEntryForm() {
       )}
       <TextField
         id="time-entry-description"
-        label="Description"
+        label={formData.description.trim().length === 0 ? "Description *" : "Description"}
+        placeholder="Please describe the time entry"
         multiline
         maxRows={4}
         minRows={2}
@@ -270,9 +273,9 @@ export default function TimeEntryForm() {
               Save entry
             </LoadingButton>
           </Stack>
-          {elapsedTime >= TEN_HOURS_IN_SECONDS && (
+          {elapsedTime >= THREE_HOURS_IN_SECONDS && (
             <Alert severity="warning" sx={{ mt: 1, mb: 1 }}>
-              <b>Heads up:</b> this time entry is a bit suspicious. You&apos;re tracking a single task of more than 10
+              <b>Heads up:</b> this time entry is a bit suspicious. You&apos;re tracking a single task of more than 3
               hour.
               <FormControlLabel
                 sx={{ display: "block", p: 2 }}

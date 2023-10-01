@@ -68,9 +68,10 @@ export default function ProjectCard({ project }: { project: Project }) {
       sx={{
         transition: "all .2s ease-in-out",
         borderRadius: "6px",
-        ...(expanded
-          ? { border: "1px solid", borderLeft: "2px solid", borderColor: "divider", p: 1, pl: 2 }
-          : { border: "1px solid", borderColor: "divider", p: 1 }),
+        border: "1px solid",
+        borderColor: "divider",
+        p: 1,
+        ...(expanded && { pl: 2 }),
       }}
     >
       {currentTaskId && (

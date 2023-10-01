@@ -91,7 +91,6 @@ export default function TimeEntries({
         p: 0.5,
         m: 0,
         mt: 1,
-        mb: 1,
         position: "relative",
         backgroundImage: "none",
         "&:before": {
