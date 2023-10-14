@@ -6,7 +6,7 @@ import { Add } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, Collapse, Divider, IconButton, Stack, Typography } from "@mui/material";
 
-import { STAGE_TO_ID_MAP } from "@lib/constants";
+import { getStageId } from "@lib/constants";
 
 import useProjectTaskStore, { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 
@@ -33,7 +33,7 @@ export default function ProjectCard({ project }: { project: Project }) {
     () =>
       project.tasks
         .filter((task) => task !== null)
-        .filter((task) => !task.parent_id && task.stage_id.id !== STAGE_TO_ID_MAP["approved"]),
+        .filter((task) => !task.parent_id && task.stage_id.id !== getStageId("approved")),
     [project],
   );
 

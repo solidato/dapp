@@ -7,7 +7,7 @@ import { Add } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 
-import { STAGE_TO_ID_MAP } from "@lib/constants";
+import { getStageId } from "@lib/constants";
 import { fetcher } from "@lib/net";
 
 import useProjectTaskStore, { Project, ProjectTask } from "@store/projectTaskStore";
@@ -98,7 +98,7 @@ export default function Tasks() {
         return (
           total +
           project.tasks.reduce(
-            (sub, task) => sub + (task.stage_id.id === STAGE_TO_ID_MAP["done"] ? task.effective_hours : 0),
+            (sub, task) => sub + (task.stage_id.id === getStageId("done") ? task.effective_hours : 0),
             0,
           )
         );

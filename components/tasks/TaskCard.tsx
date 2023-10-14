@@ -39,7 +39,7 @@ import useProjectTaskStore, { ProjectTask, useProjectTaskActions } from "@store/
 
 import useErrorHandler from "@hooks/useErrorHandler";
 
-import { STAGE_TO_ID_MAP, TAGS_COLORS } from "../../lib/constants";
+import { TAGS_COLORS, getStageId } from "../../lib/constants";
 import ActionCardBtn from "./ActionBtn";
 import Stopwatch from "./Stopwatch";
 import SubTaskCard from "./SubTaskCard";
@@ -74,7 +74,7 @@ export default function TaskCard({ task }: { task: ProjectTask }) {
   const openDialog = useDialogStore(({ openDialog }) => openDialog);
   const closeDialog = useDialogStore(({ closeDialog }) => closeDialog);
 
-  const isDone = task.stage_id.id === STAGE_TO_ID_MAP["done"];
+  const isDone = task.stage_id.id === getStageId("done");
   const hasSubtasks = task.child_ids.length;
 
   const createNewSubTask = () => {

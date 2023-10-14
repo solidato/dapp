@@ -22,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { STAGE_TO_ID_MAP } from "@lib/constants";
+import { getStageId } from "@lib/constants";
 
 import useProjectTaskStore, { ProjectTask, Timesheet } from "@store/projectTaskStore";
 import useTimeEntryStore from "@store/timeEntry";
@@ -95,7 +95,7 @@ export default function Task({
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const isDone = task.stage_id.id === STAGE_TO_ID_MAP["done"];
+  const isDone = task.stage_id.id === getStageId("done");
 
   const handleToggle = () => {
     const newOpenTasks = openTasks.includes(task.id)

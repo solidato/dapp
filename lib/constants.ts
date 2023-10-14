@@ -1,17 +1,5 @@
 export const ODOO_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-export type STAGE_NAME = "backlog" | "created" | "progress" | "inprogress" | "done" | "approved" | "canceled";
-
-export const STAGE_TO_ID_MAP: Record<STAGE_NAME, number> = {
-  backlog: 29,
-  created: 29,
-  progress: 30,
-  inprogress: 30,
-  done: 31, // 161 !!
-  approved: 32,
-  canceled: 162,
-};
-
 export const STAGE_TO_COLOR_MAP: Record<STAGE_NAME, string> = {
   backlog: "default",
   created: "default",
@@ -62,4 +50,101 @@ export const BLOCKCHAIN_TRANSACTION_KEYS = {
   MATCH_TOKENS: "matchTokens",
   APPROVE_DEPOSIT_NEOK: "approveDepositNeok",
   DEPOSIT_NEOK: "depositNeok",
+};
+
+const PROJECT_TASK_TYPE_TELEDISKO = [
+  {
+    id: 1,
+    name: "Created",
+  },
+  {
+    id: 90,
+    name: "Inbox",
+  },
+  {
+    id: 97,
+    name: "Internal",
+  },
+  {
+    id: 5,
+    name: "In Progress",
+  },
+  {
+    id: 91,
+    name: "Today",
+  },
+  {
+    id: 2,
+    name: "Done",
+  },
+  {
+    id: 92,
+    name: "This Week",
+  },
+  {
+    id: 3,
+    name: "Approved",
+  },
+  {
+    id: 93,
+    name: "This Month",
+  },
+  {
+    id: 94,
+    name: "Later",
+  },
+  {
+    id: 96,
+    name: "Canceled",
+  },
+];
+
+const PROJECT_TASK_TYPE_NEOKINGDOM = [
+  {
+    id: 29,
+    name: "Created",
+  },
+  {
+    id: 156,
+    name: "Inbox",
+  },
+  {
+    id: 30,
+    name: "In Progress",
+  },
+  {
+    id: 157,
+    name: "Today",
+  },
+  {
+    id: 31,
+    name: "Done",
+  },
+  {
+    id: 158,
+    name: "This Week",
+  },
+  {
+    id: 32,
+    name: "Approved",
+  },
+  {
+    id: 159,
+    name: "This Month",
+  },
+  {
+    id: 160,
+    name: "Later",
+  },
+  {
+    id: 162,
+    name: "Canceled",
+  },
+];
+
+export const getStageId = (stageName: string) => {
+  const PROJECT_TASK_TYPE =
+    process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" ? PROJECT_TASK_TYPE_TELEDISKO : PROJECT_TASK_TYPE_NEOKINGDOM;
+  const stage = PROJECT_TASK_TYPE.find((projectType) => projectType.name.toLowerCase() === stageName.toLowerCase());
+  return stage?.id;
 };

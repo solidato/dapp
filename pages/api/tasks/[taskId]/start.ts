@@ -2,7 +2,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { ODOO_DATE_FORMAT, STAGE_TO_ID_MAP } from "@lib/constants";
+import { ODOO_DATE_FORMAT, getStageId } from "@lib/constants";
 import { ODOO_DB_NAME, ODOO_ENDPOINT, getSession } from "@lib/odooClient";
 import { sessionOptions } from "@lib/session";
 
@@ -30,7 +30,7 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
       const timeEntry = { task_id: Number(taskId), start };
       // Move task to In progress
       await session.update("project.task", Number(taskId), {
-        stage_id: STAGE_TO_ID_MAP["progress"],
+        stage_id: getStageId("in progress"),
       });
       const timeEntryId = await session.create("account.analytic.line", timeEntry);
       const [newTimeEntry] = await session.read("account.analytic.line", [timeEntryId]);

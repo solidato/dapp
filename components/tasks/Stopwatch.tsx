@@ -3,7 +3,7 @@ import { ReactEventHandler, SyntheticEvent, useCallback, useEffect, useMemo, use
 import { AccessAlarm, CheckCircleRounded, PlayArrow, Stop } from "@mui/icons-material";
 import { Box, Chip, CircularProgress, IconButton, keyframes, useTheme } from "@mui/material";
 
-import { STAGE_TO_ID_MAP } from "@lib/constants";
+import { getStageId } from "@lib/constants";
 import { findActiveTimesheet, getTaskName, toPrettyDuration } from "@lib/utils";
 
 import useDialogStore from "@store/dialogStore";
@@ -105,7 +105,7 @@ export default function StopwatchSlim({
     pauseTime();
   };
 
-  const isDone = task.stage_id.id === STAGE_TO_ID_MAP["done"];
+  const isDone = task.stage_id.id === getStageId("done");
 
   const renderTaskAction = () => {
     if (isLoading && isTrackingTask(task)) {

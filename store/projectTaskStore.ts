@@ -2,7 +2,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { v4 as uuid } from "uuid";
 import { create } from "zustand";
 
-import { ODOO_DATE_FORMAT, STAGE_TO_ID_MAP } from "@lib/constants";
+import { ODOO_DATE_FORMAT, getStageId } from "@lib/constants";
 import { getTaskTotalHours } from "@lib/utils";
 
 export type Project = {
@@ -90,7 +90,7 @@ const useProjectTaskStore = create<ProjectTaskStore>((set, get) => ({
       const response = await fetch(`/api/tasks/${task.id}`, {
         method: "PUT",
         body: JSON.stringify({
-          stage_id: STAGE_TO_ID_MAP["done"],
+          stage_id: getStageId("done"),
           effective_hours: totalHours,
         }),
       });
@@ -205,7 +205,7 @@ const useProjectTaskStore = create<ProjectTaskStore>((set, get) => ({
       if (task.timesheet_ids.length === 1) {
         await fetch(`/api/tasks/${task.id}`, {
           method: "PUT",
-          body: JSON.stringify({ stage_id: STAGE_TO_ID_MAP["created"] }),
+          body: JSON.stringify({ stage_id: getStageId("created") }),
         });
       }
       const response = await fetch(`/api/time_entries/${timeEntry.id}`, { method: "DELETE" });
