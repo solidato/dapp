@@ -33,7 +33,8 @@ import { META } from "./_document";
 
 const ExtraneousWarning = dynamic(() => import("../components/ExtraneousWarning"), { ssr: false });
 
-export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : evmos];
+// export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : evmos];
+export const SUPPORTED_CHAINS = [evmos];
 
 // Wagmi client
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
