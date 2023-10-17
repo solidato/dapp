@@ -15,7 +15,7 @@ export default function ExtraneousWarning() {
   const { data, isLoading: isLoadingGetDaoManager } = useSWR<any>(address ? getDaoManagerQuery : null, fetcher);
   const { logout } = useLogout();
 
-  if (!isLoadingGetDaoManager && data.daoManager === null) {
+  if (!isLoadingGetDaoManager && data?.daoManager === null) {
     return (
       <Container maxWidth="lg" sx={{ mb: 6, mt: 1 }}>
         <Alert severity="error">
@@ -32,7 +32,7 @@ export default function ExtraneousWarning() {
     isConnected &&
     !isConnecting &&
     address &&
-    data.daoManager
+    data?.daoManager
   ) {
     return (
       <Container maxWidth="lg" sx={{ mb: 6, mt: 1 }}>
