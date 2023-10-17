@@ -27,8 +27,8 @@ export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: bool
     return { acl: DEFAULT_ACL, error, isLoading: isLoading || isLoadingShareholderStatus };
   }
 
-  const isContributor = data.daoManager.contributorsAddresses.includes(address.toLowerCase());
-  const isManagingBoard = data.daoManager.managingBoardAddresses.includes(address.toLowerCase());
+  const isContributor = data.daoManager?.contributorsAddresses.includes(address.toLowerCase());
+  const isManagingBoard = data.daoManager?.managingBoardAddresses.includes(address.toLowerCase());
 
   const isExtraneous = daoUsers ? !Object.keys(daoUsers).includes(address.toLowerCase()) : true;
 
@@ -38,7 +38,7 @@ export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: bool
     canApprove: isManagingBoard,
     canVote: (resolutionVoters: ResolutionVoter[]) =>
       resolutionVoters.map((voter) => voter.address.toLowerCase()).includes(address.toLowerCase()),
-    isShareholder: data.daoManager.shareholdersAddresses.includes(address.toLowerCase()),
+    isShareholder: data.daoManager?.shareholdersAddresses.includes(address.toLowerCase()),
     isManagingBoard,
     isContributor,
     isExtraneous,
