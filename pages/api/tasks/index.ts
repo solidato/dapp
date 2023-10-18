@@ -25,19 +25,36 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const getUserProjectIds = async (userId: number) => {
+  const getUserTasks = async (userId: number) => {
     const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
-    return [...new Set(userTasks.ProjectTask.map((t: ProjectTask) => t.project_id.id))];
+    return userTasks?.ProjectTask;
+  };
+
+  const getUserProjectIds = (tasks: ProjectTask[]) => {
+    return [...new Set(tasks.map((t: ProjectTask) => t.project_id.id))];
+  };
+
+  const getTaskIds = (tasks: ProjectTask[]) => {
+    return [
+      ...new Set(
+        tasks.map((task: ProjectTask) => {
+          if (task.parent_id) return task.parent_id.id;
+          return task.id;
+        }),
+      ),
+    ];
   };
 
   if (req.method === "GET") {
     // List all Projects Tasks
     try {
       const userId = user.id;
-      const projectIds = await getUserProjectIds(userId);
+      const tasks = await getUserTasks(userId);
+      const projectIds = getUserProjectIds(tasks);
+      const taskIds = getTaskIds(tasks);
       const data = await odooGraphQLClient.query(cookie, getProjectsTasksQuery, {
         projectIds,
-        userId,
+        taskIds,
       });
       res.status(200).json(data?.ProjectProject || []);
     } catch (err: any) {
