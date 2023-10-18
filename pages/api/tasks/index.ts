@@ -55,6 +55,7 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
       const data = await odooGraphQLClient.query(cookie, getProjectsTasksQuery, {
         projectIds,
         taskIds,
+        userId,
       });
       res.status(200).json(data?.ProjectProject || []);
     } catch (err: any) {
