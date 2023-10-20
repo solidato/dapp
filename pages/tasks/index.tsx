@@ -83,11 +83,19 @@ export default function Tasks() {
     setAddingTask({});
   };
 
-  const [totalTime, projectIds, taskIds, totalTimeNotMarkedAsDone] = useMemo(() => {
+  const [totalTime, projectIds, taskIds] = useMemo(() => {
     const projectIds = projectsWithTasks.map((project) => project.id);
     const totalTime =
       projectsWithTasks.reduce((total, project) => {
-        return total + project.tasks.reduce((sub, task) => sub + task.effective_hours, 0);
+        return (
+          total +
+          project.tasks.reduce((sub, task) => {
+            if (task.child_ids.length > 0) {
+              return sub + task.child_ids.reduce((childSub, child) => childSub + child.effective_hours, 0);
+            }
+            return sub + task.effective_hours;
+          }, 0)
+        );
       }, 0) * 3600;
     const taskIds = projectsWithTasks.reduce((ids, project) => {
       return [...ids, ...project.tasks.filter((task) => task.child_ids.length > 0).map((task) => task.id)];
@@ -104,7 +112,7 @@ export default function Tasks() {
         );
       }, 0) * 3600;
 
-    return [totalTime, projectIds, taskIds, totalTime - totalTimeDone];
+    return [totalTime, projectIds, taskIds];
   }, [projectsWithTasks]);
 
   return (
