@@ -101,17 +101,6 @@ export default function Tasks() {
       return [...ids, ...project.tasks.filter((task) => task.child_ids.length > 0).map((task) => task.id)];
     }, [] as number[]);
 
-    const totalTimeDone =
-      projectsWithTasks.reduce((total, project) => {
-        return (
-          total +
-          project.tasks.reduce(
-            (sub, task) => sub + (task.stage_id.id === getStageId("done") ? task.effective_hours : 0),
-            0,
-          )
-        );
-      }, 0) * 3600;
-
     return [totalTime, projectIds, taskIds];
   }, [projectsWithTasks]);
 
