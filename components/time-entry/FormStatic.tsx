@@ -39,7 +39,7 @@ type StateType = {
 };
 
 const ONE_MINUTE_IN_SECONDS = 60;
-const THREE_HOURS_IN_SECONDS = 10 * 60 * 60;
+const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 const DEFAULT_TASK_DURATION = 120000; // 2 mins
 
 export default function TimeEntryFormStatic({
