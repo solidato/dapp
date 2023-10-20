@@ -1,5 +1,7 @@
 import { gql } from "graphql-request";
 
+import { getStageId } from "@lib/constants";
+
 import { projectTaskFragment } from "./project-task.fragment";
 
 export const getProjectsTasksQuery = gql`
@@ -15,9 +17,9 @@ export const getProjectsTasksQuery = gql`
       }
       task_count
       task_count_with_subtasks
-      tasks(domain: [["id", "in", $taskIds]]) {
+      tasks(domain: [["id", "in", $taskIds], ["stage_id.id", "!=", ${getStageId("approved")} ]]) {
         ...projectTaskFragment
-        child_ids(domain: [["user_id", "in", [$userId]]]) {
+        child_ids(domain: [["user_id", "in", [$userId]], ["stage_id.id", "!=", ${getStageId("approved")} ]]) {
           ...projectTaskFragment
         }
       }
