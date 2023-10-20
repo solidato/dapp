@@ -31,12 +31,16 @@ import Chart from "./Chart";
 type ChartVizType = "default" | "accumulated";
 
 export default function InvestorsReport() {
-  const { data, dataAccumulated, isLoading } = useGetInvestorsReportData();
+  const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
   const [chartType, setChartType] = useState<ChartVizType>("accumulated");
   const theme = useTheme();
   const [infoBox, setInfoBox] = useState<"internal" | "external" | null>(null);
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (error) {
+    return null;
+  }
 
   if (isLoading) {
     return <CircularProgress />;

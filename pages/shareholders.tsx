@@ -26,7 +26,11 @@ export default function Shareholders() {
     shallow,
   );
 
-  const { isLoading, daoUsersAddresses, daoUsers, getShareholderStatus } = useShareholderStatus();
+  const { isLoading, daoUsersAddresses, daoUsers, getShareholderStatus, error } = useShareholderStatus();
+
+  if (error) {
+    return null;
+  }
 
   if (isLoading) {
     return <CircularProgress />;

@@ -1,11 +1,8 @@
-import { useContractsContext } from "contexts/ContractsContext";
 import { BigNumber } from "ethers";
 import { formatEther } from "ethers/lib/utils.js";
 import useSWR from "swr";
 import { ComputedBalances, DaoUser, Offer } from "types";
 import { useAccount } from "wagmi";
-
-import { useEffect, useState } from "react";
 
 import { fetcherWithParams } from "@graphql/client";
 import { getTokensPageData } from "@graphql/queries/get-tokens-page-data";
@@ -54,11 +51,17 @@ export const computeBalances = (daoUser: DaoUser | null): ComputedBalances => {
 const REFRESH_EVERY_MS = 1000 * 5;
 
 export default function useUserBalanceAndOffers(): {
-  data: { balance: ComputedBalances; allOffers: Offer[]; expiredOffers: Offer[]; activeOffers: Offer[] } | null;
+  data: {
+    balance: ComputedBalances;
+    allOffers: Offer[];
+    expiredOffers: Offer[];
+    activeOffers: Offer[];
+  } | null;
+  error: any;
   isLoading: boolean;
 } {
   const { address: userId } = useAccount();
-  const { data, isLoading } = useSWR<any>(
+  const { data, error, isLoading } = useSWR<any>(
     userId ? [getTokensPageData, { userId: userId.toLowerCase() }] : null,
     fetcherWithParams,
     {
@@ -66,7 +69,7 @@ export default function useUserBalanceAndOffers(): {
     },
   );
 
-  if (data && !isLoading) {
+  if (data && !isLoading && !error) {
     return {
       data: {
         balance: computeBalances(data.daoUser),
@@ -75,11 +78,13 @@ export default function useUserBalanceAndOffers(): {
         activeOffers: data.offers.filter(isNonExpired),
       },
       isLoading,
+      error: null,
     };
   }
 
   return {
     data,
     isLoading,
+    error,
   };
 }

@@ -36,7 +36,7 @@ const emptyStats = {
 };
 
 export default function Home() {
-  const { resolutions, isLoading } = useGetResolutions();
+  const { resolutions, isLoading, error } = useGetResolutions();
 
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const { currentTimestamp } = useTimestamp();
@@ -47,7 +47,7 @@ export default function Home() {
     ResolutionEntityEnhanced[],
     typeof emptyStats,
   ] = useMemo(() => {
-    if ((isLoading || isLoadingAcl) && resolutions.length === 0) {
+    if (((isLoading || isLoadingAcl) && resolutions.length === 0) || error) {
       return [[], [], emptyStats];
     }
 
@@ -82,7 +82,7 @@ export default function Home() {
           };
 
     return [allResolutions, resolutionsToVote, statsValues];
-  }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
+  }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl, error]);
   return (
     <>
       <Section
@@ -100,26 +100,30 @@ export default function Home() {
       <Section inverse={enhancedResolutionsToVote?.length === 0}>
         <Tasks />
       </Section>
-      <Section inverse={enhancedResolutionsToVote?.length > 0}>
-        <ResolutionsStats
-          stats={stats}
-          isLoading={isLoading && resolutions?.length === 0}
-          totalResolutions={enhancedResolutions.length}
-        />
-      </Section>
-      {isConnected && (
-        <Section inverse={enhancedResolutionsToVote?.length === 0}>
-          <Tokens />
-        </Section>
-      )}
-      <Section inverse={isConnected && enhancedResolutionsToVote?.length > 0}>
+      {!error && (
         <>
-          <Typography variant="h4" sx={{ mb: 4 }}>
-            Investors transparency report
-          </Typography>
-          <InvestorsReport />
+          <Section inverse={enhancedResolutionsToVote?.length > 0}>
+            <ResolutionsStats
+              stats={stats}
+              isLoading={isLoading && resolutions?.length === 0 && !error}
+              totalResolutions={enhancedResolutions.length}
+            />
+          </Section>
+          {isConnected && (
+            <Section inverse={enhancedResolutionsToVote?.length === 0}>
+              <Tokens />
+            </Section>
+          )}
+          <Section inverse={isConnected && enhancedResolutionsToVote?.length > 0}>
+            <>
+              <Typography variant="h4" sx={{ mb: 4 }}>
+                Investors transparency report
+              </Typography>
+              <InvestorsReport />
+            </>
+          </Section>
         </>
-      </Section>
+      )}
     </>
   );
 }

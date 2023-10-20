@@ -47,7 +47,7 @@ function a11yProps(index: number) {
 
 export default function Tokens() {
   const [value, setValue] = useState(0);
-  const { data, isLoading } = useUserBalanceAndOffers();
+  const { data, isLoading, error } = useUserBalanceAndOffers();
   const { isConnected } = useAccount();
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
@@ -57,6 +57,10 @@ export default function Tokens() {
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
+
+  if (error) {
+    return null;
+  }
 
   if (!isConnected) {
     return <Alert severity="warning">Please connect your wallet to be able to visit this page</Alert>;

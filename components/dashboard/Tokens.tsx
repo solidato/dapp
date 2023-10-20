@@ -10,7 +10,7 @@ import UserBalance from "@components/tokens/UserBalance";
 import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 export default function Tokens() {
-  const { data } = useUserBalanceAndOffers();
+  const { data, error } = useUserBalanceAndOffers();
   const { data: daoManagerData } = useSWR<any>(getDaoManagerQuery, fetcher);
 
   const totalVotingPower = bigIntToNum(daoManagerData?.daoManager?.totalVotingPower || BigInt(0));
@@ -25,7 +25,7 @@ export default function Tokens() {
       <Divider sx={{ mt: 2 }} />
       <Box sx={{ textAlign: "center", mt: 4 }}>
         <Typography sx={{ mb: 4 }} variant="h4">
-          Your voting Power: {userVotingPower}%
+          Your voting Power: {error ? "-" : `${userVotingPower}%`}
         </Typography>
       </Box>
     </>

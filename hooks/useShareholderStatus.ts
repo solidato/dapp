@@ -13,7 +13,10 @@ const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(big
 type ShareholderStatus = "ManagingBoard" | "Investor" | "Contributor" | "Shareholder";
 
 export default function useShareholderStatus() {
-  const { data, isLoading }: { data: any; isLoading: boolean } = useSWR(getShareholdersInfo, fetcher);
+  const { data, isLoading, error }: { data: any; isLoading: boolean; error: any } = useSWR(
+    getShareholdersInfo,
+    fetcher,
+  );
 
   const getShareholderStatus: (address: string) => ShareholderStatus[] = useCallback(
     (address: string) => {
@@ -57,5 +60,6 @@ export default function useShareholderStatus() {
     daoUsersAddresses,
     getShareholderStatus,
     isLoading,
+    error,
   };
 }

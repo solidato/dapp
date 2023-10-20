@@ -2,11 +2,10 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAccount } from "wagmi";
 
 import React, { useMemo } from "react";
 
-import { Alert, Badge, Button, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
+import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -41,7 +40,7 @@ export default function Layout({
   const { shouldNotifyMismatch } = useCheckSubgraphState();
   const trigger = useScrollTrigger();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
-  const { data, isLoading } = useDelegationStatus();
+  const { data, isLoading, error } = useDelegationStatus();
   const { votingResolutions } = useGetActiveResolutions();
   const votingResolutionsNum = votingResolutions?.length || 0;
 
@@ -182,7 +181,7 @@ export default function Layout({
                 />
               )}
 
-              {!isLoading && typeof window !== "undefined" && user?.isLoggedIn && (
+              {typeof window !== "undefined" && user?.isLoggedIn && (
                 <Badge
                   color="success"
                   sx={{

@@ -12,14 +12,15 @@ import useResolutionsAcl from "@hooks/useResolutionsAcl";
 export default function ExtraneousWarning() {
   const { acl, isLoading } = useResolutionsAcl();
   const { isConnected, address, isConnecting } = useAccount();
-  const { data, isLoading: isLoadingGetDaoManager } = useSWR<any>(address ? getDaoManagerQuery : null, fetcher);
+  const { data, isLoading: isLoadingGetDaoManager, error } = useSWR<any>(address ? getDaoManagerQuery : null, fetcher);
   const { logout } = useLogout();
 
-  if (!isLoadingGetDaoManager && data?.daoManager === null) {
+  if ((!isLoadingGetDaoManager && data?.daoManager === null) || error) {
     return (
       <Container maxWidth="lg" sx={{ mb: 6, mt: 1 }}>
         <Alert severity="error">
-          There are indexing problems. If this persist please reach out to the dev team on Discord.
+          There are indexing problems. This is probably due to evmos being down. The dev team will do an announcement on
+          discord as soon as this will be fixed
         </Alert>
       </Container>
     );

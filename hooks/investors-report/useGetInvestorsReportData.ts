@@ -20,11 +20,12 @@ export default function useGetInvestorsReportData(): {
   data: DATA_POINT[];
   isLoading: boolean;
   dataAccumulated: DATA_POINT[];
+  error: any;
 } {
-  const { data, isLoading } = useSWR<any>(getTokenMintings, fetcher, { refreshInterval: REFETCH_AFTER_MS });
+  const { data, isLoading, error } = useSWR<any>(getTokenMintings, fetcher, { refreshInterval: REFETCH_AFTER_MS });
 
-  if (isLoading || !data) {
-    return { data, isLoading, dataAccumulated: [] };
+  if (isLoading || !data || error) {
+    return { data, isLoading, dataAccumulated: [], error };
   }
 
   const { tokenMintings } = data;
@@ -89,5 +90,6 @@ export default function useGetInvestorsReportData(): {
       };
     }),
     isLoading,
+    error,
   };
 }

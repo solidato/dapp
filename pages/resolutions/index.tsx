@@ -24,7 +24,7 @@ export default function Resolutions() {
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
   const { currentTimestamp } = useTimestamp();
-  const { resolutions, isLoading } = useGetResolutions();
+  const { resolutions, isLoading, error } = useGetResolutions();
 
   const enhancedResolutions: ResolutionEntityEnhanced[] = useMemo(() => {
     if ((isLoading || isLoadingAcl) && resolutions.length === 0) {
@@ -39,6 +39,10 @@ export default function Resolutions() {
 
   const hasRejected =
     enhancedResolutions.filter((resolution) => resolution.state === RESOLUTION_STATES.REJECTED).length > 0;
+
+  if (error) {
+    return null;
+  }
 
   return (
     <>

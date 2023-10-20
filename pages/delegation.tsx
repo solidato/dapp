@@ -51,7 +51,7 @@ Delegation.checkMismatch = true;
 export default function Delegation() {
   const { user } = useUser();
   const { address: walletAddress } = useAccount();
-  const { data, isLoading } = useSWR<any>(getShareholdersInfo, fetcher);
+  const { data, isLoading, error } = useSWR<any>(getShareholdersInfo, fetcher);
   const { data: delegationData, isLoading: delegationLoading } = useDelegationStatus();
   const [onlyManagingBoard, setOnlyManagingBoard] = React.useState(false);
   const { isLoading: isLoadingTransaction } = useBlockchainTransactionStore();
@@ -116,6 +116,10 @@ export default function Delegation() {
     ]
       .filter(Boolean)
       .join(" and ");
+
+  if (error) {
+    return null;
+  }
 
   if (isLoading || delegationLoading) {
     return <CircularProgress />;
