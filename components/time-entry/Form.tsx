@@ -34,7 +34,6 @@ import ElapsedTime from "./ElapsedTime";
 type StateType = {
   startTime: Date;
   endTime: Date;
-  description: string;
   disabledEditStart: boolean;
   disabledEditEnd: boolean;
 };
@@ -43,18 +42,21 @@ const ONE_MINUTE_IN_SECONDS = 60;
 const THREE_HOURS_IN_SECONDS = 3 * 60 * 60;
 
 export default function TimeEntryForm() {
-  const { startAt, stopAt, resume, reset, taskId, setTaskId, setStartAt } = useTimeEntryStore(
-    (state) => ({
-      startAt: state.startAt,
-      stopAt: state.stopAt,
-      taskId: state.taskId,
-      resume: state.resume,
-      reset: state.reset,
-      setTaskId: state.setTaskId,
-      setStartAt: state.setStartAt,
-    }),
-    shallow,
-  );
+  const { startAt, stopAt, resume, description, setDescription, reset, taskId, setTaskId, setStartAt } =
+    useTimeEntryStore(
+      (state) => ({
+        startAt: state.startAt,
+        stopAt: state.stopAt,
+        taskId: state.taskId,
+        resume: state.resume,
+        reset: state.reset,
+        setTaskId: state.setTaskId,
+        setStartAt: state.setStartAt,
+        description: state.description,
+        setDescription: state.setDescription,
+      }),
+      shallow,
+    );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,7 +75,6 @@ export default function TimeEntryForm() {
     endTime: new Date(stopAt as number),
     disabledEditStart: true,
     disabledEditEnd: true,
-    description: "",
   }));
 
   const clashingEntry = useGetClashingTimeEntry({
@@ -139,7 +140,7 @@ export default function TimeEntryForm() {
         id: -1,
         start: formData.startTime.getTime(),
         end: formData.endTime.getTime(),
-        name: formData.description,
+        name: description,
       },
       taskId as number,
     );
@@ -156,7 +157,7 @@ export default function TimeEntryForm() {
     formData.startTime && formData.endTime && formData.startTime.getTime() < formData.endTime.getTime();
 
   const elapsedTime = Math.floor((formData.endTime.getTime() - formData.startTime.getTime()) / 1000);
-  const descriptionFilled = formData.description.trim().length > 0;
+  const descriptionFilled = description.trim().length > 0;
   const isValid =
     taskId &&
     isValidTime &&
@@ -220,14 +221,14 @@ export default function TimeEntryForm() {
       )}
       <TextField
         id="time-entry-description"
-        label={formData.description.trim().length === 0 ? "Description *" : "Description"}
+        label={description.trim().length === 0 ? "Description *" : "Description"}
         placeholder="Please describe the time entry"
         multiline
         maxRows={4}
         minRows={2}
         sx={{ width: "100%", mt: 2 }}
-        value={formData.description}
-        onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <Box mt={2} sx={{ display: "flex", alignItems: "center" }}>
         <DateTimeField
