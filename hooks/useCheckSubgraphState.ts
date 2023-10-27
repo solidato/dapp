@@ -59,6 +59,7 @@ export function useCheckSubgraphState() {
     // so, when it actually became true we need to notify when it becomes false again (when it's synced)
     if (shouldNotifyMismatch) {
       return () => {
+        if (shouldNotifyMismatch) return; // if it's still true, don't notify (it means we just changed page)
         enqueueSnackbar("Synchronization complete", {
           variant: "success",
           autoHideDuration: 3000,
