@@ -22,14 +22,10 @@ import {
   Voting__factory,
 } from "../contracts/typechain";
 import networksNeoKingdom from "../networks/neokingdom.json";
+import networksTeledisko from "../networks/teledisko.json";
 
-// import networksTeledisko from "../networks/teledisko.json";
-
-// const networks: Record<string, any> =
-//   process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? networksNeoKingdom : networksTeledisko;
-
-// todo remove this and uncomment above as soon as we have the new teledisko contracts
-const networks: Record<string, any> = networksNeoKingdom;
+const networks: Record<string, any> =
+  process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? networksNeoKingdom : networksTeledisko;
 
 const getResolutionManagerContract = (chainId: string, signer: Signer): ResolutionManager => {
   const address = networks[chainId]["ResolutionManager"]?.address;
