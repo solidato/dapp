@@ -60,7 +60,8 @@ const overriddenEvmos: typeof evmos = {
   },
 };
 
-export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : overriddenEvmos];
+// export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? evmosTestnet : overriddenEvmos];
+export const SUPPORTED_CHAINS = [overriddenEvmos];
 
 // Wagmi client
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
