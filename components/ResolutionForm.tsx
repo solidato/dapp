@@ -93,6 +93,13 @@ export default function ResolutionForm({
     };
   }, [isMonthlyRewards]);
 
+  const onChangeExclusion = () => {
+    if (withExclusion) {
+      onUpdateExclusionAddress("");
+    }
+    setWithExclusion((old) => !old);
+  };
+
   return (
     <div>
       {isMonthlyRewards && (
@@ -166,7 +173,7 @@ export default function ResolutionForm({
           <Grid item xs={12} sx={{ mt: 4 }}>
             <Paper sx={{ p: 4 }}>
               <FormControlLabel
-                control={<Switch checked={withExclusion} onChange={() => setWithExclusion((old) => !old)} />}
+                control={<Switch checked={withExclusion} onChange={onChangeExclusion} />}
                 label="Resolution with exclusion"
               />
               {withExclusion && (
