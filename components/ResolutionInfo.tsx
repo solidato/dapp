@@ -34,7 +34,7 @@ export default function ResolutionInfo({
   scrollGradient?: boolean;
   chipSize?: "medium" | "small";
 }) {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const votingUser = address
     ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
     : null;
@@ -93,7 +93,7 @@ export default function ResolutionInfo({
           "&::-webkit-scrollbar": { display: "none" },
         }}
       >
-        {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && (
+        {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && isConnected && (
           <>
             <Chip
               size={chipSize}
@@ -103,7 +103,7 @@ export default function ResolutionInfo({
             />
           </>
         )}
-        {votingUser && (
+        {votingUser && isConnected && (
           <>
             <Typography variant="body2">Your Vote: </Typography>
             <Chip

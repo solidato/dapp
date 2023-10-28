@@ -28,6 +28,7 @@ converter.setFlavor("github");
 
 ResolutionView.fullWidth = true;
 ResolutionView.checkMismatch = true;
+ResolutionView.requireLogin = true;
 
 export default function ResolutionView() {
   const { currentTimestamp } = useTimestamp();

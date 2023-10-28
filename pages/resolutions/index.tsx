@@ -15,6 +15,7 @@ import Section from "@components/Section";
 import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
+import useUser from "@hooks/useUser";
 
 import { ResolutionEntityEnhanced } from "../../types";
 
@@ -27,6 +28,7 @@ export default function Resolutions() {
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
   const { currentTimestamp } = useTimestamp();
+  const { user } = useUser();
   const { resolutions, isLoading, error } = useGetResolutions();
 
   const enhancedResolutions: ResolutionEntityEnhanced[] = useMemo(() => {
@@ -45,13 +47,13 @@ export default function Resolutions() {
       const votingUser = address
         ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
         : null;
-      return resolution.state === RESOLUTION_STATES.VOTING && !votingUser;
+      return resolution.state === RESOLUTION_STATES.VOTING && !votingUser && user?.isLoggedIn;
     });
     const inactive = filteredResolutions.filter((resolution) => {
       const votingUser = address
         ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
         : null;
-      return resolution.state !== RESOLUTION_STATES.VOTING || !!votingUser;
+      return resolution.state !== RESOLUTION_STATES.VOTING || !!votingUser || !user?.isLoggedIn;
     });
     return [active, inactive];
   }, [filteredResolutions, address]);

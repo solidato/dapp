@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import ResolutionInfo from "@components/ResolutionInfo";
 import User from "@components/User";
 
+import useUser from "@hooks/useUser";
+
 import useResolutionsAcl from "../hooks/useResolutionsAcl";
 import { RESOLUTION_STATES } from "../lib/resolutions/common";
 import { ResolutionEntityEnhanced } from "../types";
@@ -28,6 +30,7 @@ export default function ResolutionCard({
   resolution: ResolutionEntityEnhanced;
   sx?: SxProps;
 }) {
+  const { user } = useUser();
   const [voteModalOpen, setVoteModalOpen] = useState(false);
   const { acl } = useResolutionsAcl();
   const { voting, outcome } = useVoting(resolution);
@@ -52,7 +55,7 @@ export default function ResolutionCard({
       sx={{
         height: "100%",
         position: "relative",
-        pb: 8,
+        pb: user?.isLoggedIn ? 8 : 0,
         opacity: resolution.state === RESOLUTION_STATES.REJECTED ? "0.5" : 1,
         ...sx,
       }}
@@ -159,28 +162,30 @@ export default function ResolutionCard({
           </Tooltip>
         )}
       </CardContent>
-      <CardActions
-        sx={{
-          position: "absolute",
-          bottom: 0,
-          width: "100%",
-          bgcolor: "grey.100",
-          ['[data-mui-color-scheme="dark"] &']: { bgcolor: "grey.900" },
-        }}
-      >
-        <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
-          <ResolutionInfo chipSize="small" resolution={resolution} hideState />
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
-            LinkComponent={NextLink}
-          >
-            {canEdit ? "Edit" : "View"}
-          </Button>
-        </Stack>
-      </CardActions>
+      {user?.isLoggedIn && (
+        <CardActions
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            bgcolor: "grey.100",
+            ['[data-mui-color-scheme="dark"] &']: { bgcolor: "grey.900" },
+          }}
+        >
+          <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
+            <ResolutionInfo chipSize="small" resolution={resolution} hideState />
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
+              LinkComponent={NextLink}
+            >
+              {canEdit ? "Edit" : "View"}
+            </Button>
+          </Stack>
+        </CardActions>
+      )}
     </Card>
   );
 }
