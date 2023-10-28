@@ -6,6 +6,7 @@ interface BlockchainTransaction {
   type: string;
   reset: () => void;
   set: (isLoading: boolean, isAwaitingConfirmation: boolean, type?: string) => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const useBlockchainTransactionStore = create<BlockchainTransaction>((set) => ({
@@ -15,6 +16,7 @@ const useBlockchainTransactionStore = create<BlockchainTransaction>((set) => ({
   reset: () => set({ isLoading: false, isAwaitingConfirmation: false, type: "" }),
   set: (isLoading, isAwaitingConfirmation, type) =>
     type ? set({ isLoading, isAwaitingConfirmation, type }) : set({ isLoading, isAwaitingConfirmation }),
+  setIsLoading: (isLoading: boolean) => set({ isLoading }),
 }));
 
 export default useBlockchainTransactionStore;

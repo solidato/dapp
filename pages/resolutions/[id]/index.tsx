@@ -17,9 +17,7 @@ import Header from "@components/resolutions/Header";
 import LegalInfo from "@components/resolutions/LegalInfo";
 import MainInfo from "@components/resolutions/MainInfo";
 import VotingBreakdown from "@components/resolutions/VotingBreakdown";
-import VotingSection from "@components/resolutions/VotingSection";
 import VotingUsers from "@components/resolutions/VotingUsers";
-import UserCard from "@components/shareholders/UserCard";
 
 import useGetResolution from "@hooks/useGetResolution";
 import useTimestamp from "@hooks/useTimestamp";
@@ -79,9 +77,8 @@ export default function ResolutionView() {
   }
 
   return (
-    <Box sx={{ pb: resolution.state === RESOLUTION_STATES.VOTING ? 58 : 4 }}>
+    <Box>
       <Header resolution={resolution} executionPayload={executionPayload} />
-      {resolution.state === RESOLUTION_STATES.VOTING && <VotingSection resolution={resolution} />}
       <Section>
         <LegalInfo resolution={resolution} />
       </Section>

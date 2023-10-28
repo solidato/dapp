@@ -4,6 +4,7 @@ import { useContext } from "react";
 
 import { addToIpfs } from "@lib/ipfs";
 
+import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 import { ResolutionFormBase } from "@store/resolutionFormStore";
 
 import { ContractsContext } from "../contexts/ContractsContext";
@@ -18,9 +19,11 @@ type SubmitParams = {
 export default function useResolutionUpdate() {
   const { resolutionManagerContract } = useContext(ContractsContext);
   const { executeTx } = useBlockchainTransaction();
+  const { setIsLoading } = useBlockchainTransactionStore();
 
   return {
     onSubmit: async ({ vetoTypeId, resolutionId, currentResolution }: SubmitParams) => {
+      setIsLoading(true);
       const ipfsId = await addToIpfs(currentResolution);
       const resolutionTypeId = Number(vetoTypeId || currentResolution.typeId);
       return executeTx<ResolutionManager["updateResolution"], Parameters<ResolutionManager["updateResolution"]>>({

@@ -2,6 +2,7 @@ import { useAccount } from "wagmi";
 
 import { Box, Chip, Stack, Typography, alpha } from "@mui/material";
 
+import { RESOLUTION_STATES } from "@lib/resolutions/common";
 import { isSameAddress } from "@lib/utils";
 
 import { ResolutionEntityEnhanced, ResolutionState } from "../types";
@@ -26,9 +27,11 @@ export default function ResolutionInfo({
   resolution,
   hideState = false,
   chipSize = "medium",
+  scrollGradient = true,
 }: {
   resolution: ResolutionEntityEnhanced;
   hideState?: boolean;
+  scrollGradient?: boolean;
   chipSize?: "medium" | "small";
 }) {
   const { address } = useAccount();
@@ -44,35 +47,37 @@ export default function ResolutionInfo({
         whiteSpace: "nowrap",
         overflow: "auto",
         scrollbarWidth: "none",
-        "&::-webkit-scrollbar": { display: "none" },
-        "&:after": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: 16,
-          height: "100%",
-          background: (t) =>
-            `linear-gradient(to right, ${alpha(t.palette.grey["100"], 0)}, ${alpha(t.palette.grey["100"], 1)})`,
-          ['[data-mui-color-scheme="dark"] &']: {
+        ...(scrollGradient && {
+          "&::-webkit-scrollbar": { display: "none" },
+          "&:after": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 16,
+            height: "100%",
             background: (t) =>
-              `linear-gradient(to right, ${alpha(t.palette.grey["900"], 0)}, ${alpha(t.palette.grey["900"], 1)})`,
+              `linear-gradient(to right, ${alpha(t.palette.grey["100"], 0)}, ${alpha(t.palette.grey["100"], 1)})`,
+            ['[data-mui-color-scheme="dark"] &']: {
+              background: (t) =>
+                `linear-gradient(to right, ${alpha(t.palette.grey["900"], 0)}, ${alpha(t.palette.grey["900"], 1)})`,
+            },
           },
-        },
-        "&:before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: 16,
-          height: "100%",
-          background: (t) =>
-            `linear-gradient(to left, ${alpha(t.palette.grey["100"], 0)}, ${alpha(t.palette.grey["100"], 1)})`,
-          ['[data-mui-color-scheme="dark"] &']: {
+          "&:before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: 16,
+            height: "100%",
             background: (t) =>
-              `linear-gradient(to left, ${alpha(t.palette.grey["900"], 0)}, ${alpha(t.palette.grey["900"], 1)})`,
+              `linear-gradient(to left, ${alpha(t.palette.grey["100"], 0)}, ${alpha(t.palette.grey["100"], 1)})`,
+            ['[data-mui-color-scheme="dark"] &']: {
+              background: (t) =>
+                `linear-gradient(to left, ${alpha(t.palette.grey["900"], 0)}, ${alpha(t.palette.grey["900"], 1)})`,
+            },
           },
-        },
+        }),
       }}
     >
       <Stack
@@ -88,15 +93,36 @@ export default function ResolutionInfo({
           "&::-webkit-scrollbar": { display: "none" },
         }}
       >
-        <Typography variant="body2">Resolution Type: </Typography>
-        <Chip
-          variant="outlined"
-          label={`${resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}`}
-          sx={{ ml: 0.5 }}
-          size={chipSize}
-        />
+        {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && (
+          <>
+            <Chip
+              size={chipSize}
+              sx={{ mr: hideState ? 0 : 2 }}
+              label={`Abstained, counts as ${resolution.isNegative ? "yes" : "no"}`}
+              variant="outlined"
+            />
+          </>
+        )}
+        {votingUser && (
+          <>
+            <Typography variant="body2">Your Vote: </Typography>
+            <Chip
+              sx={{ ml: 0.5, mr: hideState ? 0 : 2 }}
+              size={chipSize}
+              label={votingUser.hasVotedYes ? "Yes" : "No"}
+              variant="outlined"
+            />
+          </>
+        )}
         {!hideState && (
           <>
+            <Typography variant="body2">Resolution Type: </Typography>
+            <Chip
+              variant="outlined"
+              label={`${resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}`}
+              sx={{ ml: 0.5 }}
+              size={chipSize}
+            />
             <Typography variant="body2" sx={{ ml: 2 }}>
               Resolution Status:{" "}
             </Typography>
@@ -106,19 +132,6 @@ export default function ResolutionInfo({
               label={resolution.state}
               color={STATE_TO_COLOR[resolution.state]}
               variant={STATE_TO_VARIANT[resolution.state]}
-            />
-          </>
-        )}
-        {votingUser && (
-          <>
-            <Typography variant="body2" sx={{ ml: 2, "@media print": { display: "none" } }}>
-              Your Vote:{" "}
-            </Typography>
-            <Chip
-              size={chipSize}
-              sx={{ ml: 0.5, "@media print": { display: "none" } }}
-              label={votingUser.hasVotedYes ? "Yes" : "No"}
-              variant="outlined"
             />
           </>
         )}

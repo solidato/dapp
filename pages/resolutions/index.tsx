@@ -3,12 +3,14 @@ import { useAccount } from "wagmi";
 
 import { useMemo, useState } from "react";
 
-import { Box, Button, CircularProgress, FormControlLabel, Grid, Stack, Switch } from "@mui/material";
+import { Box, Button, CircularProgress, FormControlLabel, Grid, Stack, Switch, Typography } from "@mui/material";
 
 import { getEnhancedResolutions } from "@lib/resolutions/common";
 import { RESOLUTION_STATES } from "@lib/resolutions/common";
+import { isSameAddress } from "@lib/utils";
 
 import ResolutionCard from "@components/ResolutionCard";
+import Section from "@components/Section";
 
 import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
@@ -18,9 +20,10 @@ import { ResolutionEntityEnhanced } from "../../types";
 
 Resolutions.title = "Resolutions";
 Resolutions.checkMismatch = true;
+Resolutions.fullWidth = true;
 
 export default function Resolutions() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [includeRejected, setIncludeRejected] = useState(false);
   const { currentTimestamp } = useTimestamp();
@@ -37,6 +40,22 @@ export default function Resolutions() {
     ? enhancedResolutions
     : enhancedResolutions.filter((resolution) => resolution.state !== RESOLUTION_STATES.REJECTED);
 
+  const [activeResolutions, inactiveResolutions] = useMemo(() => {
+    const active = filteredResolutions.filter((resolution) => {
+      const votingUser = address
+        ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
+        : null;
+      return resolution.state === RESOLUTION_STATES.VOTING && !votingUser;
+    });
+    const inactive = filteredResolutions.filter((resolution) => {
+      const votingUser = address
+        ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
+        : null;
+      return resolution.state !== RESOLUTION_STATES.VOTING || !!votingUser;
+    });
+    return [active, inactive];
+  }, [filteredResolutions, address]);
+
   const hasRejected =
     enhancedResolutions.filter((resolution) => resolution.state === RESOLUTION_STATES.REJECTED).length > 0;
 
@@ -46,33 +65,60 @@ export default function Resolutions() {
 
   return (
     <>
-      <Box sx={{ mb: 2, display: "flex", alignItems: "center" }}>
-        {isConnected && acl.isContributor && (
-          <Stack direction="row" spacing={2}>
-            <Button component={Link} href="/resolutions/new" variant="outlined">
-              Create new Resolution
-            </Button>
-            <Button component={Link} href="/resolutions/new?template=monthlyRewards" variant="outlined">
-              Monthly Rewards
-            </Button>
-          </Stack>
-        )}
-        {hasRejected && (
-          <FormControlLabel
-            sx={{ ml: "auto" }}
-            control={<Switch checked={includeRejected} onChange={() => setIncludeRejected((old) => !old)} />}
-            label="Include rejected"
-          />
-        )}
-      </Box>
-      {(isLoading || isLoadingAcl) && resolutions?.length === 0 && <CircularProgress />}
-      <Grid container spacing={3}>
-        {filteredResolutions.map((resolution) => (
-          <Grid item xs={12} md={6} lg={4} key={resolution.id}>
-            <ResolutionCard resolution={resolution} />
+      <Section sx={{ pt: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          {isConnected && acl.isContributor && (
+            <Stack direction="row" spacing={2}>
+              <Button component={Link} href="/resolutions/new" variant="outlined">
+                Create new Resolution
+              </Button>
+              <Button component={Link} href="/resolutions/new?template=monthlyRewards" variant="outlined">
+                Monthly Rewards
+              </Button>
+            </Stack>
+          )}
+          {hasRejected && (
+            <FormControlLabel
+              sx={{ ml: "auto" }}
+              control={<Switch checked={includeRejected} onChange={() => setIncludeRejected((old) => !old)} />}
+              label="Include rejected"
+            />
+          )}
+        </Box>
+      </Section>
+      {activeResolutions?.length > 0 && (
+        <Section inverse>
+          <>
+            <Typography variant="h5" sx={{ mb: 2 }}>
+              Resolutions you need to vote
+            </Typography>
+            <Grid container spacing={3}>
+              {activeResolutions.map((resolution) => (
+                <Grid item xs={12} md={6} lg={4} key={resolution.id}>
+                  <ResolutionCard resolution={resolution} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        </Section>
+      )}
+      <Section inverse={activeResolutions?.length === 0}>
+        <>
+          {activeResolutions?.length > 0 && (
+            <Typography variant="h5" sx={{ mb: 2 }}>
+              Other resolutions
+            </Typography>
+          )}
+          {(isLoading || isLoadingAcl) && resolutions?.length === 0 && <CircularProgress />}
+          <Grid container spacing={3}>
+            {inactiveResolutions.map((resolution) => (
+              <Grid item xs={12} md={6} lg={4} key={resolution.id}>
+                <ResolutionCard resolution={resolution} />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
+        </>
+      </Section>
     </>
   );
 }

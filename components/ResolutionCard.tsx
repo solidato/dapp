@@ -3,7 +3,7 @@ import NextLink from "next/link";
 import * as React from "react";
 import { useState } from "react";
 
-import { Alert, Box, Button, Link, Stack, SxProps } from "@mui/material";
+import { Alert, Box, Button, LinearProgress, Link, Stack, SxProps, Tooltip } from "@mui/material";
 import Card, { CardProps } from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -19,6 +19,7 @@ import { ResolutionEntityEnhanced } from "../types";
 import Countdown from "./Countdown";
 import Modal from "./Modal";
 import VotingWidget from "./VotingWidget";
+import useVoting from "./resolutions/hooks/useVoting";
 
 export default function ResolutionCard({
   resolution,
@@ -29,6 +30,7 @@ export default function ResolutionCard({
 }) {
   const [voteModalOpen, setVoteModalOpen] = useState(false);
   const { acl } = useResolutionsAcl();
+  const { voting, outcome } = useVoting(resolution);
 
   const handleVote = () => {
     setVoteModalOpen(true);
@@ -136,6 +138,26 @@ export default function ResolutionCard({
             </Alert>
           )}
         </Box>
+        {[RESOLUTION_STATES.VOTING, RESOLUTION_STATES.ENDED].includes(resolution.state) && (
+          <Tooltip
+            title={
+              <Typography variant="caption" sx={{ display: "block", textAlign: "center" }}>
+                {outcome}
+                <br />
+                Quorum {voting.hasQuorum ? "reached" : "not reached"}
+              </Typography>
+            }
+            arrow
+            placement="top"
+          >
+            <LinearProgress
+              color="success"
+              value={Number(voting.totalVotedYesPerc)}
+              variant="determinate"
+              sx={{ mt: 2, bgcolor: "error.dark" }}
+            />
+          </Tooltip>
+        )}
       </CardContent>
       <CardActions
         sx={{
