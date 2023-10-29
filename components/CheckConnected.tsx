@@ -22,7 +22,7 @@ export default function CheckConnected({ fullWidth = false }: { fullWidth?: bool
   setDefaultChain(SUPPORTED_CHAINS[0]);
 
   return (
-    <Component sx={{ mb: fullWidth ? 0 : 2 }}>
+    <Component sx={{ p: 0, mb: 2, mt: 0 }}>
       <Alert
         severity="warning"
         action={

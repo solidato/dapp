@@ -1,5 +1,6 @@
 import Link from "next/link";
 import useSWR from "swr";
+import { useAccount } from "wagmi";
 
 import { useEffect, useMemo } from "react";
 
@@ -28,7 +29,7 @@ Tasks.requireLogin = true;
 Tasks.fullWidth = true;
 
 export default function Tasks() {
-  const { mutateUser } = useUser();
+  const { mutateUser, user } = useUser();
   const { data: projects, error, mutate, isLoading } = useSWR<Project[]>("/api/tasks", fetcher);
   const { projectKey, createTask, setAddingTask, addingTask, updatingTask, updateTask, setUpdatingTask } =
     useProjectTaskStore((state) => ({
@@ -43,6 +44,7 @@ export default function Tasks() {
   const { enqueueSnackbar } = useSnackbar();
   const projectsWithTasks = useMemo(() => projects?.filter((project) => project.tasks.length) || [], [projects]);
   const { openProjects, setOpenTasks, setOpenProjects } = useUserSettings();
+  const { isConnected } = useAccount();
 
   useEffect(() => {
     mutate(); // force revalidate
@@ -128,7 +130,7 @@ export default function Tasks() {
           <TaskForm task={updatingTask} onConfirm={confirmUpdateTask} />
         </Modal>
       )}
-      <Section inverse sx={{ marginTop: "-24px" }}>
+      <Section inverse sx={{ mt: isConnected || !user?.isLoggedIn ? -3 : 0 }}>
         <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems="center" justifyContent="space-between">
           <ElapsedTime
             elapsedTime={totalTime}
