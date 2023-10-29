@@ -5,6 +5,8 @@ import { Box, Chip, Stack, Typography, alpha } from "@mui/material";
 import { RESOLUTION_STATES } from "@lib/resolutions/common";
 import { isSameAddress } from "@lib/utils";
 
+import useUser from "@hooks/useUser";
+
 import { ResolutionEntityEnhanced, ResolutionState } from "../types";
 
 const STATE_TO_COLOR: Record<ResolutionState, any> = {
@@ -35,9 +37,14 @@ export default function ResolutionInfo({
   chipSize?: "medium" | "small";
 }) {
   const { address, isConnected } = useAccount();
-  const votingUser = address
-    ? resolution.votingStatus.votersHaveVoted.find((voter) => isSameAddress(voter.address, address))
-    : null;
+  const { user } = useUser();
+
+  const votingUser =
+    address || user?.ethereum_address
+      ? resolution.votingStatus.votersHaveVoted.find((voter) =>
+          isSameAddress(voter.address, address || (user?.ethereum_address as string)),
+        )
+      : null;
 
   return (
     <Box
@@ -93,7 +100,7 @@ export default function ResolutionInfo({
           "&::-webkit-scrollbar": { display: "none" },
         }}
       >
-        {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && isConnected && (
+        {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && (isConnected || user?.isLoggedIn) && (
           <>
             <Chip
               size={chipSize}
@@ -103,7 +110,7 @@ export default function ResolutionInfo({
             />
           </>
         )}
-        {votingUser && isConnected && (
+        {votingUser && (isConnected || user?.isLoggedIn) && (
           <>
             <Typography variant="body2">Your Vote: </Typography>
             <Chip

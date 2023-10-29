@@ -24,6 +24,7 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const [votingYes, setVotingYes] = useState(false);
   const { onSubmit } = useResolutionVote();
+  const { open: openWeb3Modal } = useWeb3Modal();
   const { isLoading } = useBlockchainTransactionStore();
 
   const { handleOpenLoginModalFromLink } = useLoginModalStore(
@@ -64,7 +65,18 @@ export default function VotingWidget({ resolution }: { resolution: ResolutionEnt
   }
 
   if (!isConnected) {
-    return <Alert severity="warning">You should connect your wallet in order to vote</Alert>;
+    return (
+      <Alert
+        severity="warning"
+        action={
+          <Button variant="outlined" color="warning" size="small" onClick={() => openWeb3Modal()}>
+            Connect Wallet
+          </Button>
+        }
+      >
+        You should connect your wallet in order to vote
+      </Alert>
+    );
   }
 
   if (!acl?.canVote(resolution.voters)) {
