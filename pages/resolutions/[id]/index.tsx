@@ -12,6 +12,7 @@ import { getPdfSigner } from "@lib/utils";
 
 import Section from "@components/Section";
 import User from "@components/User";
+import VotingWidget from "@components/VotingWidget";
 import ExecutionPayload from "@components/resolutions/ExecutionPayload";
 import Header from "@components/resolutions/Header";
 import LegalInfo from "@components/resolutions/LegalInfo";
@@ -137,6 +138,13 @@ export default function ResolutionView() {
       {(executionPayload || []).length > 0 && resolution.state !== RESOLUTION_STATES.REJECTED && (
         <Section noPrint>
           <ExecutionPayload resolution={resolution} executionPayload={executionPayload} />
+        </Section>
+      )}
+      {RESOLUTION_STATES.VOTING === resolution.state && (
+        <Section inverse>
+          <Box sx={{ maxWidth: 600, margin: "0 auto" }}>
+            <VotingWidget resolution={resolution} />
+          </Box>
         </Section>
       )}
       {[RESOLUTION_STATES.REJECTED, RESOLUTION_STATES.ENDED].includes(resolution.state) && user?.isLoggedIn && (

@@ -58,12 +58,10 @@ const getTick = (hasPlayButton: boolean): SxProps<Theme> => ({
 export default function Task({
   task,
   isSubtask = false,
-  parentTask,
   onAddNewEntry,
   onDeleteTimeEntry,
 }: {
   task: ProjectTask;
-  parentTask?: ProjectTask;
   isSubtask?: boolean;
   onAddNewEntry: (taskId: number) => void;
   onDeleteTimeEntry: (timeEntry: Timesheet, task: ProjectTask) => void;
@@ -172,7 +170,7 @@ export default function Task({
 
   const elapsedTime = hoursToSeconds(task?.effective_hours || 0);
 
-  const canTrackTime = (task.child_ids?.length || 0) === 0;
+  const canTrackTime = (task.child_ids?.filter(Boolean).length || 0) === 0;
   const hasTimeEntries = (task.timesheet_ids?.length || 0) > 0;
 
   return (
@@ -295,17 +293,16 @@ export default function Task({
             </MenuItem>,
           ]}
       </Menu>
-      {!isSubtask && task.child_ids.length > 0 && (
+      {!isSubtask && task.child_ids.filter(Boolean).length > 0 && (
         <Collapse in={expanded} timeout="auto">
           <Box>
-            {task.child_ids.map((subTask) => (
+            {task.child_ids.filter(Boolean).map((subTask) => (
               <Task
                 task={subTask}
                 isSubtask
                 key={subTask.id}
                 onAddNewEntry={onAddNewEntry}
                 onDeleteTimeEntry={onDeleteTimeEntry}
-                parentTask={task}
               />
             ))}
           </Box>
