@@ -170,7 +170,7 @@ export default function Task({
     onDeleteTimeEntry(timeEntry, task);
   };
 
-  const elapsedTime = hoursToSeconds(task.effective_hours || 0);
+  const elapsedTime = hoursToSeconds(task?.effective_hours || 0);
 
   const canTrackTime = (task.child_ids?.length || 0) === 0;
   const hasTimeEntries = (task.timesheet_ids?.length || 0) > 0;

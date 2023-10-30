@@ -8,7 +8,6 @@ import { Add } from "@mui/icons-material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Box, Button, CircularProgress, Stack, Typography } from "@mui/material";
 
-import { getStageId } from "@lib/constants";
 import { fetcher } from "@lib/net";
 
 import useProjectTaskStore, { Project, ProjectTask } from "@store/projectTaskStore";
@@ -93,9 +92,9 @@ export default function Tasks() {
           total +
           project.tasks.reduce((sub, task) => {
             if (task.child_ids.length > 0) {
-              return sub + task.child_ids.reduce((childSub, child) => childSub + child.effective_hours, 0);
+              return sub + task.child_ids.reduce((childSub, child) => childSub + (child?.effective_hours || 0), 0);
             }
-            return sub + task.effective_hours;
+            return sub + (task?.effective_hours || 0);
           }, 0)
         );
       }, 0) * 3600;
