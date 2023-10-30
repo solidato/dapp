@@ -21,7 +21,7 @@ export default function useGetClashingTimeEntry({
 
   const clashingEntry = useMemo(() => {
     const allTimeEntries: Timesheet[] = userTasks.reduce((allEntries, task) => {
-      return [...allEntries, ...task.timesheet_ids]
+      return [...allEntries, ...(task?.timesheet_ids || [])]
         .filter((entry) => entry.id !== timeEntryId)
         .map((entry) => ({
           ...entry,
