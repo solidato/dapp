@@ -101,14 +101,7 @@ export default function ResolutionInfo({
         }}
       >
         {!votingUser && RESOLUTION_STATES.ENDED === resolution.state && (isConnected || user?.isLoggedIn) && (
-          <>
-            <Chip
-              size={chipSize}
-              sx={{ mr: hideState ? 0 : 2 }}
-              label={`Abstained, counts as ${resolution.isNegative ? "yes" : "no"}`}
-              variant="outlined"
-            />
-          </>
+          <Chip size={chipSize} sx={{ mr: hideState ? 0 : 2 }} label="Abstained, counts as No" variant="outlined" />
         )}
         {votingUser && (isConnected || user?.isLoggedIn) && (
           <>
