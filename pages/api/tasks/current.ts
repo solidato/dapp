@@ -14,7 +14,7 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const data = await odooGraphQLClient.query(cookie, getCurrentTasks, { userId: user.id });
-  res.status(200).json(data.ProjectTask);
+  res.status(200).json(data?.ProjectTask);
 }
 
 export default withIronSessionApiRoute(tasksRoute, sessionOptions);

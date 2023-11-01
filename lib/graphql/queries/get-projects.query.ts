@@ -14,7 +14,10 @@ export const getProjectsQuery = gql`
         id
         name
         write_date
-        approval_user_id
+        approval_user_id {
+          id
+          name
+        }
         date_deadline
         tag_ids {
           id
