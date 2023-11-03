@@ -8,7 +8,7 @@ export const getCurrentTasks = gql`
       domain: [
         ["user_id", "=", $userId]
         ["child_ids", "=", false]
-        ["stage_id.id", "!=", ${getStageId("approved")}
+        ["stage_id.id", "!=", ${getStageId("approved")}]
         "|"
         ["subtask_effective_hours", ">", 0]
         ["effective_hours", ">", 0]

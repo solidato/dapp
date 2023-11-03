@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 
-import { toPrettyRange } from "@lib/utils";
+import { getTaskName, toPrettyRange } from "@lib/utils";
 
 import useProjectTaskStore from "@store/projectTaskStore";
 import useTimeEntryStore from "@store/timeEntry";
@@ -165,8 +165,9 @@ export default function TimeEntryForm() {
     descriptionFilled &&
     elapsedTime > ONE_MINUTE_IN_SECONDS &&
     (shouldConfirm || elapsedTime < THREE_HOURS_IN_SECONDS);
+
   const options = userTasks.map((userTask: any) => ({
-    label: userTask.name,
+    label: getTaskName(userTask),
     id: userTask.id,
     projectName: userTask.projectName,
     projectId: userTask.projectId,

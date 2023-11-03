@@ -63,7 +63,7 @@ export function toPrettyRange(start: number, end?: number) {
 
 export function getTaskName(task: ProjectTask) {
   if (task.parent_id) {
-    return `${task.parent_id.name} - ${task.name}`;
+    return `${task.name} (${task.parent_id.name})`;
   }
   return task.name;
 }
