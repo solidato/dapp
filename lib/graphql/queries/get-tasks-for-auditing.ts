@@ -1,10 +1,12 @@
 import { gql } from "graphql-request";
 
+import { getStageId } from "@lib/constants";
+
 export const getTasksForAuditing = gql`
   query GetTasksForAuditing($limit: Number! = 50, $offset: Number! = 0) {
     ProjectTask(
       domain: [
-        ["approval_date", "=", false]
+        ["stage_id.id", "!=", ${getStageId("approved")}]
         ["child_ids", "=", false]
         "|"
         ["subtask_effective_hours", ">", 0]
