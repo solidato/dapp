@@ -28,6 +28,7 @@ import { Project, ProjectTask, Tier } from "@store/projectTaskStore";
 import useUser from "@hooks/useUser";
 
 import { OdooUser } from "../../types";
+import SearchSelect from "../SearchSelect";
 
 type FormData = {
   name: string;
@@ -56,6 +57,7 @@ export default function TaskForm({
   const { data: users } = useSWR<OdooUser[]>("/api/users", fetcher);
   const { data: projects } = useSWR<{ user: Project[]; other: Project[] }>("/api/projects/all", fetcher);
   const { data: tiers } = useSWR<Project[]>("/api/tiers", fetcher);
+  const { data: tags } = useSWR<{ name: string; id: number }[]>("/api/tags", fetcher);
 
   const [selectedProject, setSelectedProject] = useState<Project | undefined>();
   const [lastTask, setLastTask] = useState<ProjectTask | undefined>();
@@ -190,41 +192,7 @@ export default function TaskForm({
             <Controller
               name="tag_ids"
               control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="task-tags"
-                  id="task-tags-select"
-                  multiple
-                  required
-                  input={<OutlinedInput id="select-multiple-tags" label="Tags" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip
-                          sx={{ height: "23px" }}
-                          key={value}
-                          label={selectedProject?.tag_ids.find((tag) => tag.id === value)?.name || value}
-                        />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={{
-                    PaperProps: {
-                      style: {
-                        maxHeight: 224,
-                        width: 235,
-                      },
-                    },
-                  }}
-                >
-                  {selectedProject?.tag_ids.map((tag) => (
-                    <MenuItem key={tag.id} value={tag.id}>
-                      {tag.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
+              render={({ field }) => <SearchSelect field={field} options={tags || []} />}
             />
           </FormControl>
         </Grid>

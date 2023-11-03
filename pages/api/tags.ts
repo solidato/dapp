@@ -3,18 +3,18 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import odooGraphQLClient from "@lib/graphql/odoo";
-import { getTiersQuery } from "@lib/graphql/queries/get-tiers.query";
+import { getTagsQuery } from "@lib/graphql/queries/get-tags.query";
 import { sessionOptions } from "@lib/session";
 
-const getTiers = async (req: NextApiRequest, res: NextApiResponse) => {
+const getTags = async (req: NextApiRequest, res: NextApiResponse) => {
   const cookie = req.session.cookie;
   const user = req.session.user;
   if (!(cookie && user)) {
     return res.status(401).end();
   }
 
-  const data = await odooGraphQLClient.query(cookie, getTiersQuery, { userId: user.id });
-  res.status(200).json(data?.AccountAnalyticTier || []);
+  const data = await odooGraphQLClient.query(cookie, getTagsQuery, { userId: user.id });
+  res.status(200).json(data?.ProjectTags || []);
 };
 
-export default withIronSessionApiRoute(getTiers, sessionOptions);
+export default withIronSessionApiRoute(getTags, sessionOptions);
