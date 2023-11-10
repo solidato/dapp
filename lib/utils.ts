@@ -156,6 +156,7 @@ export const getDateFromOdooTimestamp = (timestamp: number) => {
 export const TOKEN_SYMBOL = {
   teledisko: "TT",
   neokingdom: "NEOK",
+  crowdpunk: "CPUNK",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const PDF_SIGNER = {
@@ -177,6 +178,12 @@ export const PDF_SIGNER = {
     {
       name: "Ragnar Reindoff",
       from: new Date("5/26/2023").getTime(),
+    },
+  ],
+  crowdpunk: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
     },
   ],
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];

@@ -8,8 +8,7 @@ import { WalletClient, useWalletClient } from "wagmi";
 
 import { useCallback, useEffect, useState } from "react";
 
-import networksNeoKingdom from "../../networks/neokingdom.json";
-import networksTeledisko from "../../networks/teledisko.json";
+import { networks } from "../useContracts";
 import { COSMOS_NODE_URL, DENOMS, restOptions } from "./utils";
 
 type Balance = {
@@ -20,9 +19,6 @@ type Balance = {
   erc?: BigNumber;
   ercFloat?: number;
 };
-
-const networks: Record<string, any> =
-  process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? networksNeoKingdom : networksTeledisko;
 
 const getNeokingdomTokenContract = (chainId: string, provider: Provider): NeokingdomToken => {
   const address = networks[chainId]["NeokingdomToken"]?.address;

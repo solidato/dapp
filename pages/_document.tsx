@@ -17,6 +17,11 @@ export const META = {
     title: "Neokingdom DAO",
     keywords: "DAO, NEOKINGDOM, Blockchain",
   },
+  crowdpunk: {
+    description: "Crowdpunk DAO. Setting new world records in web3",
+    title: "Crowdpunk DAO",
+    keywords: "DAO, Crowdpunk, Blockchain",
+  },
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export default class MyDocument extends Document {

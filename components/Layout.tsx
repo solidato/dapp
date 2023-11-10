@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { Stardos_Stencil } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,11 +16,17 @@ import useGetActiveResolutions from "@hooks/useGetActiveResolutions";
 import useUser from "@hooks/useUser";
 
 import useDelegationStatus from "../hooks/useDelegationStatus";
+import CrowdpunkLogo from "../images/logo-crowdpunk.png";
 import TelediskoLogo from "../images/logo-teledisko.png";
 import AccountMenu from "./AccountMenu";
 import LoginModal from "./LoginModal";
 import MismatchNotifier from "./mismatch-notifier/MismatchNotifier";
 import NkdLogo from "./svg-logos/NkdLogo";
+
+const stardosStencil = Stardos_Stencil({
+  weight: "700",
+  subsets: ["latin"],
+});
 
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
@@ -45,6 +52,29 @@ export default function Layout({
   const votingResolutionsNum = votingResolutions?.length || 0;
 
   const delegationActive = data.signerDelegatedBy.length > 0 || data.signerDelegationStatus?.isDelegating;
+
+  const LOGO = {
+    neokingdom: <NkdLogo height={70} />,
+    teledisko: <Image height={35} src={TelediskoLogo} alt="Teledisko DAO" />,
+    crowdpunk: (
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box
+          sx={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            border: "1px solid rgb(237, 89, 203)",
+            overflow: "hidden",
+          }}
+        >
+          <Image width={40} height={40} src={CrowdpunkLogo} alt="Crowdpunk DAO" />
+        </Box>
+        <Box sx={{ ml: 1, fontSize: "1.8rem", color: "rgb(237, 89, 203)" }} className={stardosStencil.className}>
+          CROWDPUNK
+        </Box>
+      </Box>
+    ),
+  };
 
   return (
     <>
@@ -82,11 +112,8 @@ export default function Layout({
                 },
               }}
             >
-              <Link href="/" style={{ display: "flex", height: 70, alignItems: "center" }}>
-                {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" && <NkdLogo height={70} />}
-                {process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" && (
-                  <Image height={35} src={TelediskoLogo} alt="Teledisko DAO" />
-                )}
+              <Link href="/" style={{ display: "flex", height: 70, alignItems: "center", textDecoration: "none" }}>
+                {LOGO[process.env.NEXT_PUBLIC_PROJECT_KEY]}
               </Link>
               <Box sx={{ ml: "auto" }}>
                 <AccountMenu />

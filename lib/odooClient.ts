@@ -2,7 +2,11 @@ import { v4 as uuid } from "uuid";
 
 export const ODOO_ENDPOINT = `${process.env.NEXT_PUBLIC_ODOO_ENDPOINT}/jsonrpc`;
 export const ODOO_AUTH_ENDPOINT = `${process.env.NEXT_PUBLIC_ODOO_ENDPOINT}/web/session/authenticate`;
-export const ODOO_DB_NAME = process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" ? "odoo" : "neokingdomdao";
+export const ODOO_DB_NAME = {
+  neokingdom: "neokingdomdao",
+  teledisko: "odoo",
+  crowdpunk: "odoo",
+}[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 async function jsonRpc(url: string, method: string, params: any) {
   const response = await fetch(url, {

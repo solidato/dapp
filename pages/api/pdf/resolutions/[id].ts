@@ -54,9 +54,11 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
         resolution: resolutionData,
         usersData: odooUsersData,
         resolutionUrl: `${
-          process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko"
-            ? "https://dao.teledisko.com"
-            : "https://dao.neokingdom.org"
+          {
+            teledisko: "https://dao.teledisko.com",
+            neokingdom: "https://dao.neokingdom.org",
+            crowdpunk: "https://dao.crowdpunk.love",
+          }[process.env.NEXT_PUBLIC_PROJECT_KEY]
         }/resolutions/${resolutionData.id}`,
       }),
     );
