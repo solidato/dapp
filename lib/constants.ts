@@ -1,6 +1,6 @@
 export const ODOO_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-export const STAGE_TO_COLOR_MAP: Record<STAGE_NAME, string> = {
+export const STAGE_TO_COLOR_MAP: Record<string, string> = {
   backlog: "default",
   created: "default",
   progress: "primary",

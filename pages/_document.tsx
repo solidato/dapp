@@ -22,6 +22,11 @@ export const META = {
     title: "Crowdpunk DAO",
     keywords: "DAO, Crowdpunk, Blockchain",
   },
+  vanilla: {
+    description: "Vanilla DAO. One dao to rule them all",
+    title: "Vanilla DAO",
+    keywords: "DAO, Vanilla, Blockchain",
+  },
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export default class MyDocument extends Document {

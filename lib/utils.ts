@@ -5,7 +5,7 @@ import { ResolutionEntityEnhanced } from "types";
 import { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 
 import { META } from "../pages/_document";
-import { STAGE_NAME, STAGE_TO_COLOR_MAP } from "./constants";
+import { STAGE_TO_COLOR_MAP } from "./constants";
 import { getDateFromUnixTimestamp } from "./resolutions/common";
 
 export const getLettersFromName = (name: string) =>
@@ -138,7 +138,7 @@ export const replaceTaskTimeEntry = (
 
 export const stageToColor = (stage: string): any => {
   if (!stage) return "default";
-  const stageName = stage.toLowerCase().split(" ").join("") as STAGE_NAME;
+  const stageName = stage.toLowerCase().split(" ").join("");
   return STAGE_TO_COLOR_MAP[stageName] || "default";
 };
 
@@ -157,6 +157,7 @@ export const TOKEN_SYMBOL = {
   teledisko: "TT",
   neokingdom: "NEOK",
   crowdpunk: "CPUNK",
+  vanilla: "VAN",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const PDF_SIGNER = {
@@ -181,6 +182,12 @@ export const PDF_SIGNER = {
     },
   ],
   crowdpunk: [
+    {
+      name: "Benjamin Gregor Uphues",
+      from: new Date("1/1/2020").getTime(),
+    },
+  ],
+  vanilla: [
     {
       name: "Benjamin Gregor Uphues",
       from: new Date("1/1/2020").getTime(),

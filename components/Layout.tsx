@@ -18,6 +18,7 @@ import useUser from "@hooks/useUser";
 import useDelegationStatus from "../hooks/useDelegationStatus";
 import CrowdpunkLogo from "../images/logo-crowdpunk.png";
 import TelediskoLogo from "../images/logo-teledisko.png";
+import VanillaLogo from "../images/vanilla-logo.svg";
 import AccountMenu from "./AccountMenu";
 import LoginModal from "./LoginModal";
 import MismatchNotifier from "./mismatch-notifier/MismatchNotifier";
@@ -47,33 +48,36 @@ export default function Layout({
   const { shouldNotifyMismatch } = useCheckSubgraphState();
   const trigger = useScrollTrigger();
   const isActive = useMemo(() => initActiveStyle(router.asPath), [router.asPath]);
-  const { data, isLoading, error } = useDelegationStatus();
+  const { data } = useDelegationStatus();
   const { votingResolutions } = useGetActiveResolutions();
   const votingResolutionsNum = votingResolutions?.length || 0;
 
   const delegationActive = data.signerDelegatedBy.length > 0 || data.signerDelegationStatus?.isDelegating;
 
+  const crowdpunkLogo = (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          width: "40px",
+          height: "40px",
+          borderRadius: "50%",
+          border: "1px solid rgb(237, 89, 203)",
+          overflow: "hidden",
+        }}
+      >
+        <Image width={40} height={40} src={CrowdpunkLogo} alt="Crowdpunk DAO" />
+      </Box>
+      <Box sx={{ ml: 1, fontSize: "1.8rem", color: "rgb(237, 89, 203)" }} className={stardosStencil.className}>
+        CROWDPUNK
+      </Box>
+    </Box>
+  );
+
   const LOGO = {
     neokingdom: <NkdLogo height={70} />,
     teledisko: <Image height={35} src={TelediskoLogo} alt="Teledisko DAO" />,
-    crowdpunk: (
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box
-          sx={{
-            width: "40px",
-            height: "40px",
-            borderRadius: "50%",
-            border: "1px solid rgb(237, 89, 203)",
-            overflow: "hidden",
-          }}
-        >
-          <Image width={40} height={40} src={CrowdpunkLogo} alt="Crowdpunk DAO" />
-        </Box>
-        <Box sx={{ ml: 1, fontSize: "1.8rem", color: "rgb(237, 89, 203)" }} className={stardosStencil.className}>
-          CROWDPUNK
-        </Box>
-      </Box>
-    ),
+    crowdpunk: crowdpunkLogo,
+    vanilla: <Image height={35} src={VanillaLogo} alt="Vanilla DAO" />,
   };
 
   return (
