@@ -6,7 +6,7 @@ export const ODOO_DB_NAME = {
   neokingdom: "neokingdomdao",
   teledisko: "odoo",
   crowdpunk: "neok_test_psql",
-  vanilla: "neok_test_psql",
+  vanilla: "odoo",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 async function jsonRpc(url: string, method: string, params: any) {
