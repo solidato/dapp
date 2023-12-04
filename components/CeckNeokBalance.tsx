@@ -1,11 +1,11 @@
-import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
+import useGetNeokBalance from "@hooks/useGetNeokBalance";
 
 import DepositTokens from "./tokens/DepositTokens";
 
 export default function CheckNeokBalance() {
-  const { data: userBalanceData } = useUserBalanceAndOffers();
+  const { neokBalance } = useGetNeokBalance();
 
-  const hasNeokWhitelisted = (userBalanceData?.balance.neokTokens || 0) > 0;
+  const hasNeokWhitelisted = (neokBalance || 0) > 0;
 
   return hasNeokWhitelisted ? <DepositTokens /> : null;
 }

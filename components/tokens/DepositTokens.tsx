@@ -15,7 +15,7 @@ import Modal from "@components/Modal";
 import useApproveToDeposit from "@hooks/useApproveToDeposit";
 import useCheckAllowance from "@hooks/useCheckAllowance";
 import useDeposit from "@hooks/useDepositNeok";
-import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
+import useGetNeokBalance from "@hooks/useGetNeokBalance";
 
 export default function DepositTokens() {
   const { neokingdomTokenContract, governanceTokenContractAddress } = useContractsContext();
@@ -23,17 +23,14 @@ export default function DepositTokens() {
     neokingdomTokenContract,
     governanceTokenContractAddress,
   );
+
   const { onSubmit: onSubmitApproveNeok } = useApproveToDeposit();
   const { onSubmit } = useDeposit();
   const { isAwaitingConfirmation, isLoading, type } = useBlockchainTransactionStore();
 
-  const { data, isLoading: isLoadingBalance } = useUserBalanceAndOffers();
+  const { neokBalance } = useGetNeokBalance();
 
-  if (isLoadingBalance) {
-    return <CircularProgress />;
-  }
-
-  const neokTokens = data?.balance.neokTokens || 0;
+  const neokTokens = neokBalance || 0;
 
   const handleDepositTokens = async () => {
     await onSubmit({ amount: neokTokens });
