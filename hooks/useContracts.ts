@@ -21,13 +21,14 @@ import {
   Voting,
   Voting__factory,
 } from "../contracts/typechain";
+import networksCrowdpunk from "../networks/crowdpunk.json";
 import networksNeoKingdom from "../networks/neokingdom.json";
 import networksTeledisko from "../networks/teledisko.json";
 
 export const networks: Record<string, any> = {
   neokingdom: networksNeoKingdom,
   teledisko: networksTeledisko,
-  crowdpunk: networksNeoKingdom,
+  crowdpunk: networksCrowdpunk,
   vanilla: networksNeoKingdom,
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
