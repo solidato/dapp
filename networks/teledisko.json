@@ -69,6 +69,9 @@
       "address": "0xD8DFeB2C9903f298E53f763dD9F97596bcB30ca4",
       "blockNumber": 17743556,
       "blockHash": "0x220a22cdaa326a7a3135b619b10aead2efb7df86bf1661acbbe3e5fb733dd27c"
+    },
+    "TokenMock": {
+      "address": "0x15c3eb3b621d1bff62cba1c9536b7c1ae9149b57"
     }
   },
   "31337": {
