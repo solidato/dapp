@@ -20,7 +20,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { moneyFormatter } from "@lib/utils";
+import { TOKEN_SYMBOL, moneyFormatter } from "@lib/utils";
 
 import Modal from "@components/Modal";
 
@@ -51,7 +51,7 @@ export default function InvestorsReport() {
   };
 
   const chartData = chartType === "default" ? data : dataAccumulated;
-  const totalSupply = dataAccumulated.slice(dataAccumulated.length - 1)[0]?.minted;
+  const totalSupply = dataAccumulated.slice(dataAccumulated.length - 1)[0]?.minted || 0;
 
   return (
     <>
@@ -60,14 +60,14 @@ export default function InvestorsReport() {
           <AlertTitle sx={{ mb: 2, fontSize: 18 }}>Internal Value</AlertTitle>
           <Typography variant="body1">
             Internally within the DAO contributors may not gain or loose based on token price speculation. Hence the
-            internal trading price of 1 NEOK is always 1Euro. <br />
+            internal trading price of 1 {TOKEN_SYMBOL} is always 1Euro. <br />
             <br />
-            The internal value simply represents the total value that has ever been put into the NEOKingdom DAO by time
-            or monetary contribution. <br />
+            The internal value simply represents the total value that has ever been put into the DAO by time or monetary
+            contribution. <br />
             <br />
             The internal value is basically the accumulation of all tokens ever minted x 1 Euro. <br />
             <br />
-            Internal value = total NEOK supply x 1EUR.
+            Internal value = total {TOKEN_SYMBOL} supply x 1EUR.
           </Typography>
         </Alert>
       </Modal>
@@ -75,12 +75,12 @@ export default function InvestorsReport() {
         <Alert severity="info">
           <AlertTitle sx={{ mb: 2, fontSize: 18 }}>External Value</AlertTitle>
           <Typography variant="body1">
-            The external value represents the value of NEOKingdom DAO based on the evaluation of external parties of
-            what has been created by the DAO and its projected profits.
+            The external value represents the value of the DAO based on the evaluation of external parties of what has
+            been created by the DAO and its projected profits.
             <br />
             <br />
-            External value = total NEOK supply x secondary market price of NEOK token. In traditional terms the external
-            value could also be described as the: <i>&quot;market cap&quot;</i>.
+            External value = total {TOKEN_SYMBOL} supply x secondary market price of {TOKEN_SYMBOL} token. In
+            traditional terms the external value could also be described as the: <i>&quot;market cap&quot;</i>.
           </Typography>
         </Alert>
       </Modal>
@@ -103,7 +103,7 @@ export default function InvestorsReport() {
             <InfoOutlined />
           </IconButton>
           <Typography variant="h6">Internal Value</Typography>
-          <Typography variant="caption">1 NEOK = 1 Euro</Typography>
+          <Typography variant="caption">1 {TOKEN_SYMBOL} = 1 Euro</Typography>
           <Typography variant="h4" sx={{ pt: 2 }}>
             {moneyFormatter.format(totalSupply)}
           </Typography>
@@ -119,7 +119,7 @@ export default function InvestorsReport() {
             <InfoOutlined />
           </IconButton>
           <Typography variant="h6">External Market Value</Typography>
-          <Typography variant="caption">1 NEOK = 1 Euro</Typography>
+          <Typography variant="caption">1 {TOKEN_SYMBOL} = 1 Euro</Typography>
           <Typography variant="h4" sx={{ pt: 2 }}>
             {moneyFormatter.format(totalSupply)}
           </Typography>

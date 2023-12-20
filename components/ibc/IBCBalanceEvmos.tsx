@@ -24,7 +24,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { calculateSteps } from "@lib/utils";
+import { TOKEN_SYMBOL, calculateSteps } from "@lib/utils";
 
 import useIbcStore from "@store/ibcStore";
 
@@ -181,7 +181,7 @@ export default function IBCBalanceEvmos() {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Image src={EvmosLogo} alt="Evmos" height={40} />
           <Typography sx={{ ml: 2 }} variant="h5">
-            Send NEOK to Crescent
+            Send {TOKEN_SYMBOL} to Crescent
           </Typography>
         </Box>
         <Box sx={{ p: 4 }}>
@@ -264,7 +264,7 @@ export default function IBCBalanceEvmos() {
               {isLoadingBalanceAfterSend ? (
                 <CircularProgress sx={{ ml: 1 }} size={14} />
               ) : (
-                ` ${balance ? formatEther(balance) : "…"} NEOK`
+                ` ${balance ? formatEther(balance) : "…"} ${TOKEN_SYMBOL}`
               )}
             </Box>
           }

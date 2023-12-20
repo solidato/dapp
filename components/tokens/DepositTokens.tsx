@@ -6,7 +6,7 @@ import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Button, CircularProgress, Slider, TextField, Typography } from "@mui/material";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
-import { calculateSteps } from "@lib/utils";
+import { TOKEN_SYMBOL, calculateSteps } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
 
@@ -49,9 +49,9 @@ export default function DepositTokens() {
     <Modal open size="medium" hasCloseButton={false}>
       <>
         <Alert severity="info" sx={{ mb: 2 }}>
-          You have an active NEOK balance of {neokTokens} tokens. As for legal reasons you can&apos;t keep them in your
-          whitelisted wallet, you can deposit them and you will be able to transfer them to your internal governance
-          tokens after one week. This action is mandatory if you want to keep using the Dapp.
+          You have an active {TOKEN_SYMBOL} balance of {neokTokens} tokens. As for legal reasons you can&apos;t keep
+          them in your whitelisted wallet, you can deposit them and you will be able to transfer them to your internal
+          governance tokens after one week. This action is mandatory if you want to keep using the Dapp.
         </Alert>
         <Typography variant="h5">Deposit tokens</Typography>
         <Alert
@@ -64,14 +64,14 @@ export default function DepositTokens() {
                 (isAwaitingConfirmation || isLoading) && type === BLOCKCHAIN_TRANSACTION_KEYS.APPROVE_DEPOSIT_NEOK
               }
             >
-              {allowance === 0 ? `Approve NEOK` : `Edit NEOK allowance`}
+              {allowance === 0 ? `Approve ${TOKEN_SYMBOL}` : `Edit ${TOKEN_SYMBOL} allowance`}
             </LoadingButton>
           }
           sx={{ mt: 2 }}
         >
-          {allowance === 0 && "Before depositing, you need to add allowance for your NEOK"}
-          {allowance > 0 && allowance < neokTokens && `You can deposit max ${maxToOffer} NEOK`}
-          {allowance > 0 && allowance >= neokTokens && `You can deposit up to your NEOK balance`}
+          {allowance === 0 && `Before depositing, you need to add allowance for your ${TOKEN_SYMBOL}`}
+          {allowance > 0 && allowance < neokTokens && `You can deposit max ${maxToOffer} ${TOKEN_SYMBOL}`}
+          {allowance > 0 && allowance >= neokTokens && `You can deposit up to your ${TOKEN_SYMBOL} balance`}
         </Alert>
         {allowance > 0 && (
           <>

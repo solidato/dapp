@@ -16,6 +16,32 @@ type DATA_POINT = {
   month: string;
 };
 
+const INITIAL_MONTHS_DATA =
+  process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom"
+    ? [
+        {
+          minted: 730,
+          month: "Jan",
+          monthIndex: 2023,
+        },
+        {
+          minted: 55294.8313,
+          month: "Feb",
+          monthIndex: 2024,
+        },
+        {
+          minted: 44581.361,
+          month: "Mar",
+          monthIndex: 2025,
+        },
+        {
+          minted: 39986.6669,
+          month: "Apr",
+          monthIndex: 2026,
+        },
+      ]
+    : [];
+
 export default function useGetInvestorsReportData(): {
   data: DATA_POINT[];
   isLoading: boolean;
@@ -56,30 +82,7 @@ export default function useGetInvestorsReportData(): {
       monthIndex: item.sortIndex,
     })) as DATA_POINT[];
 
-  const initialMonthsData = [
-    {
-      minted: 730,
-      month: "Jan",
-      monthIndex: 2023,
-    },
-    {
-      minted: 55294.8313,
-      month: "Feb",
-      monthIndex: 2024,
-    },
-    {
-      minted: 44581.361,
-      month: "Mar",
-      monthIndex: 2025,
-    },
-    {
-      minted: 39986.6669,
-      month: "Apr",
-      monthIndex: 2026,
-    },
-  ];
-
-  const results = initialMonthsData.concat(finalData.slice(1));
+  const results = INITIAL_MONTHS_DATA.concat(finalData.slice(1));
 
   return {
     data: results,

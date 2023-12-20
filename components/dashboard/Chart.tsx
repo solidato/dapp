@@ -2,7 +2,7 @@ import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "rec
 
 import { memo } from "react";
 
-import { moneyFormatter } from "@lib/utils";
+import { TOKEN_SYMBOL, moneyFormatter } from "@lib/utils";
 
 const Chart = memo(function Chart({ data }: { data: any[] }) {
   return (
@@ -22,12 +22,12 @@ const Chart = memo(function Chart({ data }: { data: any[] }) {
           content={({ active, payload }) => {
             if (active && payload && payload.length) {
               const result = (Math.round((payload[0].value as number) * 100) / 100).toFixed(2);
-              return moneyFormatter.format(Number(result)).replace("€", "NEOK");
+              return moneyFormatter.format(Number(result)).replace("€", TOKEN_SYMBOL);
             }
           }}
         />
         <XAxis dataKey="month" />
-        <YAxis label={{ value: "NEOK", position: "insideTopLeft" }} tick={false} mirror={true} />
+        <YAxis label={{ value: TOKEN_SYMBOL, position: "insideTopLeft" }} tick={false} mirror={true} />
         <Line type="monotone" dataKey="minted" stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
     </ResponsiveContainer>
