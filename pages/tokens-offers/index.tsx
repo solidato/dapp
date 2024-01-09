@@ -6,6 +6,8 @@ import SwipeableViews from "react-swipeable-views";
 
 import { Alert, Badge, Box, CircularProgress, Link, Tab, Tabs } from "@mui/material";
 
+import { TOKEN_SYMBOL } from "@lib/utils";
+
 import OffersList from "@components/tokens/OffersList";
 import UserActions from "@components/tokens/UserActions";
 import UserBalance from "@components/tokens/UserBalance";
@@ -74,8 +76,8 @@ export default function Tokens() {
       <Alert severity="info" sx={{ mb: 2 }}>
         <strong>Governance Tokens</strong> provide holders with voting and dividend rights, but must be offered to
         contributors before becoming available for trading in the secondary market. <br />
-        <strong>NEOK Tokens</strong> do not possess these rights or limitations, allowing for unrestricted trading on
-        the secondary market at any time.
+        <strong>{TOKEN_SYMBOL} Tokens</strong> do not possess these rights or limitations, allowing for unrestricted
+        trading on the secondary market at any time.
         <br />
         <br />
         For IBC specific tools, please visit the{" "}

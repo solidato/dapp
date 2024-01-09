@@ -21,7 +21,7 @@ const DEFAULT_ACL = {
 export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: boolean; isLoading?: boolean } {
   const { address } = useAccount();
   const { data, error, isLoading } = useSWR<any>(address ? getDaoManagerQuery : null, fetcher);
-  const { daoUsers, isLoading: isLoadingShareholderStatus } = useShareholderStatus();
+  const { daoUsers, isLoading: isLoadingShareholderStatus, getShareholderStatus } = useShareholderStatus();
 
   if (!data || error || !address || isLoading || isLoadingShareholderStatus) {
     return { acl: DEFAULT_ACL, error, isLoading: isLoading || isLoadingShareholderStatus };
@@ -30,7 +30,7 @@ export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: bool
   const isContributor = data.daoManager?.contributorsAddresses.includes(address.toLowerCase());
   const isManagingBoard = data.daoManager?.managingBoardAddresses.includes(address.toLowerCase());
 
-  const isExtraneous = daoUsers ? !Object.keys(daoUsers).includes(address.toLowerCase()) : true;
+  const isExtraneous = daoUsers ? getShareholderStatus(address).length === 0 : true;
 
   const acl = {
     canCreate: isContributor,

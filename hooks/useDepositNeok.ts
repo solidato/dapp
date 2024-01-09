@@ -3,6 +3,7 @@ import { useContractsContext } from "contexts/ContractsContext";
 import { parseEther } from "ethers/lib/utils.js";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
+import { TOKEN_SYMBOL } from "@lib/utils";
 
 import useBlockchainTransaction from "./useBlockchainTransaction";
 
@@ -15,7 +16,7 @@ export default function useDeposit() {
       return executeTx<InternalMarket["deposit"], Parameters<InternalMarket["deposit"]>>({
         contractMethod: internalMarketContract?.deposit,
         params: [parseEther(String(amount))],
-        onSuccessMessage: `NEOK deposited successfully`,
+        onSuccessMessage: `${TOKEN_SYMBOL} deposited successfully`,
         onErrorMessage: `Error while depositing NEOK`,
         stateKey: BLOCKCHAIN_TRANSACTION_KEYS.DEPOSIT_NEOK,
       });

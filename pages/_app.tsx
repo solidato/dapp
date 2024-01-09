@@ -32,7 +32,10 @@ import ContractsProvider from "../components/ContractsProvider";
 import { newTheme } from "../styles/theme";
 import { META } from "./_document";
 
-const ExtraneousWarning = dynamic(() => import("../components/ExtraneousWarning"), { ssr: false });
+// @ts-ignore
+const ExtraneousWarning = dynamic(() => import("../components/ExtraneousWarning"), {
+  ssr: false,
+});
 
 const overriddenEvmos: typeof evmos = {
   id: 9001,
@@ -137,26 +140,28 @@ export default function App({ Component, pageProps }: DappProps) {
               <CssBaseline />
               {Component.noLayout ? (
                 <>
-                  <ExtraneousWarning />
-                  <Component {...pageProps} />
+                  <ExtraneousWarning>
+                    <Component {...pageProps} />
+                  </ExtraneousWarning>
                 </>
               ) : (
                 <Layout fullWidth={!!Component.fullWidth} checkMismatch={!!Component.checkMismatch}>
-                  <ExtraneousWarning />
-                  {(isLoading || !mounted) && (
-                    <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                      <CircularProgress />
-                    </Box>
-                  )}
-                  {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-                    <ContractsProvider>
-                      <>
-                        <CheckNeokBalance />
-                        <CheckConnected fullWidth={!!Component.fullWidth} />
-                        <Component {...pageProps} />
-                      </>
-                    </ContractsProvider>
-                  )}
+                  <ExtraneousWarning>
+                    {(isLoading || !mounted) && (
+                      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                        <CircularProgress />
+                      </Box>
+                    )}
+                    {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
+                      <ContractsProvider>
+                        <>
+                          <CheckNeokBalance />
+                          <CheckConnected fullWidth={!!Component.fullWidth} />
+                          <Component {...pageProps} />
+                        </>
+                      </ContractsProvider>
+                    )}
+                  </ExtraneousWarning>
                 </Layout>
               )}
             </StyledSnackbarProvider>
