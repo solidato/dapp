@@ -3,7 +3,17 @@ import useSWR from "swr";
 import { useState } from "react";
 
 import { LoadingButton } from "@mui/lab";
-import { Alert, Box, Button, CircularProgress, Slider, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  FormControlLabel,
+  Slider,
+  Switch,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
 import { fetcher } from "@lib/net";
@@ -21,6 +31,7 @@ export default function RedeemTokens({ closeModal, maxToRedeem }: { closeModal: 
   const { onSubmit } = useRedeemTokens();
   const { data: eurUsdt, isLoading: isLoadingEurUsdt } = useSWR(GET_EURUSDT_ENDPOINT, fetcher);
   const { isAwaitingConfirmation, isLoading, type } = useBlockchainTransactionStore();
+  const [shouldConfirm, setShouldConfirm] = useState(false);
 
   if (isLoadingEurUsdt) {
     return <CircularProgress />;
@@ -71,7 +82,18 @@ export default function RedeemTokens({ closeModal, maxToRedeem }: { closeModal: 
       </Box>
       {toRedeem > 0 && (
         <Alert severity="info" sx={{ mt: 3 }}>
-          You will receive {Math.round((toRedeem * Number(eurUsdt.price) + Number.EPSILON) * 100) / 100} axlUSDT
+          You will receive <b>{Math.round((toRedeem * Number(eurUsdt.price) + Number.EPSILON) * 100) / 100} axlUSDT</b>
+          <br />
+          <br />
+          <b>Heads up:</b> In order to redeem the tokens, you will need to send an invoice to Marko, who will give you
+          the details via discord. Automatic invoice generation is coming soon.
+          <FormControlLabel
+            sx={{ display: "block", p: 2 }}
+            control={<Switch defaultChecked />}
+            label="I have created the invoice"
+            checked={shouldConfirm}
+            onChange={() => setShouldConfirm((prev) => !prev)}
+          />
         </Alert>
       )}
       <Box sx={{ textAlign: "center", pt: 2 }}>
@@ -81,7 +103,7 @@ export default function RedeemTokens({ closeModal, maxToRedeem }: { closeModal: 
           variant="contained"
           color="primary"
           sx={{ mt: 2 }}
-          disabled={toRedeem === 0}
+          disabled={!shouldConfirm}
           onClick={handleRedeemTokens}
         >
           Redeem Tokens
