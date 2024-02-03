@@ -34,12 +34,21 @@ import Chart from "./Chart";
 
 type ChartVizType = "default" | "accumulated";
 
+const TOKEN_CMC_PAGE = {
+  teledisko: "berlin",
+  neokingdom: "neokingdom-dao",
+  crowdpunk: "crowdp",
+  vanilla: "vanilla",
+}[process.env.NEXT_PUBLIC_PROJECT_KEY];
+
+const TOKEN_API_ENDPOINT = `/api/token-price/${TOKEN_CMC_PAGE}`;
+
 export default function InvestorsReport() {
   const {
     data: tokenPrice,
     isLoading: isLoadingGetTokenPrice,
     error: errorGettingTokenPrice,
-  } = useSWR<{ priceEur: number; priceUsd: number }>("/api/token-price/neokingdom-dao", fetcher);
+  } = useSWR<{ priceEur: number; priceUsd: number }>(TOKEN_API_ENDPOINT, fetcher);
   const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
   const [chartType, setChartType] = useState<ChartVizType>("accumulated");
   const theme = useTheme();
@@ -97,7 +106,11 @@ export default function InvestorsReport() {
             traditional terms the external value could also be described as the: <i>&quot;market cap&quot;</i>.<br />
             <br />
             The price of the token ({tokenPrice?.priceEur} EUR, or {tokenPrice?.priceUsd} USD) is taken{" "}
-            <Link href="https://coinmarketcap.com/currencies/neokingdom-dao/" rel="noopener noreferrer" target="_blank">
+            <Link
+              href={`https://coinmarketcap.com/currencies/${TOKEN_CMC_PAGE}/`}
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {" "}
               from coinmarketcap
             </Link>

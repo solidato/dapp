@@ -18,7 +18,10 @@ async function getNeokingdomTokenPrice(req: NextApiRequest, res: NextApiResponse
     const descriptionContent = root.querySelector("meta[name='description']")?.getAttribute("content");
 
     if (!descriptionContent) {
-      return res.status(500).json({ error: "no price available" });
+      return res.status(200).json({
+        priceUsd: 1,
+        priceEur: 1,
+      });
     }
 
     const price = Number(
@@ -28,7 +31,11 @@ async function getNeokingdomTokenPrice(req: NextApiRequest, res: NextApiResponse
 
     return res.status(200).json({ priceUsd: Number(price), priceEur: round(price / eurUsdt, 4) });
   } catch (error) {
-    return res.status(500).json({ error: "no price available" });
+    // we just swallow the error and return a default price
+    return res.status(200).json({
+      priceUsd: 1,
+      priceEur: 1,
+    });
   }
 }
 
