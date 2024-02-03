@@ -97,7 +97,7 @@ export default function InvestorsReport() {
             traditional terms the external value could also be described as the: <i>&quot;market cap&quot;</i>.<br />
             <br />
             The price of the token ({tokenPrice?.priceEur} EUR, or {tokenPrice?.priceUsd} USD) is taken{" "}
-            <Link href="https://coinmarketcap.com/currencies/neokingdom-dao/" rel="noopener" target="_blank">
+            <Link href="https://coinmarketcap.com/currencies/neokingdom-dao/" rel="noopener noreferrer" target="_blank">
               {" "}
               from coinmarketcap
             </Link>
