@@ -146,18 +146,46 @@ const PROJECT_TASK_TYPE_NEOKINGDOM = [
 const PROJECT_TASK_TYPE_CROWDPUNK = [
   {
     id: 1,
-    name: "To Do",
+    name: "Created",
   },
   {
-    id: 2,
+    id: 9,
+    name: "Inbox",
+  },
+  {
+    id: 10,
+    name: "Today",
+  },
+  {
+    id: 37,
     name: "In Progress",
   },
   {
-    id: 3,
+    id: 11,
+    name: "This Week",
+  },
+  {
+    id: 38,
     name: "Done",
   },
   {
-    id: 4,
+    id: 12,
+    name: "This Month",
+  },
+  {
+    id: 39,
+    name: "Approved",
+  },
+  {
+    id: 13,
+    name: "Later",
+  },
+  {
+    id: 14,
+    name: "Done",
+  },
+  {
+    id: 15,
     name: "Canceled",
   },
 ];
