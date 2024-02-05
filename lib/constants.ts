@@ -143,9 +143,33 @@ const PROJECT_TASK_TYPE_NEOKINGDOM = [
   },
 ];
 
+const PROJECT_TASK_TYPE_CROWDPUNK = [
+  {
+    id: 1,
+    name: "To Do",
+  },
+  {
+    id: 2,
+    name: "In Progress",
+  },
+  {
+    id: 3,
+    name: "Done",
+  },
+  {
+    id: 4,
+    name: "Canceled",
+  },
+];
+
+const STAGE_IDS: Record<string, { id: number; name: string }[]> = {
+  crowdpunk: PROJECT_TASK_TYPE_CROWDPUNK,
+  teledisko: PROJECT_TASK_TYPE_TELEDISKO,
+  neokingdom: PROJECT_TASK_TYPE_NEOKINGDOM,
+};
+
 export const getStageId = (stageName: string) => {
-  const PROJECT_TASK_TYPE =
-    process.env.NEXT_PUBLIC_PROJECT_KEY === "teledisko" ? PROJECT_TASK_TYPE_TELEDISKO : PROJECT_TASK_TYPE_NEOKINGDOM;
-  const stage = PROJECT_TASK_TYPE.find((projectType) => projectType.name.toLowerCase() === stageName.toLowerCase());
+  const PROJECT_TASK_TYPE = STAGE_IDS[process.env.NEXT_PUBLIC_PROJECT_KEY];
+  const stage = PROJECT_TASK_TYPE?.find((projectType) => projectType.name.toLowerCase() === stageName.toLowerCase());
   return stage?.id;
 };
