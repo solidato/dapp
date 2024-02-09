@@ -16,7 +16,6 @@ async function getNeokingdomTokenPrice(req: NextApiRequest, res: NextApiResponse
     const root = parse(coinPageText);
 
     const descriptionContent = root.querySelector("meta[name='description']")?.getAttribute("content");
-    console.log("descriptionContent: ", descriptionContent);
 
     if (!descriptionContent) {
       return res.status(200).json({
