@@ -85,6 +85,7 @@ const wagmiConfig = defaultWagmiConfig({
   projectId,
   metadata,
   enableCoinbase: false,
+  ssr: true,
 });
 
 createWeb3Modal({
