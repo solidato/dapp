@@ -26,3 +26,12 @@ Note: if you want to change from i.e. teledisko to neokingdom, just re-run `verc
 - When the query is ready or after each update remember to run `pnpm codegen:subgraph`
 
 If the schema on https://api.neokingdom.org/subgraphs/name/NeokingdomDAO/vigodarzere is not working - as the server is down - try with https://api2.neokingdom.org/subgraphs/name/NeokingdomDAO/vigodarzere. You can find in `./codegen-subgraph.ts`
+
+## How to run e2e tests
+
+You can run e2e tests with Playwright in two different ways. In both case remember to start the local server with `pnpm dev`.
+
+The first time you should run `pnpm e2e:init` before running e2e tests. After that you can use one of the following options:
+
+- With the CLI (faster): `pnpm e2e`
+- With the UI (easier to debug): `pnpm e2e:ui`
