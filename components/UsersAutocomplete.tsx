@@ -14,11 +14,13 @@ export default function UsersAutocomplete({
   selectedAddress,
   filterList,
   label,
+  fullWidth,
 }: {
   onChange: (address: string) => void;
   selectedAddress: string | null;
   filterList?: string[];
   label: string;
+  fullWidth?: boolean;
 }) {
   const { allOdooUsers, isLoading } = useOdooUsers();
 
@@ -37,7 +39,7 @@ export default function UsersAutocomplete({
   return (
     <Autocomplete
       id="users-autocomplete"
-      sx={{ width: 300 }}
+      sx={{ width: fullWidth ? undefined : 300 }}
       options={options}
       autoHighlight
       value={options.find((opt) => opt.value === selectedAddress)}

@@ -172,38 +172,42 @@ export default function OffersList({
         </Typography>
       ) : (
         <>
-          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+          <Grid container spacing={2} sx={{ mb: 4 }}>
             {isExportEnabled && (
-              <LoadingButton
-                endIcon={<FileDownloadIcon />}
-                loading={isLoadingUsers}
-                variant="outlined"
-                color="primary"
-                loadingPosition="end"
-                disabled={!enableExportButton || errorUsers}
-                onClick={() => {
-                  downloadOffersCsv({
-                    offers,
-                    currentUserAddress: userAddressLowerCase,
-                    getUserInfo: getOdooUser,
-                  });
-                }}
-              >
-                {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
-                <span>Export your offers</span>
-              </LoadingButton>
+              <Grid item xs={12} md={4}>
+                <LoadingButton
+                  fullWidth
+                  endIcon={<FileDownloadIcon />}
+                  loading={isLoadingUsers}
+                  variant="outlined"
+                  color="primary"
+                  loadingPosition="end"
+                  disabled={!enableExportButton || errorUsers}
+                  onClick={() => {
+                    downloadOffersCsv({
+                      offers,
+                      currentUserAddress: userAddressLowerCase,
+                      getUserInfo: getOdooUser,
+                    });
+                  }}
+                >
+                  {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
+                  <span>Export your offers</span>
+                </LoadingButton>
+              </Grid>
             )}
             {usersAddresses.length > 1 && (
-              <Box sx={{ ml: "auto" }}>
+              <Grid item xs={12} md={4} sx={{ ml: "auto" }}>
                 <UsersAutocomplete
+                  fullWidth
                   filterList={usersAddresses}
                   selectedAddress={selectedUserAddress}
                   onChange={(address) => setSelectedUserAddress(address)}
                   label="Filter by contributor"
                 />
-              </Box>
+              </Grid>
             )}
-          </Box>
+          </Grid>
           <Grid container spacing={2}>
             {filteredOffers.map((offer) => (
               <Grid key={offer.id} item xs={12} md={6} lg={4}>
