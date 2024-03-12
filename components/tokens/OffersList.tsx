@@ -1,12 +1,15 @@
 import { useContractsContext } from "contexts/ContractsContext";
 import { Offer } from "types";
+import { useAccount } from "wagmi";
 
 import { useState } from "react";
 
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { LoadingButton } from "@mui/lab";
 import { Alert, Box, Grid, Slider, TextField, Typography } from "@mui/material";
 
 import { BLOCKCHAIN_TRANSACTION_KEYS } from "@lib/constants";
+import { downloadOffersCsv } from "@lib/exportOffers";
 import { calculateSteps } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
@@ -17,11 +20,20 @@ import UsersAutocomplete from "@components/UsersAutocomplete";
 import useApproveToMatchOffer from "@hooks/useApproveToMatchOffer";
 import useCheckAllowance from "@hooks/useCheckAllowance";
 import useMatchTokens from "@hooks/useMatchTokens";
+import useOdooUsers from "@hooks/useOdooUsers";
 import { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 import OfferCard from "./OfferCard";
 
-export default function OffersList({ offers, noOffersMessage }: { offers: Offer[]; noOffersMessage: string }) {
+export default function OffersList({
+  offers,
+  noOffersMessage,
+  isExportEnabled,
+}: {
+  offers: Offer[];
+  noOffersMessage: string;
+  isExportEnabled?: boolean;
+}) {
   const [matchingOfferOpen, setMatchingOfferOpen] = useState<Offer | null>(null);
   const [matchingTokens, setMatchingTokens] = useState(0);
   const [selectedUserAddress, setSelectedUserAddress] = useState<string | null>(null);
@@ -31,6 +43,10 @@ export default function OffersList({ offers, noOffersMessage }: { offers: Offer[
   const { isLoading, isAwaitingConfirmation, type } = useBlockchainTransactionStore();
   const { onSubmit } = useMatchTokens();
   const { onSubmit: onSubmitApproveUsdc } = useApproveToMatchOffer();
+  const { getOdooUser, isLoading: isLoadingUsers, error: errorUsers } = useOdooUsers();
+
+  const { address: userAddress } = useAccount();
+  const userAddressLowerCase = userAddress?.toLowerCase();
 
   const handleOnMatch = (offer: Offer) => {
     setMatchingOfferOpen(offer);
@@ -64,6 +80,10 @@ export default function OffersList({ offers, noOffersMessage }: { offers: Offer[
 
   const usersAddresses = [...new Set(offers.map((offer) => offer.from))];
 
+  const filteredOffers = offers.filter((offer) => !selectedUserAddress || offer.from === selectedUserAddress);
+
+  const isCurrentUserSelected = selectedUserAddress?.toLowerCase() === userAddressLowerCase;
+  const enableExportButton = isExportEnabled && (isCurrentUserSelected || !selectedUserAddress);
   return (
     <>
       <Modal open={!!matchingOfferOpen} onClose={handleModalClose} size="medium">
@@ -137,7 +157,8 @@ export default function OffersList({ offers, noOffersMessage }: { offers: Offer[
                   onClick={handleMatchOffer}
                   loading={(isLoading || isAwaitingConfirmation) && type === BLOCKCHAIN_TRANSACTION_KEYS.MATCH_TOKENS}
                 >
-                  Match offer
+                  {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
+                  <span>Match offer</span>
                 </LoadingButton>
               </Box>
             </>
@@ -150,24 +171,40 @@ export default function OffersList({ offers, noOffersMessage }: { offers: Offer[
         </Typography>
       ) : (
         <>
-          {usersAddresses.length > 1 && (
-            <Box sx={{ mb: 3, display: "flex", justifyContent: "flex-end" }}>
+          <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
+            <LoadingButton
+              endIcon={<FileDownloadIcon />}
+              loading={isLoadingUsers}
+              variant="outlined"
+              color="primary"
+              loadingPosition="end"
+              disabled={!enableExportButton || errorUsers}
+              onClick={() => {
+                downloadOffersCsv({
+                  offers,
+                  currentUserAddress: userAddressLowerCase,
+                  getUserInfo: getOdooUser,
+                });
+              }}
+            >
+              {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
+              <span>Export your offers</span>
+            </LoadingButton>
+            {usersAddresses.length > 1 && (
               <UsersAutocomplete
                 filterList={usersAddresses}
                 selectedAddress={selectedUserAddress}
                 onChange={(address) => setSelectedUserAddress(address)}
                 label="Filter by contributor"
               />
-            </Box>
-          )}
+            )}
+          </Box>
           <Grid container spacing={2}>
-            {offers
-              .filter((offer) => !selectedUserAddress || offer.from === selectedUserAddress)
-              .map((offer) => (
-                <Grid key={offer.id} item xs={12} md={6} lg={4}>
-                  <OfferCard offer={offer} onMatchClicked={handleOnMatch} />
-                </Grid>
-              ))}
+            {filteredOffers.map((offer) => (
+              <Grid key={offer.id} item xs={12} md={6} lg={4}>
+                <OfferCard offer={offer} onMatchClicked={handleOnMatch} />
+              </Grid>
+            ))}
           </Grid>
         </>
       )}
