@@ -82,8 +82,9 @@ export default function OffersList({
 
   const filteredOffers = offers.filter((offer) => !selectedUserAddress || offer.from === selectedUserAddress);
 
+  const hasOffers = offers.filter((offer) => offer.from === userAddressLowerCase).length > 0;
   const isCurrentUserSelected = selectedUserAddress?.toLowerCase() === userAddressLowerCase;
-  const enableExportButton = isExportEnabled && (isCurrentUserSelected || !selectedUserAddress);
+  const enableExportButton = isExportEnabled && (isCurrentUserSelected || (!selectedUserAddress && hasOffers));
   return (
     <>
       <Modal open={!!matchingOfferOpen} onClose={handleModalClose} size="medium">
@@ -172,31 +173,35 @@ export default function OffersList({
       ) : (
         <>
           <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
-            <LoadingButton
-              endIcon={<FileDownloadIcon />}
-              loading={isLoadingUsers}
-              variant="outlined"
-              color="primary"
-              loadingPosition="end"
-              disabled={!enableExportButton || errorUsers}
-              onClick={() => {
-                downloadOffersCsv({
-                  offers,
-                  currentUserAddress: userAddressLowerCase,
-                  getUserInfo: getOdooUser,
-                });
-              }}
-            >
-              {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
-              <span>Export your offers</span>
-            </LoadingButton>
+            {isExportEnabled && (
+              <LoadingButton
+                endIcon={<FileDownloadIcon />}
+                loading={isLoadingUsers}
+                variant="outlined"
+                color="primary"
+                loadingPosition="end"
+                disabled={!enableExportButton || errorUsers}
+                onClick={() => {
+                  downloadOffersCsv({
+                    offers,
+                    currentUserAddress: userAddressLowerCase,
+                    getUserInfo: getOdooUser,
+                  });
+                }}
+              >
+                {/* We need <span> to prevent a bug with Chrome and translations: https://mui.com/material-ui/react-button/#loading-button */}
+                <span>Export your offers</span>
+              </LoadingButton>
+            )}
             {usersAddresses.length > 1 && (
-              <UsersAutocomplete
-                filterList={usersAddresses}
-                selectedAddress={selectedUserAddress}
-                onChange={(address) => setSelectedUserAddress(address)}
-                label="Filter by contributor"
-              />
+              <Box sx={{ ml: "auto" }}>
+                <UsersAutocomplete
+                  filterList={usersAddresses}
+                  selectedAddress={selectedUserAddress}
+                  onChange={(address) => setSelectedUserAddress(address)}
+                  label="Filter by contributor"
+                />
+              </Box>
             )}
           </Box>
           <Grid container spacing={2}>
