@@ -15,6 +15,7 @@ import Tokens from "@components/dashboard/Tokens";
 import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
+import useUser from "@hooks/useUser";
 
 import ResolutionsStats from "../components/dashboard/ResolutionsStats";
 import { ResolutionEntityEnhanced } from "../types";
@@ -39,6 +40,7 @@ export default function Home() {
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const { currentTimestamp } = useTimestamp();
   const { isConnected, address } = useAccount();
+  const { user: odooUser } = useUser();
 
   const [enhancedResolutions, enhancedResolutionsToVote, stats, votingPercentageInTheYear]: [
     ResolutionEntityEnhanced[],
@@ -51,7 +53,7 @@ export default function Home() {
     }
 
     const allResolutions = getEnhancedResolutions(resolutions, +currentTimestamp, acl);
-    const votingPercentageInTheYear = getVotingPercentage(allResolutions, address);
+    const votingPercentageInTheYear = getVotingPercentage(allResolutions, address || odooUser?.ethereum_address);
 
     const inProgress = allResolutions.filter(
       (res) => ![RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(res.state),
