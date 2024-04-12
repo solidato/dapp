@@ -121,11 +121,10 @@ export default function Header({ votingPercentageInTheYear }: { votingPercentage
           </>
         )}
       </Paper>
-      {typeof votingPercentageInTheYear === "number" && (
-        <Alert severity={votingSeverity as AlertColor} sx={{ mt: 2, width: "100%" }}>
-          {votingInfoMessage}
-        </Alert>
-      )}
+
+      <Alert severity={votingSeverity as AlertColor} sx={{ mt: 2, width: "100%" }}>
+        {votingInfoMessage}
+      </Alert>
     </>
   );
 }
