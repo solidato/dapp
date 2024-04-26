@@ -7,8 +7,8 @@ import useLoginModalStore from "@store/loginModal";
 
 import useWalletOdooLogin from "@hooks/useWalletOdooLogin";
 
-import LoginForm from "./LoginForm";
 import Modal from "./Modal";
+import SimpleLoginForm from "./SimpleLoginForm";
 
 export default function LoginModal() {
   const { handleWalletOdooLogin } = useWalletOdooLogin();
@@ -51,7 +51,7 @@ export default function LoginModal() {
           </>
         ) : (
           <Box sx={{ pt: 3 }}>
-            <LoginForm onLoggedIn={handleModalClose} />
+            <SimpleLoginForm onLoggedIn={handleModalClose} />
           </Box>
         )}
       </>

@@ -1,5 +1,6 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { decodeJwt } from "jose";
+import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { getOdooCookie } from "@lib/getOdooCookie";
@@ -10,28 +11,30 @@ import userFactory from "@lib/userFactory";
 
 import { OdooUser } from "../../types";
 
-// Login with Wallet+Odoo
-const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
+// import { recoverMessageAddress } from "viem";
+
+// Login with Wallet
+const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
+  const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret";
+
   if (req.method === "GET") {
     try {
-      const response = await fetch(process.env.ODOO_JWT_TOKEN_ENDPOINT, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const { signing_token } = await response.json();
-      const claims = decodeJwt(signing_token);
-      res.json({
-        signingToken: signing_token,
-        message: claims.message,
-      });
+      const message = "Please sign this message to login";
+      const payload = { iat: Date.now(), message };
+      const signingToken = jwt.sign(payload, JWT_SECRET);
+      res.json({ signingToken, message });
     } catch (error) {
       return res.status(401).json({ error });
     }
   }
 
-  if (req.method === "POST") {
-    const { signingToken, address, sig } = req.body as { signingToken: string; address: string; sig: string };
-    const password = JSON.stringify({ signing_token: signingToken, signature: sig });
+  if (req.method === "PUT") {
+    const { signingToken, address, signature } = req.body as {
+      signingToken: string;
+      address: string;
+      signature: string;
+    };
+    const password = JSON.stringify({ signing_token: signingToken, signature });
     const pwdB64 = Buffer.from(password, "utf8").toString("base64");
     try {
       const cookie = await getOdooCookie(address.toLowerCase(), pwdB64);
@@ -49,6 +52,22 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).json({ error: JSON.stringify(error) });
     }
   }
+
+  if (req.method === "POST") {
+    const { signingToken, signature } = req.body;
+    console.log("🐞 > req.body:", req.body);
+    try {
+      const decoded = jwt.verify(signingToken, JWT_SECRET);
+      console.log("🐞 > decoded:", decoded);
+      const { message } = decoded as { message: string };
+      console.log("🐞 > message:", message);
+      // const signer = await recoverMessageAddress({ message, signature });
+      // console.log('🐞 > signer:', signer);
+      // return signer;
+    } catch (err) {
+      return res.status(409).json({ error: "Invalid signing token" });
+    }
+  }
 };
 
-export default withIronSessionApiRoute(loginRoute, sessionOptions);
+export default withIronSessionApiRoute(walletLoginRoute, sessionOptions);

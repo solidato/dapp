@@ -15,8 +15,6 @@ import useLogout from "@hooks/useLogout";
 import useOdooUsers from "@hooks/useOdooUsers";
 import useUser from "@hooks/useUser";
 
-import { SUPPORTED_CHAINS } from "./_app";
-
 Settings.title = "Settings";
 Settings.requireLogin = false;
 
