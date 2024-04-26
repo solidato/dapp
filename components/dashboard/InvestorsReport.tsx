@@ -35,10 +35,7 @@ import Chart from "./Chart";
 type ChartVizType = "default" | "accumulated";
 
 const TOKEN_CMC_PAGE = {
-  teledisko: "berlin",
-  neokingdom: "neokingdom-dao",
-  crowdpunk: "crowdp",
-  vanilla: "vanilla",
+  solidato: "solidato",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 const TOKEN_API_ENDPOINT = `/api/token-price/${TOKEN_CMC_PAGE}`;

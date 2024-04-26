@@ -167,42 +167,13 @@ export const formatTimestampToDateTime = (timestamp: string) => {
 };
 
 export const TOKEN_SYMBOL = {
-  teledisko: "BERLIN",
-  neokingdom: "NEOK",
-  crowdpunk: "CROWDP",
-  vanilla: "VAN",
+  solidato: "SOLID",
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export const PDF_SIGNER = {
-  teledisko: [
+  solidato: [
     {
-      name: "Benjamin Gregor Uphues",
-      from: new Date("1/1/2020").getTime(),
-    },
-    {
-      name: "Ragnar Reindoff",
-      from: new Date("6/8/2023").getTime(),
-    },
-  ],
-  neokingdom: [
-    {
-      name: "Benjamin Gregor Uphues",
-      from: new Date("1/1/2020").getTime(),
-    },
-    {
-      name: "Ragnar Reindoff",
-      from: new Date("5/26/2023").getTime(),
-    },
-  ],
-  crowdpunk: [
-    {
-      name: "Benjamin Gregor Uphues",
-      from: new Date("1/1/2020").getTime(),
-    },
-  ],
-  vanilla: [
-    {
-      name: "Benjamin Gregor Uphues",
+      name: "Alberto Ceschi Miotto",
       from: new Date("1/1/2020").getTime(),
     },
   ],
@@ -212,7 +183,7 @@ export const getPdfSigner = (resolution: ResolutionEntityEnhanced) => {
   const resolutionCreatedTs = getDateFromUnixTimestamp(resolution.createTimestamp).getTime();
   return (
     PDF_SIGNER.sort((a, b) => b.from - a.from).find((signer) => signer.from <= resolutionCreatedTs)?.name ||
-    "Benjamin Gregor Uphues"
+    "Alberto Ceschi Miotto"
   );
 };
 
