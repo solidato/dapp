@@ -245,7 +245,8 @@ export const getVotingPercentage = (allResolutions: ResolutionEntityEnhanced[], 
     if (
       new Date(res.approveTimestamp * 1000).getFullYear() !== now.getFullYear() ||
       res.isNegative ||
-      RESOLUTIONS_IDS_TO_SKIP.includes(res.id)
+      RESOLUTIONS_IDS_TO_SKIP.includes(res.id) ||
+      res.state === "notice"
     ) {
       return false;
     }
