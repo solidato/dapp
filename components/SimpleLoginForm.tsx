@@ -14,13 +14,13 @@ import useLoginModalStore from "@store/loginModal";
 
 import { useSnackbar } from "@hooks/useSnackbar";
 import useUser from "@hooks/useUser";
-import useWalletOdooLogin from "@hooks/useWalletOdooLogin";
+import useWalletLogin from "@hooks/useWalletLogin";
 
 export default function SimpleLoginForm({ onLoggedIn }: { onLoggedIn?: () => void }) {
   const { query } = useRouter();
   const { open: openWeb3Modal } = useWeb3Modal();
   const { isConnected } = useAccount();
-  const { handleWalletLogin } = useWalletOdooLogin();
+  const { handleWalletLogin } = useWalletLogin();
 
   const { enqueueSnackbar } = useSnackbar();
   const [openLoginForm, setOpenLoginForm] = useState(false);
