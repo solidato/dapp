@@ -1,14 +1,12 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 
 export const shareholders = pgTable(
   "shareholders",
   {
     id: serial("id").primaryKey(),
-    firstName: text("firstName").notNull(),
-    lastName: text("lastName").notNull(),
+    name: text("name").notNull(),
     email: text("email").notNull(),
     ethAddress: text("ethAddress").notNull(),
     avatar: text("avatar"),

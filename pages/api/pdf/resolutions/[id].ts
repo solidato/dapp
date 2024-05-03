@@ -42,7 +42,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
     const shareholders = await db.query.shareholders.findMany();
     const shareholdersData = shareholders.map((user) => ({
       ethereumAddress: user.ethAddress,
-      name: `${user.firstName} ${user.lastName}`,
+      name: user.name,
       email: user.email,
     }));
 
