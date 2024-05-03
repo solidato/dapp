@@ -5,13 +5,13 @@ import { Alert, Box, Button, Chip, Divider } from "@mui/material";
 
 import useLoginModalStore from "@store/loginModal";
 
-import useWalletOdooLogin from "@hooks/useWalletOdooLogin";
+import useWalletLogin from "@hooks/useWalletLogin";
 
-import LoginForm from "./LoginForm";
 import Modal from "./Modal";
+import SimpleLoginForm from "./SimpleLoginForm";
 
 export default function LoginModal() {
-  const { handleWalletOdooLogin } = useWalletOdooLogin();
+  const { handleWalletLogin } = useWalletLogin();
 
   const { modalOpen, handleModalClose, readyToSign, setIsReadyToSign } = useLoginModalStore(
     (state) => ({
@@ -25,7 +25,7 @@ export default function LoginModal() {
   );
 
   const handleSignInClick = async () => {
-    await handleWalletOdooLogin();
+    await handleWalletLogin();
     handleModalClose();
   };
 
@@ -51,7 +51,7 @@ export default function LoginModal() {
           </>
         ) : (
           <Box sx={{ pt: 3 }}>
-            <LoginForm onLoggedIn={handleModalClose} />
+            <SimpleLoginForm onLoggedIn={handleModalClose} />
           </Box>
         )}
       </>

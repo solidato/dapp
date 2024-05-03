@@ -31,10 +31,10 @@ export default function LegalInfo({ resolution }: { resolution: ResolutionEntity
       >
         <Paper sx={{ p: 3 }}>
           <Typography variant="body2">
-            <b>Business name:</b> {process.env.NEXT_PUBLIC_PROJECT_KEY} DAO OÜ
+            <b>Business name:</b> {process.env.NEXT_PUBLIC_PROJECT_KEY.toUpperCase()} OÜ
           </Typography>
           <Typography variant="body2">
-            <b>Registry code:</b> {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "16638166" : "16374990"}
+            <b>Registry code:</b> 16374990
           </Typography>
           <Typography variant="body2">
             <b>Registered office</b>: Sõle 14, Tallinn, 10611 , Estonia

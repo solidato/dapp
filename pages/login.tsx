@@ -1,6 +1,6 @@
 import { Container, Typography } from "@mui/material";
 
-import LoginForm from "@components/LoginForm";
+import SimpleLoginForm from "@components/SimpleLoginForm";
 
 export default function Login() {
   return (
@@ -9,7 +9,7 @@ export default function Login() {
       <Typography variant="body2" sx={{ mb: 4 }}>
         Please sign in to continue.
       </Typography>
-      <LoginForm />
+      <SimpleLoginForm />
     </Container>
   );
 }

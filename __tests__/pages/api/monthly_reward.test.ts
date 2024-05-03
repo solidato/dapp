@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { createMocks, createRequest, createResponse } from "node-mocks-http";
 
-import odooGraphQLClient from "@lib/graphql/odoo";
-
 import { getMonthlyReward } from "../../../pages/api/monthly_reward";
 import ApiMonthlyRewardResult from "../../fixtures/api_monthly_reward_result.json";
 import OdooMonthlyRewardQueryResult from "../../fixtures/odoo_monthly_reward_query_result.json";
@@ -20,7 +18,7 @@ describe("/api/monthly_reward", () => {
       },
     });
 
-    odooGraphQLClient.query = jest.fn().mockReturnValue(OdooMonthlyRewardQueryResult);
+    // odooGraphQLClient.query = jest.fn().mockReturnValue(OdooMonthlyRewardQueryResult);
 
     await getMonthlyReward(req, res);
     const data = JSON.parse(res._getData());

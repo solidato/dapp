@@ -5,7 +5,6 @@ import { Alert, AlertTitle, Box, Button } from "@mui/material";
 
 import useUser from "@hooks/useUser";
 
-import { SUPPORTED_CHAINS } from "../pages/_app";
 import Section from "./Section";
 
 export default function CheckConnected({ fullWidth = false }: { fullWidth?: boolean }) {
@@ -18,8 +17,6 @@ export default function CheckConnected({ fullWidth = false }: { fullWidth?: bool
   }
 
   const Component = fullWidth ? Section : Box;
-
-  // setDefaultChain(SUPPORTED_CHAINS[0]);
 
   return (
     <Component sx={{ p: 0, mb: 2, mt: 0 }}>
