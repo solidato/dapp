@@ -11,11 +11,6 @@ export const META = {
     title: "Solidato",
     keywords: "DAO, Solidato, Blockchain",
   },
-  solidato: {
-    description: "Solidato description",
-    title: "Solidato",
-    keywords: "Solidato, Blockchain, AI",
-  },
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 export default class MyDocument extends Document {
