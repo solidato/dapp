@@ -37,13 +37,12 @@ const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       const user = results[0];
       const authUser = userFactory({
-        ...user,
         ethereum_address: user.ethAddress,
         name: `${user.firstName} ${user.lastName}`,
         display_name: user.firstName,
         isLoggedIn: true,
       });
-      const cookie = jwt.sign({ sub: address, role: "user" }, JWT_SECRET);
+      const cookie = jwt.sign({ sub: address }, JWT_SECRET);
       req.session.cookie = cookie;
       req.session.user = authUser;
       await req.session.save();

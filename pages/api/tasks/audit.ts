@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { getTasksForAuditing } from "@graphql/queries/get-tasks-for-auditing";
 
-import odooClient from "@lib/graphql/odoo";
 import { sessionOptions } from "@lib/session";
 
 async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
@@ -12,9 +11,9 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
   if (!(cookie && user)) {
     return res.status(401).end();
   }
-
-  const data = await odooClient.query(cookie, getTasksForAuditing);
-  res.status(200).json(data?.ProjectTask || []);
+  // TODO: TASKS FOR AUDITING
+  // const data = await odooClient.query(cookie, getTasksForAuditing);
+  res.status(200).json([]);
 }
 
 export default withIronSessionApiRoute(tasksRoute, sessionOptions);

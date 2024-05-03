@@ -4,8 +4,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getProjectsTasksQuery } from "@graphql/queries/get-projects-tasks.query";
 import { getUserTasksQuery } from "@graphql/queries/get-user-tasks.query";
 
-import odooGraphQLClient from "@lib/graphql/odoo";
-import { ODOO_DB_NAME, ODOO_ENDPOINT, getSession } from "@lib/odooClient";
 import { sessionOptions } from "@lib/session";
 
 import { ProjectTask } from "@store/projectTaskStore";
@@ -18,18 +16,11 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
   }
 
   const { body } = req;
-  const { username, password } = user;
-  let session;
-  try {
-    session = await getSession(ODOO_ENDPOINT, ODOO_DB_NAME, username, password);
-  } catch (err) {
-    await req.session.destroy();
-    return res.status(401).json({ message: "Unauthorized" });
-  }
 
   const getUserTasks = async (userId: number) => {
-    const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
-    return userTasks?.ProjectTask;
+    // TODO: TASKS
+    // const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
+    return [];
   };
 
   const getUserProjectIds = (tasks: ProjectTask[]) => {
@@ -54,12 +45,13 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
       const tasks = await getUserTasks(userId);
       const projectIds = getUserProjectIds(tasks);
       const taskIds = getTaskIds(tasks);
-      const data = await odooGraphQLClient.query(cookie, getProjectsTasksQuery, {
-        projectIds,
-        taskIds,
-        userId,
-      });
-      res.status(200).json(data?.ProjectProject || []);
+      // TODO: TASKS
+      // const data = await odooGraphQLClient.query(cookie, getProjectsTasksQuery, {
+      //   projectIds,
+      //   taskIds,
+      //   userId,
+      // });
+      res.status(200).json([]);
     } catch (err: any) {
       console.log("🐞 > err:", err);
       res.status(500).json({ message: err.message });
@@ -69,13 +61,15 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
     // Create New Task
     try {
-      const newTaskId = await session.create("project.task", JSON.parse(body));
-      if (newTaskId) {
-        const [newTask] = await session.read("project.task", [Number(newTaskId)]);
-        res.status(200).json(newTask);
-      } else {
-        throw new Error("Unable to create task");
-      }
+      // TODO: TASKS
+      // const newTaskId = await session.create("project.task", JSON.parse(body));
+      // if (newTaskId) {
+      //   const [newTask] = await session.read("project.task", [Number(newTaskId)]);
+      //   res.status(200).json(newTask);
+      // } else {
+      //   throw new Error("Unable to create task");
+      // }
+      throw new Error("Unable to create task");
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }

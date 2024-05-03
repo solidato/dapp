@@ -2,12 +2,10 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { withIronSessionApiRoute } from "iron-session/next";
 import kebabCase from "lodash.kebabcase";
 import { NextApiRequest, NextApiResponse } from "next";
-import { OdooUser, ResolutionEntity, ResolutionEntityEnhanced } from "types";
+import { ResolutionEntity, ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
-import odooClient from "@graphql/odoo";
-import { getUsersQuery } from "@graphql/queries/get-users.query";
 import { getLegacyResolutionQuery } from "@graphql/subgraph/queries/get-legacy-resolution-query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
 import {
@@ -20,6 +18,8 @@ import { getEnhancedResolutionMapper } from "@lib/resolutions/common";
 import { sessionOptions } from "@lib/session";
 
 import ResolutionPdf from "@components/resolutions/Pdf";
+
+import { db } from "../../../../drizzle";
 
 const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
@@ -39,10 +39,10 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).send("resolution not found");
     }
 
-    const usersData = await odooClient.query(cookie, getUsersQuery);
-    const odooUsersData = (usersData.ResUsers as OdooUser[]).map((user) => ({
-      ethereumAddress: user.ethereum_address,
-      name: user.display_name,
+    const shareholders = await db.query.shareholders.findMany();
+    const shareholdersData = shareholders.map((user) => ({
+      ethereumAddress: user.ethAddress,
+      name: `${user.firstName} ${user.lastName}`,
       email: user.email,
     }));
 
@@ -56,7 +56,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
       // @ts-ignore
       React.createElement(ResolutionPdf, {
         resolution: resolutionData,
-        usersData: odooUsersData,
+        usersData: shareholdersData,
         resolutionUrl: `${{ solidato: "https://dao.solidato.org" }[process.env.NEXT_PUBLIC_PROJECT_KEY]}/resolutions/${
           resolutionData.id
         }`,
