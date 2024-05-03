@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ZodError } from "zod";
 
-import { db } from "../../drizzle";
-import { insertShareholdersSchema, shareholders } from "../../schema/shareholders";
+import { db } from "../../../drizzle";
+import { insertShareholdersSchema, shareholders } from "../../../schema/shareholders";
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
