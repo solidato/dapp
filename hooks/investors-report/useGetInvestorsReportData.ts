@@ -16,35 +16,7 @@ type DATA_POINT = {
   year: number;
 };
 
-const INITIAL_MONTHS_DATA =
-  process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom"
-    ? [
-        {
-          minted: 730,
-          month: "Jan",
-          sortIndex: 202301,
-          year: 2023,
-        },
-        {
-          minted: 55294.8313,
-          month: "Feb",
-          sortIndex: 202302,
-          year: 2023,
-        },
-        {
-          minted: 44581.361,
-          month: "Mar",
-          sortIndex: 202303,
-          year: 2023,
-        },
-        {
-          minted: 39986.6669,
-          month: "Apr",
-          sortIndex: 202304,
-          year: 2023,
-        },
-      ]
-    : [];
+const INITIAL_MONTHS_DATA: DATA_POINT[] = [];
 
 export default function useGetInvestorsReportData(): {
   data: DATA_POINT[];

@@ -17,8 +17,7 @@ import type {
   RewardsResponse,
 } from "../../types";
 
-// 106 is a Test resolution (Ragnar's test) => https://dao.neokingdom.org/resolutions/106
-const RESOLUTIONS_IDS_TO_SKIP = process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? ["106"] : [];
+const RESOLUTIONS_IDS_TO_SKIP: string[] = [];
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
