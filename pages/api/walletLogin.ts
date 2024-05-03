@@ -1,7 +1,7 @@
 import { withIronSessionApiRoute } from "iron-session/next";
-import { decodeJwt } from "jose";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
+import { recoverMessageAddress } from "viem";
 
 import { getOdooCookie } from "@lib/getOdooCookie";
 import odooClient from "@lib/graphql/odoo";
@@ -10,8 +10,6 @@ import { sessionOptions } from "@lib/session";
 import userFactory from "@lib/userFactory";
 
 import { OdooUser } from "../../types";
-
-// import { recoverMessageAddress } from "viem";
 
 // Login with Wallet
 const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -55,15 +53,22 @@ const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     const { signingToken, signature } = req.body;
-    console.log("🐞 > req.body:", req.body);
     try {
-      const decoded = jwt.verify(signingToken, JWT_SECRET);
-      console.log("🐞 > decoded:", decoded);
-      const { message } = decoded as { message: string };
-      console.log("🐞 > message:", message);
-      // const signer = await recoverMessageAddress({ message, signature });
-      // console.log('🐞 > signer:', signer);
-      // return signer;
+      const { message } = jwt.verify(signingToken, JWT_SECRET) as { message: string };
+      const address = await recoverMessageAddress({ message, signature });
+      // Check if the signer is in the Database!
+      const user = userFactory({
+        id: 1,
+        name: "Gianluca",
+        email: "gian.dnt@gmail.com",
+        ethereum_address: address,
+        isLoggedIn: true,
+      });
+      const cookie = jwt.sign({ sub: address, role: "user" }, JWT_SECRET);
+      // req.session.cookie = cookie;
+      req.session.user = user;
+      await req.session.save();
+      return res.status(200).json(user);
     } catch (err) {
       return res.status(409).json({ error: "Invalid signing token" });
     }
