@@ -57,14 +57,9 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
       React.createElement(ResolutionPdf, {
         resolution: resolutionData,
         usersData: odooUsersData,
-        resolutionUrl: `${
-          {
-            teledisko: "https://dao.teledisko.com",
-            neokingdom: "https://dao.neokingdom.org",
-            crowdpunk: "https://dao.crowdpunk.love",
-            vanilla: "https://dao.vanilla.org",
-          }[process.env.NEXT_PUBLIC_PROJECT_KEY]
-        }/resolutions/${resolutionData.id}`,
+        resolutionUrl: `${{ solidato: "https://dao.solidato.org" }[process.env.NEXT_PUBLIC_PROJECT_KEY]}/resolutions/${
+          resolutionData.id
+        }`,
       }),
     );
 

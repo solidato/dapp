@@ -149,11 +149,10 @@ const ResolutionPdf = ({
           </View>
           <View style={{ width: "40%", textAlign: "right" }}>
             <Text>
-              <Bold>Business name:</Bold> {process.env.NEXT_PUBLIC_PROJECT_KEY} DAO OÜ
+              <Bold>Business name:</Bold> {process.env.NEXT_PUBLIC_PROJECT_KEY.toUpperCase()} OÜ
             </Text>
             <Text>
-              <Bold>Registry code:</Bold>{" "}
-              {process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? "16638166" : "16374990"}
+              <Bold>Registry code:</Bold> 16374990
             </Text>
             <Text>
               <Bold>Registered office:</Bold> Sõle 14, Tallinn, 10611 , Estonia

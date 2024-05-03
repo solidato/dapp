@@ -22,15 +22,10 @@ import {
   Voting,
   Voting__factory,
 } from "../contracts/typechain";
-import networksCrowdpunk from "../networks/crowdpunk.json";
-import networksNeoKingdom from "../networks/neokingdom.json";
-import networksTeledisko from "../networks/teledisko.json";
+import networksSolidato from "../networks/neokingdom.json";
 
 export const networks: Record<string, any> = {
-  neokingdom: networksNeoKingdom,
-  teledisko: networksTeledisko,
-  crowdpunk: networksCrowdpunk,
-  vanilla: networksNeoKingdom,
+  solidato: networksSolidato,
 }[process.env.NEXT_PUBLIC_PROJECT_KEY];
 
 const getResolutionManagerContract = (chainId: number, signer: Signer): ResolutionManager => {
