@@ -1,7 +1,7 @@
 {
-  "name": "neokingdomdao-dapp",
+  "name": "dapp-solidato",
   "private": true,
-  "version": "0.3.1",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "next dev",
@@ -18,7 +18,7 @@
     "postinstall": "husky install",
     "codegen:subgraph": "graphql-codegen --config codegen-subgraph.ts --require dotenv/config"
   },
-  "homepage": "https://github.com/NeokingdomDAO/dapp",
+  "homepage": "https://github.com/solidato/dapp",
   "dependencies": {
     "@cosmology-ui/react": "1.1.0-beta.10",
     "@cosmos-kit/keplr": "^2.0.3",
