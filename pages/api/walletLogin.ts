@@ -12,13 +12,15 @@ import { shareholders } from "../../schema/shareholders";
 
 // Login with Wallet
 const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
-  const JWT_SECRET = process.env.JWT_SECRET || "jwt_secret";
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
 
   if (req.method === "GET") {
     try {
       const message = "Please sign this message to login";
       const payload = { iat: Date.now(), message };
-      const signingToken = jwt.sign(payload, JWT_SECRET);
+      const signingToken = jwt.sign(payload, process.env.JWT_SECRET);
       res.json({ signingToken, message });
     } catch (error) {
       return res.status(401).json({ error });
@@ -28,7 +30,7 @@ const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     const { signingToken, signature } = req.body;
     try {
-      const { message } = jwt.verify(signingToken, JWT_SECRET) as { message: string };
+      const { message } = jwt.verify(signingToken, process.env.JWT_SECRET) as { message: string };
       const address = await recoverMessageAddress({ message, signature });
       // Check if the signer is in the Database!
       const results = await db.query.shareholders.findMany({ where: eq(shareholders.ethAddress, address) });
@@ -40,7 +42,7 @@ const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
         ...user,
         isLoggedIn: true,
       });
-      const cookie = jwt.sign({ sub: address }, JWT_SECRET);
+      const cookie = jwt.sign({ sub: address }, process.env.JWT_SECRET);
       req.session.cookie = cookie;
       req.session.user = authUser;
       await req.session.save();

@@ -114,17 +114,8 @@ export default function Settings() {
             </Avatar>
           </Stack>
           <Box sx={{ textAlign: "center", mt: 4 }}>
-            <Button
-              variant="outlined"
-              size="small"
-              href={`${process.env.NEXT_PUBLIC_ODOO_ENDPOINT}/web#id=${user.id}&cids=1&menu_id=77&action=231&model=res.users&view_type=form`}
-              sx={{ mr: 2 }}
-              target="_blank"
-            >
-              Edit on odoo
-            </Button>
             <Button variant="outlined" size="small" onClick={() => logout()}>
-              Log out from odoo
+              Logout
             </Button>
           </Box>
         </>
