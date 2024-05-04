@@ -49,7 +49,7 @@ const evmosLava = {
   },
 };
 
-export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? polygonMumbai : evmosLava];
+export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava];
 
 // Wagmi client
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
@@ -62,7 +62,7 @@ const metadata = {
 };
 
 const wagmiConfig = defaultWagmiConfig({
-  chains: [process.env.NEXT_PUBLIC_ENV === "staging" ? polygonMumbai : evmosLava],
+  chains: [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava],
   projectId,
   metadata,
   enableCoinbase: false,
