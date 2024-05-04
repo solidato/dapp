@@ -8,7 +8,7 @@ import { sessionOptions } from "@lib/session";
 import { Timesheet } from "../../store/projectTaskStore";
 
 type AccountAnalyticLine = Timesheet & {
-  user_id: { id: number; name: string; email: string; ethereum_address: string };
+  user_id: { id: number; name: string; email: string; ethAddress: string };
   token_amount: number;
 };
 

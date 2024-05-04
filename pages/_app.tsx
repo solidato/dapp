@@ -107,7 +107,7 @@ export default function App({ Component, pageProps }: DappProps) {
   const { asPath } = useRouter();
   const [mounted, setMounted] = useState(!!Component.renderOnServer);
 
-  const { isLoading, user } = useUser({
+  const { user, isLoading } = useUser({
     redirectTo: `/login?redirectTo=${asPath}`,
     shouldSkip: !Component.requireLogin,
   });
@@ -117,7 +117,7 @@ export default function App({ Component, pageProps }: DappProps) {
   }, []);
 
   const appElement = (
-    <FeatureFlagContextProvider email={user?.email} walletAddress={user?.ethereum_address} erpId={user?.id.toString()}>
+    <FeatureFlagContextProvider email={user?.email} walletAddress={user?.ethAddress} erpId={user?.id?.toString()}>
       <CssVarsProvider theme={newTheme} defaultMode="system">
         <VercelTools />
         <LocalizationProvider dateAdapter={AdapterDateFns}>

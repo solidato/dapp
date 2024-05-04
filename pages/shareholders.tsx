@@ -1,32 +1,23 @@
 import NextLink from "next/link";
-import { shallow } from "zustand/shallow";
 
-import * as React from "react";
+import { useState } from "react";
 
-import { Alert, Box, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
-
-import useLoginModalStore from "@store/loginModal";
+import { Add } from "@mui/icons-material";
+import { Alert, Box, Button, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
 
 import UserCard from "@components/shareholders/UserCard";
 
-import useShareholderStatus from "@hooks/useShareholderStatus";
 import useUser from "@hooks/useUser";
+
+import useShareholders from "../hooks/useShareholders";
 
 Shareholders.title = "Shareholders";
 Shareholders.checkMismatch = true;
 
 export default function Shareholders() {
   const { user } = useUser();
-  const [onlyManagingBoard, setOnlyManagingBoard] = React.useState(false);
-
-  const { handleOpenLoginModalFromLink } = useLoginModalStore(
-    (state) => ({
-      handleOpenLoginModalFromLink: state.handleOpenLoginModalFromLink,
-    }),
-    shallow,
-  );
-
-  const { isLoading, daoUsersAddresses, daoUsers, getShareholderStatus, error } = useShareholderStatus();
+  const [onlyManagingBoard, setOnlyManagingBoard] = useState(false);
+  const { daoUsers, isLoading, error } = useShareholders();
 
   if (error) {
     return null;
@@ -36,12 +27,25 @@ export default function Shareholders() {
     return <CircularProgress />;
   }
 
+  const handleCreateShareholder = () => {
+    console.log("Create shareholder");
+  };
+
   return (
     <>
-      <Box display="flex" justifyContent="flex-end" mb={2}>
+      <Box display="flex" justifyContent="space-between" mb={2}>
+        <Button
+          href="/shareholders/new"
+          onClick={handleCreateShareholder}
+          variant="outlined"
+          startIcon={<Add />}
+          component={Link}
+        >
+          New shareholder
+        </Button>
         <FormControlLabel
           sx={{ ml: "auto" }}
-          control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((old) => !old)} />}
+          control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((omb) => !omb)} />}
           label="Display only managing board members"
         />
       </Box>
@@ -49,25 +53,18 @@ export default function Shareholders() {
         <Box sx={{ mb: 2 }}>
           <Alert severity="warning">
             To view shareholder information, please{" "}
-            <Link component={NextLink} href="/login" onClick={handleOpenLoginModalFromLink}>
+            <Link component={NextLink} href="/login">
               log in
             </Link>
           </Alert>
         </Box>
       )}
       <Grid container spacing={2}>
-        {daoUsersAddresses
-          ?.filter(
-            (userAddress) =>
-              !onlyManagingBoard || (onlyManagingBoard && getShareholderStatus(userAddress).includes("ManagingBoard")),
-          )
-          .map((userAddress) => (
-            <Grid item xs={12} md={6} lg={4} key={userAddress}>
-              <UserCard
-                address={userAddress}
-                power={daoUsers?.[userAddress].power || ""}
-                statuses={getShareholderStatus(userAddress)}
-              />
+        {daoUsers
+          ?.filter((user) => !onlyManagingBoard || (onlyManagingBoard && user.status.includes("ManagingBoard")))
+          .map((user) => (
+            <Grid item xs={12} md={6} lg={4} key={user.address}>
+              <UserCard daoUser={user} />
             </Grid>
           ))}
       </Grid>

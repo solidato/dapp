@@ -2,11 +2,12 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { sessionOptions } from "../../lib/session";
-import userFactory, { User } from "../../lib/userFactory";
+import userFactory from "../../lib/userFactory";
+import { AuthUser } from "../../types";
 
-function logoutRoute(req: NextApiRequest, res: NextApiResponse<User>) {
+function logoutRoute(req: NextApiRequest, res: NextApiResponse<AuthUser>) {
   req.session.destroy();
-  res.json(userFactory());
+  res.json(userFactory({}));
 }
 
 export default withIronSessionApiRoute(logoutRoute, sessionOptions);

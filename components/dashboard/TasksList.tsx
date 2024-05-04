@@ -1,8 +1,4 @@
-import { format } from "date-fns";
-
 import { Box, Chip, Paper, Skeleton, Stack, Typography } from "@mui/material";
-
-import { getDateFromOdooTimestamp, hoursToTime } from "@lib/utils";
 
 import TimeEntries from "@components/tasks/TimeEntries";
 import ElapsedTime from "@components/time-entry/ElapsedTime";
@@ -25,7 +21,11 @@ export default function TasksList({
         ? [...new Array(3).keys()].map((index) => (
             <Paper key={index} sx={{ p: 2, mb: 1, display: "flex", alignItems: "center" }}>
               <Box sx={{ mr: 2, width: "80%" }}>
-                {showUser && <User isSkeleton />}
+                {showUser && (
+                  <Typography variant="body2" component="span">
+                    <Skeleton sx={{ width: 100, display: "inline-block" }} />
+                  </Typography>
+                )}
                 <Typography variant="h6" sx={{ mt: 1 }}>
                   <Skeleton />
                 </Typography>
@@ -50,9 +50,7 @@ export default function TasksList({
             <Paper key={task.id} sx={{ p: 2.5, pb: 1.8, mb: 2 }}>
               <Stack direction="row" alignItems="center">
                 <Box sx={{ mr: 2, mb: 1 }}>
-                  {showUser && task.user_id?.ethereum_address && (
-                    <User address={task.user_id?.ethereum_address} shortAddress />
-                  )}
+                  {showUser && task.user_id?.ethAddress && <User user={task.user_id} />}
                   <Typography variant="h6" sx={{ mt: 1, mb: 1 }}>
                     {task.name}
                     {task.parent_id ? ` - ${task.parent_id.name}` : ""}

@@ -9,7 +9,7 @@ import { META } from "../pages/_document";
 import { STAGE_TO_COLOR_MAP } from "./constants";
 import { getDateFromUnixTimestamp } from "./resolutions/common";
 
-export const getLettersFromName = (name: string) =>
+export const getLettersFromName = (name?: string) =>
   name
     ?.split(/\s/)
     .map((w) => Array.from(w)[0])
@@ -19,10 +19,18 @@ export const getLettersFromName = (name: string) =>
 export const enhanceTitleWithPrefix = (title: string, reversed?: boolean) =>
   reversed ? `${title} | ${META.title}` : `${META.title} | ${title}`;
 
-export const isSameAddress = (addressLeft: string, addressRight: string) =>
-  typeof addressLeft === "string" && // neeeded as odoo sometimes returns false as eth address
-  typeof addressRight === "string" && // see ^
-  addressLeft.toLowerCase() === addressRight.toLowerCase();
+export const isSameAddress = (addressLeft?: string, addressRight?: string) =>
+  addressLeft?.toLowerCase() === addressRight?.toLowerCase();
+
+// Truncates an ethereum address to the format 0x0000…0000
+export const shortEthAddress = (address?: string) => {
+  if (!address) return "";
+  // Captures 0x + 4 characters, then the last 4 characters.
+  const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
+  const match = address.match(truncateRegex);
+  if (!match) return address;
+  return `${match[1]}…${match[2]}`;
+};
 
 // PROJECTS TASKS UTILS
 export function getTaskTotalHours(task: ProjectTask) {

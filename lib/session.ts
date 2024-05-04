@@ -1,11 +1,11 @@
 import type { IronSessionOptions } from "iron-session";
 
-import { User } from "../lib/userFactory";
+import { AuthUser } from "../types";
 
 // Typings of req.session.*
 declare module "iron-session" {
   interface IronSessionData {
-    user?: User;
+    user?: AuthUser;
     cookie?: string;
   }
 }
