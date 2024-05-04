@@ -12,7 +12,6 @@ import { getChain, getLettersFromName } from "@lib/utils";
 import Dialog from "@components/Dialog";
 
 import useLogout from "@hooks/useLogout";
-import useOdooUsers from "@hooks/useOdooUsers";
 import useUser from "@hooks/useUser";
 
 Settings.title = "Settings";
@@ -46,7 +45,6 @@ export default function Settings() {
   const chainId = useChainId();
   const chain = useMemo(() => getChain(chainId), [chainId]);
   const { isConnected: isWalletConnected, address } = useAccount();
-  const { currentOdooUser } = useOdooUsers();
   const { data } = useBalance({
     address,
   });
@@ -104,15 +102,15 @@ export default function Settings() {
             justifyContent="center"
           >
             <Box>
-              <Typography variant="body1">Name: {user?.display_name}</Typography>
+              <Typography variant="body1">Name: {user?.name}</Typography>
               <Typography variant="body1">Email: {user?.email}</Typography>
             </Box>
             <Avatar
               sx={{ width: { xs: 64, sm: 124 }, height: { xs: 64, sm: 124 } }}
-              alt={user?.display_name}
-              src={`data:image/jpeg;charset=utf-8;base64,${currentOdooUser?.image || ""}`}
+              alt={user?.name}
+              src={`data:image/jpeg;charset=utf-8;base64,${user?.avatar || ""}`}
             >
-              {getLettersFromName(user?.display_name)}
+              {getLettersFromName(user?.name)}
             </Avatar>
           </Stack>
           <Box sx={{ textAlign: "center", mt: 4 }}>

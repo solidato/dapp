@@ -40,14 +40,14 @@ export default function ResolutionInfo({
   const { user } = useUser();
 
   const canVote =
-    address || user?.ethereum_address
-      ? resolution.voters.find((voter) => isSameAddress(voter.address, address || (user?.ethereum_address as string)))
+    address || user?.ethAddress
+      ? resolution.voters.find((voter) => isSameAddress(voter.address, address || (user?.ethAddress as string)))
       : null;
 
   const votingUser =
-    canVote && (address || user?.ethereum_address)
+    canVote && (address || user?.ethAddress)
       ? resolution.votingStatus.votersHaveVoted.find((voter) =>
-          isSameAddress(voter.address, address || (user?.ethereum_address as string)),
+          isSameAddress(voter.address, address || (user?.ethAddress as string)),
         )
       : null;
 

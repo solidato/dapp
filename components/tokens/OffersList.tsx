@@ -20,8 +20,8 @@ import UsersAutocomplete from "@components/UsersAutocomplete";
 import useApproveToMatchOffer from "@hooks/useApproveToMatchOffer";
 import useCheckAllowance from "@hooks/useCheckAllowance";
 import useMatchTokens from "@hooks/useMatchTokens";
-import useOdooUsers from "@hooks/useOdooUsers";
 import { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
+import useUsers from "@hooks/useUsers";
 
 import OfferCard from "./OfferCard";
 
@@ -43,7 +43,7 @@ export default function OffersList({
   const { isLoading, isAwaitingConfirmation, type } = useBlockchainTransactionStore();
   const { onSubmit } = useMatchTokens();
   const { onSubmit: onSubmitApproveUsdc } = useApproveToMatchOffer();
-  const { getOdooUser, isLoading: isLoadingUsers, error: errorUsers } = useOdooUsers();
+  const { getUser, isLoading: isLoadingUsers, error: errorUsers } = useUsers();
 
   const { address: userAddress } = useAccount();
   const userAddressLowerCase = userAddress?.toLowerCase();
@@ -187,7 +187,7 @@ export default function OffersList({
                     downloadOffersCsv({
                       offers,
                       currentUserAddress: userAddressLowerCase,
-                      getUserInfo: getOdooUser,
+                      getUserInfo: getUser,
                     });
                   }}
                 >

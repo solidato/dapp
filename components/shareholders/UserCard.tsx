@@ -8,20 +8,12 @@ import { isSameAddress } from "@lib/utils";
 
 import User from "@components/User";
 
-export default function UserCard({
-  address,
-  power,
-  statuses,
-  cta,
-}: {
-  address: string;
-  power: string;
-  statuses: string[];
-  cta?: ReactElement;
-}) {
+import { DaoUser } from "@hooks/useShareholders";
+
+export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: ReactElement }) {
   const { address: connectedAddress } = useAccount();
 
-  const cardProps = isSameAddress(connectedAddress as string, address)
+  const cardProps = isSameAddress(connectedAddress as string, daoUser.address)
     ? {
         variant: "elevation" as "elevation",
         elevation: 6,
@@ -31,7 +23,7 @@ export default function UserCard({
   return (
     <Card {...cardProps}>
       <CardContent sx={{ pt: 3, pb: 3 }}>
-        <User address={address} />
+        <User user={{ ...(daoUser.user || {}), ethAddress: daoUser.address }} />
         <Stack
           direction="row"
           justifyContent="center"
@@ -41,12 +33,12 @@ export default function UserCard({
         >
           <Box>
             <Typography variant="body2">Voting power</Typography>
-            <Typography variant="caption">{power}%</Typography>
+            <Typography variant="caption">{daoUser.power}%</Typography>
           </Box>
         </Stack>
       </CardContent>
       <CardActions sx={{ borderTop: (t) => `1px solid ${t.palette.divider}`, display: "flex", width: "100%" }}>
-        {statuses.map((status) => (
+        {(daoUser.status || daoUser.user?.status || []).map((status) => (
           <Chip key={status} size="small" label={status} />
         ))}
         <Box ml="auto !important">{cta}</Box>

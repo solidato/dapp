@@ -15,7 +15,7 @@ const getProjects = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).end();
   }
 
-  const getUserProjectIds = async (userId: number) => {
+  const getUserProjectIds = async (userId?: number) => {
     // const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
     return [...new Set([].map((t: ProjectTask) => t.project_id.id))];
   };

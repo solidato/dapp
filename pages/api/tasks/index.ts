@@ -17,7 +17,7 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
 
   const { body } = req;
 
-  const getUserTasks = async (userId: number) => {
+  const getUserTasks = async (userId?: number) => {
     // TODO: TASKS
     // const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
     return [];

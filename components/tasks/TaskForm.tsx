@@ -4,19 +4,7 @@ import useSWR from "swr";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import {
-  Box,
-  Button,
-  Chip,
-  FormControl,
-  Grid,
-  InputLabel,
-  ListSubheader,
-  MenuItem,
-  OutlinedInput,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, Button, FormControl, Grid, InputLabel, ListSubheader, MenuItem, Select, TextField } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { fetcher } from "@lib/net";
@@ -27,7 +15,7 @@ import { Project, ProjectTask, Tier } from "@store/projectTaskStore";
 
 import useUser from "@hooks/useUser";
 
-import { OdooUser } from "../../types";
+import { Shareholder } from "../../schema/shareholders";
 import SearchSelect from "../SearchSelect";
 
 type FormData = {
@@ -54,7 +42,7 @@ export default function TaskForm({
   onCancel?: () => void;
 }) {
   const { user } = useUser();
-  const { data: users } = useSWR<OdooUser[]>("/api/users", fetcher);
+  const { data: users } = useSWR<Shareholder[]>("/api/users", fetcher);
   const { data: projects } = useSWR<{ user: Project[]; other: Project[] }>("/api/projects/all", fetcher);
   const { data: tiers } = useSWR<Project[]>("/api/tiers", fetcher);
   const { data: tags } = useSWR<{ name: string; id: number }[]>("/api/tags", fetcher);
@@ -205,7 +193,7 @@ export default function TaskForm({
               control={control}
               render={({ field }) => (
                 <Select required labelId="task-assignee" id="task-assignee-select" label="Assignee" {...field}>
-                  {users?.map((user: OdooUser) => (
+                  {users?.map((user: Shareholder) => (
                     <MenuItem key={user.id} value={user.id}>
                       {user.name}
                     </MenuItem>
@@ -243,7 +231,7 @@ export default function TaskForm({
               control={control}
               render={({ field }) => (
                 <Select required labelId="task-controller" id="task-controller-select" label="Controller" {...field}>
-                  {users?.map((user: OdooUser) => (
+                  {users?.map((user: Shareholder) => (
                     <MenuItem key={user.id} value={user.id}>
                       {user.name}
                     </MenuItem>

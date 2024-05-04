@@ -1,3 +1,5 @@
+import useSWR from "swr";
+
 import { useMemo } from "react";
 
 import { Avatar, CircularProgress } from "@mui/material";
@@ -5,9 +7,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
+import { fetcher } from "@lib/net";
 import { getLettersFromName } from "@lib/utils";
 
-import useOdooUsers from "@hooks/useOdooUsers";
+import { Shareholder } from "../schema/shareholders";
 
 export default function UsersAutocomplete({
   onChange,
@@ -22,17 +25,17 @@ export default function UsersAutocomplete({
   label: string;
   fullWidth?: boolean;
 }) {
-  const { allOdooUsers, isLoading } = useOdooUsers();
+  const { data: users, isLoading, error } = useSWR<Shareholder[]>("/api/users", fetcher);
 
   const options = useMemo(() => {
-    return allOdooUsers
-      .filter((user) => !filterList || filterList.includes(user.ethereum_address))
+    return (users || [])
+      .filter((user) => !filterList || filterList.includes(user.ethAddress))
       .map((user) => ({
-        name: user.display_name,
-        value: user.ethereum_address,
-        image: user.image,
+        name: user.name,
+        value: user.ethAddress,
+        image: user.avatar,
       }));
-  }, [allOdooUsers]);
+  }, [users]);
 
   if (isLoading) return <CircularProgress />;
 

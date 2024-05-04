@@ -1,6 +1,17 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { customType } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+
+import { ShareholderStatus } from "../types";
+
+const stringArray = customType<{ data: ShareholderStatus[]; driverData: string; default: true }>({
+  dataType() {
+    return "text";
+  },
+  toDriver: (value: ShareholderStatus[]) => `${(value || []).join(",")}`,
+  fromDriver: (value: string) => value.split(",") as ShareholderStatus[],
+});
 
 export const shareholders = pgTable(
   "shareholders",
@@ -9,6 +20,7 @@ export const shareholders = pgTable(
     name: text("name").notNull(),
     email: text("email").notNull(),
     ethAddress: text("ethAddress").notNull(),
+    status: stringArray("status"),
     avatar: text("avatar"),
     updatedAt: timestamp("updatedAt"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
