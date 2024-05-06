@@ -33,21 +33,20 @@ const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       const { message } = jwt.verify(signingToken, process.env.JWT_SECRET) as { message: string };
       const address = await recoverMessageAddress({ message, signature });
       // Check if the signer is in the Database!
-      const results = await db.query.shareholders.findMany({ where: eq(shareholders.ethAddress, address) });
-      if (!results.length) {
+      const users = await db.query.shareholders.findMany({ where: eq(shareholders.ethAddress, address) });
+      if (!users.length) {
         return res.status(401).json({ error: "User not found" });
       }
-      const user = results[0];
       const authUser = userFactory({
-        ...user,
+        ...users[0],
         isLoggedIn: true,
       });
-      const cookie = jwt.sign({ sub: address }, process.env.JWT_SECRET);
+      const cookie = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: "7 days" });
       req.session.cookie = cookie;
-      req.session.user = authUser;
       await req.session.save();
-      return res.status(200).json(user);
+      return res.status(200).json(authUser);
     } catch (err) {
+      console.log("🐞 >>> Error:", err);
       return res.status(409).json({ error: "Invalid signing token" });
     }
   }
