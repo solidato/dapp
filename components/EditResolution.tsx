@@ -114,9 +114,11 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
     (isVeto ? formProps.typeId !== "routineVeto" : resolution.resolutionType.id !== formProps.typeId);
 
   if (!canCreateResolutions) {
-    <Alert severity="warning">
-      Creating or updating resolutions is disabled at the moment. The functionality will be back shortly.
-    </Alert>;
+    return (
+      <Alert severity="warning">
+        Creating or updating resolutions is disabled at the moment. The functionality will be back shortly.
+      </Alert>
+    );
   }
 
   return (
