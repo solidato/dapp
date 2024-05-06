@@ -9,17 +9,28 @@ const stringArray = customType<{ data: ShareholderStatus[]; driverData: string; 
   dataType() {
     return "text";
   },
-  toDriver: (value: ShareholderStatus[]) => `${(value || []).join(",")}`,
+  toDriver: (value: ShareholderStatus[]) => {
+    const array = Array.isArray(value) ? value : JSON.parse(value);
+    return `${array.join(",")}`;
+  },
   fromDriver: (value: string) => value.split(",") as ShareholderStatus[],
 });
 
+const textToLowercase = customType<{ data: string; driverData: string }>({
+  dataType() {
+    return "text";
+  },
+  toDriver: (value: string) => value.toLowerCase(),
+});
+
+// SHAREHOLDER SCHEMA
 export const shareholders = pgTable(
   "shareholders",
   {
     id: serial("id").primaryKey(),
     name: text("name").notNull(),
     email: text("email").notNull(),
-    ethAddress: text("ethAddress").notNull(),
+    ethAddress: textToLowercase("ethAddress").notNull(),
     status: stringArray("status"),
     avatar: text("avatar"),
     updatedAt: timestamp("updatedAt"),

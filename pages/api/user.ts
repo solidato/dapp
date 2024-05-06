@@ -20,7 +20,6 @@ async function userRoute(req: NextApiRequest, res: NextApiResponse) {
     });
     return res.json({ ...userFactory(payload), ...users[0] });
   } catch (err) {
-    console.log("🐞 >>> Error:", err);
     req.session.destroy();
     return res.status(401).json(userFactory({}));
   }

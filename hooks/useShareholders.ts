@@ -23,6 +23,7 @@ export type DaoUser = {
 
 export default function useShareholders() {
   const { data: daoUsers, isLoading, error } = useSWR<DaoUser[]>("/api/shareholders", fetcher);
+  console.log("🐞 > daoUsers:", daoUsers);
   return {
     daoUsers,
     isLoading,

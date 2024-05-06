@@ -34,15 +34,17 @@ export default function Shareholders() {
   return (
     <>
       <Box display="flex" justifyContent="space-between" mb={2}>
-        <Button
-          href="/shareholders/new"
-          onClick={handleCreateShareholder}
-          variant="outlined"
-          startIcon={<Add />}
-          component={Link}
-        >
-          New shareholder
-        </Button>
+        {user?.isLoggedIn && (
+          <Button
+            href="/shareholders/new"
+            onClick={handleCreateShareholder}
+            variant="outlined"
+            startIcon={<Add />}
+            component={Link}
+          >
+            New shareholder
+          </Button>
+        )}
         <FormControlLabel
           sx={{ ml: "auto" }}
           control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((omb) => !omb)} />}

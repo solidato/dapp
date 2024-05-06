@@ -16,10 +16,10 @@ import { Shareholder } from "../../../schema/shareholders";
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
-  const cookie = req.session.cookie;
-  if (!cookie) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  // const cookie = req.session.cookie;
+  // if (!cookie) {
+  //   return res.status(401).json({ message: "Unauthorized" });
+  // }
 
   if (req.method === "GET") {
     const users = await fetcherGraphqlPublic([getShareholdersInfo, {}]);
