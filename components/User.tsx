@@ -33,8 +33,9 @@ export default function User({
 }) {
   const [shareholder, setShareholder] = useState(user || {});
   const { address: connectedAddress } = useAccount();
-  const shortAddress = shortEthAddress(shareholder.ethAddress);
+  const shortAddress = shortEthAddress(shareholder.ethAddress || address);
   const { data: fetchedUser } = useSWR<Shareholder>(address && !user ? `/api/users/${address}` : null, fetcher);
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
   const avatarURI = useMemo(() => {
     const randomIcon = "data:image/svg+xml;utf8," + generateAvatar(shareholder.ethAddress || "");
@@ -106,19 +107,13 @@ export default function User({
             )}
             <Typography
               variant="caption"
+              onClick={() => setShowFullAddress((sfa) => !sfa)}
               sx={{
                 display: "block",
-                ...(shortAddress
-                  ? {
-                      maxWidth: { xs: "100px", md: "auto" },
-                      overflow: { xs: "hidden", md: "visible" },
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }
-                  : {}),
+                cursor: "pointer",
               }}
             >
-              {shortAddress}
+              {showFullAddress ? shareholder.ethAddress || address : shortAddress}
             </Typography>
           </>
         )}
