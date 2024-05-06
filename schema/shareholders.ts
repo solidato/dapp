@@ -2,6 +2,7 @@ import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { pgTable, serial, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { customType } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import z from "zod";
 
 import { ShareholderStatus } from "../types";
 
@@ -16,7 +17,7 @@ const stringArray = customType<{ data: ShareholderStatus[]; driverData: string; 
   fromDriver: (value: string) => value.split(",") as ShareholderStatus[],
 });
 
-const textToLowercase = customType<{ data: string; driverData: string }>({
+const textToLowercase = customType<{ data: string; notNull: true; driverData: string }>({
   dataType() {
     return "text";
   },
@@ -49,5 +50,6 @@ export type NewShareholder = InferInsertModel<typeof shareholders>;
 // Zod schema for select and insert
 export const selectShareholdersSchema = createSelectSchema(shareholders);
 export const insertShareholdersSchema = createInsertSchema(shareholders, {
+  ethAddress: () => z.string(),
   email: (schema) => schema.email.email(),
 });

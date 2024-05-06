@@ -1,13 +1,15 @@
+"use client";
+
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Avatar, Box, Skeleton, SxProps, Tooltip, Typography, Zoom } from "@mui/material";
 import { Variant } from "@mui/material/styles/createTypography";
 
 import { fetcher } from "@lib/net";
-import { getLettersFromName, isSameAddress, shortEthAddress } from "@lib/utils";
+import { generateAvatar, getLettersFromName, isSameAddress, shortEthAddress } from "@lib/utils";
 
 import { Shareholder } from "../schema/shareholders";
 import { AuthUser } from "../types";
@@ -33,6 +35,11 @@ export default function User({
   const { address: connectedAddress } = useAccount();
   const shortAddress = shortEthAddress(shareholder.ethAddress);
   const { data: fetchedUser } = useSWR<Shareholder>(address && !user ? `/api/users/${address}` : null, fetcher);
+
+  const avatarURI = useMemo(() => {
+    const randomIcon = "data:image/svg+xml;utf8," + generateAvatar(shareholder.ethAddress || "");
+    return shareholder?.avatar ? `data:image/jpeg;charset=utf-8;base64,${shareholder.avatar}` : randomIcon;
+  }, [shareholder]);
 
   useEffect(() => {
     if (fetchedUser) {
@@ -64,14 +71,16 @@ export default function User({
         <Tooltip title={markCurrentUser ? "you" : ""} placement="top" arrow TransitionComponent={Zoom}>
           <Avatar
             alt={shareholder.name}
-            src={`data:image/jpeg;charset=utf-8;base64,${user?.avatar || ""}`}
+            src={avatarURI}
             sx={
               markCurrentUser
                 ? {
                     boxShadow: (theme) => `0 0 0 3px ${theme.palette.success.main}`,
                     "@media print": { boxShadow: "none" },
                   }
-                : {}
+                : {
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                  }
             }
           >
             {getLettersFromName(shareholder.name || "")}
