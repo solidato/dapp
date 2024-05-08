@@ -1,6 +1,6 @@
 import isCorrupted from "@lib/resolutions/corruption-check";
 
-describe.only("corruption-check", () => {
+describe("corruption-check", () => {
   test("returns true if the check is not successful", async () => {
     const result = isCorrupted("0xc64ad9f9ebb39687237025f77b8ebfa97070245e7986fb7dc539fabc8e32036e", {
       title: "title-corrupted",
