@@ -1,7 +1,7 @@
 import isCorrupted from "@lib/resolutions/corruption-check";
 
 describe("corruption-check", () => {
-  test("returns true if the check is not successful", async () => {
+  test("should return true if the check is not successful", async () => {
     const result = isCorrupted("0xc64ad9f9ebb39687237025f77b8ebfa97070245e7986fb7dc539fabc8e32036e", {
       title: "title-corrupted",
       content: "content",
@@ -10,7 +10,7 @@ describe("corruption-check", () => {
     expect(result).toBe(true);
   });
 
-  test("returns true if the data is not correct", async () => {
+  test("should return true if the data is not correct", async () => {
     // @ts-ignore
     const result = isCorrupted("0xc64ad9f9ebb39687237025f77b8ebfa97070245e7986fb7dc539fabc8e32036e", {
       title: "title",
@@ -19,7 +19,7 @@ describe("corruption-check", () => {
     expect(result).toBe(true);
   });
 
-  test("returns false if the check is successful", async () => {
+  test("should return false if the check is successful", async () => {
     const result = isCorrupted("0xc64ad9f9ebb39687237025f77b8ebfa97070245e7986fb7dc539fabc8e32036e", {
       title: "title",
       content: "content",
@@ -28,7 +28,18 @@ describe("corruption-check", () => {
     expect(result).toBe(false);
   });
 
-  test("returns false if the hash is not 0x (comes from an IPFS migrated content)", async () => {
+  test("should return false if the check is successful, regardless of other properties in the data obj", async () => {
+    const result = isCorrupted("0xc64ad9f9ebb39687237025f77b8ebfa97070245e7986fb7dc539fabc8e32036e", {
+      title: "title",
+      content: "content",
+      isRewards: true,
+      // @ts-ignore
+      foo: "bar",
+    });
+    expect(result).toBe(false);
+  });
+
+  test("should return false if the hash is not 0x (comes from an IPFS migrated content)", async () => {
     const result = isCorrupted("QmXqjYU2xVwEuc19JpjBkZJKYc9qjDevxaGEseT11UgiiG", {
       title: "title",
       content: "content",

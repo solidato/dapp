@@ -53,7 +53,7 @@ export default function NewResolution({
   const featureFlags = useFeatureFlags();
   const canCreateResolutions = featureFlags.canCreateResolutions().get(true);
 
-  if (canCreateResolutions) {
+  if (!canCreateResolutions) {
     return (
       <Alert severity="warning">
         Creating or updating resolutions is disabled at the moment. The functionality will be back shortly.
