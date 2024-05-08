@@ -9,7 +9,7 @@ import UserCard from "@components/shareholders/UserCard";
 
 import useUser from "@hooks/useUser";
 
-import useShareholders from "../hooks/useShareholders";
+import useShareholders from "../../hooks/useShareholders";
 
 Shareholders.title = "Shareholders";
 Shareholders.checkMismatch = true;
@@ -34,17 +34,6 @@ export default function Shareholders() {
   return (
     <>
       <Box display="flex" justifyContent="space-between" mb={2}>
-        {user?.isLoggedIn && (
-          <Button
-            href="/shareholders/new"
-            onClick={handleCreateShareholder}
-            variant="outlined"
-            startIcon={<Add />}
-            component={Link}
-          >
-            New shareholder
-          </Button>
-        )}
         <FormControlLabel
           sx={{ ml: "auto" }}
           control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((omb) => !omb)} />}

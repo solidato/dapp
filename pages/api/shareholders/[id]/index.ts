@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ZodError } from "zod";
 
 import { db } from "../../../../drizzle";
-import { insertShareholdersSchema, shareholders } from "../../../../schema/shareholders";
+import { shareholders, updateShareholdersSchema } from "../../../../schema/shareholders";
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
@@ -21,7 +21,7 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "PUT") {
     try {
-      const data = insertShareholdersSchema.partial().parse(req.body);
+      const data = updateShareholdersSchema.parse(JSON.parse(req.body));
       const newShareholder = await db
         .update(shareholders)
         .set({ ...data, updatedAt: new Date() })

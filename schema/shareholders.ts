@@ -53,3 +53,9 @@ export const insertShareholdersSchema = createInsertSchema(shareholders, {
   ethAddress: () => z.string(),
   email: (schema) => schema.email.email(),
 });
+export const updateShareholdersSchema = insertShareholdersSchema.pick({
+  name: true,
+  email: true,
+  ethAddress: true,
+  avatar: true,
+});
