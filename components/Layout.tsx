@@ -26,11 +26,6 @@ import LoginModal from "./LoginModal";
 import MismatchNotifier from "./mismatch-notifier/MismatchNotifier";
 import NkdLogo from "./svg-logos/NkdLogo";
 
-const stardosStencil = Stardos_Stencil({
-  weight: "700",
-  subsets: ["latin"],
-});
-
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
