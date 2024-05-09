@@ -8,17 +8,17 @@ import ShareholderForm from "@components/shareholders/ShareholderForm";
 
 import useErrorHandler from "@hooks/useErrorHandler";
 
+import useShareholders from "../../hooks/useShareholders";
+
 NewShareholder.title = "New shareholder";
 NewShareholder.requireLogin = true;
 
 export default function NewShareholder() {
   const router = useRouter();
-  const {
-    query: { shareholderId },
-  } = router;
   const actions = useActions();
   const { handleError } = useErrorHandler();
   const createShareholder = handleError(actions.createShareholder);
+  const { mutate } = useShareholders();
 
   return (
     <>
@@ -28,9 +28,13 @@ export default function NewShareholder() {
         </Grid>
         <Grid item xs={12} md={9}>
           <ShareholderForm
+            onCancel={() => router.push("/shareholders")}
             onConfirm={async (data) => {
               const { error } = await createShareholder(data);
-              if (!error) router.push("/shareholders");
+              if (!error) {
+                await mutate();
+                router.push("/shareholders");
+              }
             }}
           />
         </Grid>

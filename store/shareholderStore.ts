@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { create } from "zustand";
 
 import { Shareholder } from "../schema/shareholders";
@@ -10,7 +11,7 @@ export type ActionResponse = {
 export interface ShareholderStore {
   isLoading: boolean;
   actions: {
-    fetchShareholder: (userId: number) => Promise<ActionResponse>;
+    fetchShareholders: (userId: number) => Promise<ActionResponse>;
     createShareholder: (user: Shareholder) => Promise<ActionResponse>;
     updateShareholder: (user: Shareholder) => Promise<ActionResponse>;
     deleteShareholder: (user: Shareholder) => Promise<ActionResponse>;
@@ -22,7 +23,7 @@ const buildError = async (response: Response) => ({ ...(await response.json()), 
 const useShareholderStore = create<ShareholderStore>((set, get) => ({
   isLoading: false,
   actions: {
-    fetchShareholder: async (id: number) => {
+    fetchShareholders: async (id: number) => {
       set({ isLoading: true });
       const response = await fetch(`/api/shareholders/${id}`, { method: "GET" });
       if (response.ok) {

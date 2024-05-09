@@ -2,8 +2,7 @@ import NextLink from "next/link";
 
 import { useState } from "react";
 
-import { Add } from "@mui/icons-material";
-import { Alert, Box, Button, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
+import { Alert, Box, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
 
 import UserCard from "@components/shareholders/UserCard";
 
@@ -26,10 +25,6 @@ export default function Shareholders() {
   if (isLoading) {
     return <CircularProgress />;
   }
-
-  const handleCreateShareholder = () => {
-    console.log("Create shareholder");
-  };
 
   return (
     <>

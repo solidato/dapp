@@ -35,6 +35,18 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(500).json({ error: err.message });
     }
   }
+
+  if (req.method === "DELETE") {
+    try {
+      const deletedUsers = await db
+        .delete(shareholders)
+        .where(eq(shareholders.id, Number(id)))
+        .returning();
+      return res.status(200).json(deletedUsers[0]);
+    } catch (err: any) {
+      return res.status(500).json({ error: err.message });
+    }
+  }
 };
 
 export default shareholdersRoute;

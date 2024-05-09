@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 import { Controller, useForm } from "react-hook-form";
 
 import { Box, Button, Grid, TextField } from "@mui/material";
@@ -8,6 +10,7 @@ type FormData = {
   name: string;
   email: string;
   ethAddress: string;
+  avatar?: string | null;
 };
 
 export default function ShareholderForm({
@@ -19,10 +22,13 @@ export default function ShareholderForm({
   onConfirm: (data: any) => void;
   onCancel?: () => void;
 }) {
+  const router = useRouter();
+  const { ethAddress } = router.query;
   const defaultValues = {
     name: "",
     email: "",
-    ethAddress: "",
+    ethAddress: ethAddress?.toString() || "",
+    avatar: "",
   };
   const { control, handleSubmit } = useForm<FormData>({ defaultValues, ...(shareholder && { values: shareholder }) });
 
@@ -69,6 +75,16 @@ export default function ShareholderForm({
                 label="Ethereum address"
                 {...field}
               />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Controller
+            name="avatar"
+            control={control}
+            render={({ field }) => (
+              <TextField sx={{ mt: 3, width: "100%" }} id="user-avatar" label="Avatar" {...field} />
             )}
           />
         </Grid>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useAccount } from "wagmi";
 
 import { ReactElement, useState } from "react";
@@ -23,17 +24,25 @@ import {
 
 import { isSameAddress } from "@lib/utils";
 
+import { useActions } from "@store/shareholderStore";
+
 import User from "@components/User";
 
-import { DaoUser } from "@hooks/useShareholders";
+import useErrorHandler from "@hooks/useErrorHandler";
+import useShareholders, { DaoUser } from "@hooks/useShareholders";
+import useUser from "@hooks/useUser";
 
-import useUser from "../../hooks/useUser";
+import Dialog from "../Dialog";
 
 export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: ReactElement }) {
   const { address: connectedAddress } = useAccount();
-  const { user } = useUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [showDeleteModal, openDeleteModal] = useState(false);
+  const { user } = useUser();
+  const actions = useActions();
+  const { handleError } = useErrorHandler();
+  const deleteShareholder = handleError(actions.deleteShareholder);
+  const { mutate } = useShareholders();
 
   const cardProps = isSameAddress(connectedAddress as string, daoUser.address)
     ? {
@@ -48,8 +57,10 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
 
   const closeMenu = () => setAnchorEl(null);
 
-  const handleAddUser = () => {
-    console.log("add user");
+  const handleDeleteShareholder = async () => {
+    await deleteShareholder(daoUser?.user);
+    await mutate();
+    openDeleteModal(false);
   };
 
   return (
@@ -90,7 +101,7 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
           id="user-actions-menu"
           aria-labelledby="user-actions-menu"
           anchorEl={anchorEl}
-          open={open}
+          open={Boolean(anchorEl)}
           onClose={closeMenu}
           anchorOrigin={{
             vertical: "top",
@@ -100,26 +111,41 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
             vertical: "top",
             horizontal: "left",
           }}
-          sx={{
-            zIndex: 10002,
-          }}
         >
-          <MenuItem onClick={handleAddUser} key="add">
+          <MenuItem component={Link} href={`/shareholders/new?ethAddress=${daoUser.address}`} key="add">
             <AddIcon sx={{ mr: 1 }} /> Add User
           </MenuItem>
           {daoUser.user && (
             <>
-              <MenuItem onClick={handleAddUser} key="edit">
+              <MenuItem component={Link} href={`/shareholders/${daoUser.user.id}/edit`} key="edit">
                 <EditIcon sx={{ mr: 1 }} />
                 Edit
               </MenuItem>
-              <MenuItem sx={{ color: (theme) => theme.palette.error.light }} onClick={handleAddUser} key="delete">
+              <MenuItem
+                sx={{ color: (theme) => theme.palette.error.light }}
+                onClick={() => {
+                  openDeleteModal(true);
+                  closeMenu();
+                }}
+                key="delete"
+              >
                 <DeleteOutlineIcon sx={{ mr: 1, color: (theme) => theme.palette.error.light }} />
                 Delete
               </MenuItem>
             </>
           )}
         </Menu>
+        <Dialog
+          open={showDeleteModal}
+          handleClose={() => openDeleteModal(false)}
+          handleApprove={handleDeleteShareholder}
+          descriptionId="dialog-delete-shareholder"
+          title={"Delete Shareholder"}
+        >
+          <Typography variant="body1">
+            Are you sure you want to delete the shareholder <b>{daoUser?.user?.name}</b>?
+          </Typography>
+        </Dialog>
       </CardActions>
     </Card>
   );

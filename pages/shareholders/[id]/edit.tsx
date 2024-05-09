@@ -11,6 +11,7 @@ import ShareholderForm from "@components/shareholders/ShareholderForm";
 
 import useErrorHandler from "@hooks/useErrorHandler";
 
+import useShareholders from "../../../hooks/useShareholders";
 import { Shareholder } from "../../../schema/shareholders";
 
 EditShareholder.title = "Edit shareholder";
@@ -25,6 +26,7 @@ export default function EditShareholder() {
   const { handleError } = useErrorHandler();
   const updateShareholder = handleError(actions.updateShareholder);
   const { data: shareholder } = useSWR<Shareholder>(id ? `/api/shareholders/${id}` : null, fetcher);
+  const { mutate } = useShareholders();
 
   return (
     <>
@@ -38,7 +40,10 @@ export default function EditShareholder() {
             onCancel={() => router.push("/shareholders")}
             onConfirm={async (data) => {
               const { error } = await updateShareholder(data);
-              if (!error) router.push("/shareholders");
+              if (!error) {
+                await mutate();
+                router.push("/shareholders");
+              }
             }}
           />
         </Grid>
