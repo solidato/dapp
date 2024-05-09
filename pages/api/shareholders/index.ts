@@ -16,10 +16,10 @@ import { Shareholder } from "../../../schema/shareholders";
 const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
-  // const cookie = req.session.cookie;
-  // if (!cookie) {
-  //   return res.status(401).json({ message: "Unauthorized" });
-  // }
+  const cookie = req.session.cookie;
+  if (!cookie) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
   if (req.method === "GET") {
     const users = await fetcherGraphqlPublic([getShareholdersInfo, {}]);
@@ -45,11 +45,12 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "POST") {
     try {
-      const shareholder = insertShareholdersSchema.parse(req.body);
+      const shareholder = insertShareholdersSchema.parse(JSON.parse(req.body));
       const newShareholder = await db.insert(shareholders).values(shareholder).returning();
       return res.status(200).json(newShareholder);
     } catch (err: any) {
       if (err instanceof ZodError) {
+        console.log("🐞 > err:", err);
         return res.status(400).json({ message: "Validation Error!", errors: err.format() });
       }
       return res.status(500).json({ error: err.message });

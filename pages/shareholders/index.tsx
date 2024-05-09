@@ -2,14 +2,13 @@ import NextLink from "next/link";
 
 import { useState } from "react";
 
-import { Add } from "@mui/icons-material";
-import { Alert, Box, Button, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
+import { Alert, Box, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
 
 import UserCard from "@components/shareholders/UserCard";
 
 import useUser from "@hooks/useUser";
 
-import useShareholders from "../hooks/useShareholders";
+import useShareholders from "../../hooks/useShareholders";
 
 Shareholders.title = "Shareholders";
 Shareholders.checkMismatch = true;
@@ -27,24 +26,9 @@ export default function Shareholders() {
     return <CircularProgress />;
   }
 
-  const handleCreateShareholder = () => {
-    console.log("Create shareholder");
-  };
-
   return (
     <>
       <Box display="flex" justifyContent="space-between" mb={2}>
-        {user?.isLoggedIn && (
-          <Button
-            href="/shareholders/new"
-            onClick={handleCreateShareholder}
-            variant="outlined"
-            startIcon={<Add />}
-            component={Link}
-          >
-            New shareholder
-          </Button>
-        )}
         <FormControlLabel
           sx={{ ml: "auto" }}
           control={<Switch checked={onlyManagingBoard} onChange={() => setOnlyManagingBoard((omb) => !omb)} />}

@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { ZodError } from "zod";
 
 import { db } from "../../../../drizzle";
-import { insertShareholdersSchema, shareholders } from "../../../../schema/shareholders";
+import { shareholders, updateShareholdersSchema } from "../../../../schema/shareholders";
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
@@ -21,7 +21,7 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "PUT") {
     try {
-      const data = insertShareholdersSchema.partial().parse(req.body);
+      const data = updateShareholdersSchema.parse(JSON.parse(req.body));
       const newShareholder = await db
         .update(shareholders)
         .set({ ...data, updatedAt: new Date() })
@@ -32,6 +32,18 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       if (err instanceof ZodError) {
         return res.status(400).json({ message: "Validation Error!", errors: err.format() });
       }
+      return res.status(500).json({ error: err.message });
+    }
+  }
+
+  if (req.method === "DELETE") {
+    try {
+      const deletedUsers = await db
+        .delete(shareholders)
+        .where(eq(shareholders.id, Number(id)))
+        .returning();
+      return res.status(200).json(deletedUsers[0]);
+    } catch (err: any) {
       return res.status(500).json({ error: err.message });
     }
   }
