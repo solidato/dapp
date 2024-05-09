@@ -54,7 +54,6 @@ const getVotingInfo = (percentage: number | null) => {
 
 export default function Header({ votingPercentageInTheYear }: { votingPercentageInTheYear: number | null }) {
   const { user } = useUser();
-  const { isLoading, totalTime } = useCurrentTasks();
   const { currentTimestamp } = useTimestamp();
   const [infoOpen, setInfoOpen] = useState(false);
   const featureFlags = useFeatureFlags();
@@ -85,35 +84,6 @@ export default function Header({ votingPercentageInTheYear }: { votingPercentage
           ))}
         </Stack>
       </Box>
-      <Paper sx={{ textAlign: "center", p: 2, ml: "auto", width: { xs: "100%", sm: "auto" }, mt: { xs: 4, sm: 0 } }}>
-        {isLoading ? (
-          <Box sx={{ width: 120 }}>
-            <Typography variant="caption">
-              <Skeleton />
-            </Typography>
-            <Typography variant="h4">
-              <Skeleton />
-            </Typography>
-            <Typography variant="caption">
-              <Skeleton />
-            </Typography>
-          </Box>
-        ) : (
-          <>
-            {totalTime > 0 ? (
-              <>
-                <ElapsedTime elapsedTime={totalTime * 3600} withLabels hideSeconds />
-                <Typography variant="caption">not tokenised, yet</Typography>
-              </>
-            ) : (
-              <Typography variant="caption">All your tasks are approved</Typography>
-            )}
-            <IconButton color="primary" aria-label="info" size="small" onClick={() => setInfoOpen(true)}>
-              <InfoOutlined />
-            </IconButton>
-          </>
-        )}
-      </Paper>
 
       <Alert severity={votingSeverity as AlertColor} sx={{ mt: 2, width: "100%" }}>
         {votingInfoMessage}

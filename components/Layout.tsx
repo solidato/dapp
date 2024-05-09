@@ -40,7 +40,7 @@ const interFont = Inter({
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
-const TimeEntryWidget = dynamic(() => import("./time-entry/TimeEntry"), { ssr: false });
+// const TimeEntryWidget = dynamic(() => import("./time-entry/TimeEntry"), { ssr: false });
 
 export default function Layout({
   children,
@@ -75,7 +75,7 @@ export default function Layout({
     <>
       {checkMismatch && <MismatchNotifier />}
       <LoginModal />
-      {user?.isLoggedIn && <TimeEntryWidget />}
+      {/* {user?.isLoggedIn && <TimeEntryWidget />} */}
       <Box
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -171,7 +171,7 @@ export default function Layout({
                 />
               )}
 
-              {user?.isLoggedIn && (
+              {/* {user?.isLoggedIn && (
                 <Chip
                   label="Tasks"
                   component={Link}
@@ -179,7 +179,7 @@ export default function Layout({
                   variant={isActive("/tasks") ? "filled" : "outlined"}
                   clickable
                 />
-              )}
+              )} */}
 
               <Badge
                 color="success"

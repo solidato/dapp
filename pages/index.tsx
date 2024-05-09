@@ -9,7 +9,6 @@ import { RESOLUTION_STATES, getEnhancedResolutions, getVotingPercentage } from "
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
 import InvestorsReport from "@components/dashboard/InvestorsReport";
-import Tasks from "@components/dashboard/Tasks";
 import Tokens from "@components/dashboard/Tokens";
 
 import useGetResolutions from "@hooks/useGetResolutions";
@@ -99,9 +98,6 @@ export default function Home() {
         }}
       >
         <Header votingPercentageInTheYear={votingPercentageInTheYear} />
-      </Section>
-      <Section inverse={enhancedResolutionsToVote?.length === 0}>
-        <Tasks />
       </Section>
       {!error && (
         <>
