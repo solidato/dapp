@@ -74,11 +74,11 @@ export default function SimpleLoginForm({ onLoggedIn }: { onLoggedIn?: () => voi
   return (
     <>
       {!isConnected ? (
-        <Button variant="contained" onClick={() => openWeb3Modal()} fullWidth size="large">
+        <Button variant="outlined" onClick={() => openWeb3Modal()} fullWidth size="large">
           Connect your Wallet
         </Button>
       ) : (
-        <Button color="success" variant="contained" onClick={() => handleSignInClick()} fullWidth size="large">
+        <Button variant="contained" onClick={() => handleSignInClick()} fullWidth size="large">
           Click to Login
         </Button>
       )}

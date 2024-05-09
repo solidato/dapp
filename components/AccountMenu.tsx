@@ -122,7 +122,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {!user?.isLoggedIn && (
-          <MenuItem href="/login" onClick={handleModalOpen} component={Link}>
+          <MenuItem href="/login" component={Link}>
             Login
           </MenuItem>
         )}

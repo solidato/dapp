@@ -85,7 +85,7 @@ export default function Settings() {
         </span>
       </Dialog>
       <Typography variant="h3" sx={{ mb: 2 }}>
-        Odoo settings
+        User settings
       </Typography>
       {!user?.isLoggedIn ? (
         <Link component={NextLink} href="/login?redirectTo=settings">
