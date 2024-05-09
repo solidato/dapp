@@ -39,7 +39,9 @@ export const getServerSideProps = async ({ params, res }: any) => {
     };
   }
 
-  const [dbResolution] = await getResolution(data.resolution?.ipfsDataURI as string);
+  const [dbResolution] = await getResolution(
+    (data.resolution?.ipfsDataURI || legacyGraphQlResolutionData.resolution?.ipfsDataURI) as string,
+  );
   const enhancedResolution: ResolutionEntityEnhanced = getEnhancedResolutionMapper(+new Date())({
     ...(data.resolution || legacyGraphQlResolutionData.resolution),
     title: dbResolution?.title,
@@ -58,7 +60,11 @@ export const getServerSideProps = async ({ params, res }: any) => {
 
   return {
     props: {
-      resolution: enhancedResolution,
+      resolution: {
+        ...(data.resolution || legacyGraphQlResolutionData.resolution),
+        title: dbResolution?.title,
+        content: dbResolution?.content,
+      },
     },
   };
 };
