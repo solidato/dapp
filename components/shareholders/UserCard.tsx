@@ -112,10 +112,7 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
             horizontal: "left",
           }}
         >
-          <MenuItem component={Link} href={`/shareholders/new?ethAddress=${daoUser.address}`} key="add">
-            <AddIcon sx={{ mr: 1 }} /> Add User
-          </MenuItem>
-          {daoUser.user && (
+          {daoUser.user ? (
             <>
               <MenuItem component={Link} href={`/shareholders/${daoUser.user.id}/edit`} key="edit">
                 <EditIcon sx={{ mr: 1 }} />
@@ -133,6 +130,10 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
                 Delete
               </MenuItem>
             </>
+          ) : (
+            <MenuItem component={Link} href={`/shareholders/new?ethAddress=${daoUser.address}`} key="add">
+              <AddIcon sx={{ mr: 1 }} /> Add User
+            </MenuItem>
           )}
         </Menu>
         <Dialog

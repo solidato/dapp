@@ -50,10 +50,16 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json(newShareholder);
     } catch (err: any) {
       if (err instanceof ZodError) {
-        console.log("🐞 > err:", err);
         return res.status(400).json({ message: "Validation Error!", errors: err.format() });
       }
-      return res.status(500).json({ error: err.message });
+      let duplicateKeyError = "";
+      if (err.message.includes("email_idx")) {
+        duplicateKeyError = "Email already exists!";
+      }
+      if (err.message.includes("eth_address_idx")) {
+        duplicateKeyError = "Eth address already exists!";
+      }
+      return res.status(500).json({ message: duplicateKeyError || err.message });
     }
   }
 };

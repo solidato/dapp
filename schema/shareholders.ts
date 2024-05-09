@@ -39,7 +39,8 @@ export const shareholders = pgTable(
   },
   (shareholders) => {
     return {
-      uniqueIdx: uniqueIndex("unique_idx").on(shareholders.email),
+      emailIdx: uniqueIndex("email_idx").on(shareholders.email),
+      ethAddressIdx: uniqueIndex("eth_address_idx").on(shareholders.ethAddress),
     };
   },
 );
