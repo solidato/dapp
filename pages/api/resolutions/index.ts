@@ -6,8 +6,7 @@ import { sessionOptions } from "@lib/session";
 
 async function getResolutionsIndex(req: NextApiRequest, res: NextApiResponse) {
   const cookie = req.session.cookie;
-  const user = req.session.user;
-  if (!(cookie && user)) {
+  if (!cookie) {
     return res.status(401).end();
   }
 
