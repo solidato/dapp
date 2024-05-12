@@ -3,19 +3,14 @@ import { getResolution } from "drizzle/db";
 import { withIronSessionApiRoute } from "iron-session/next";
 import kebabCase from "lodash.kebabcase";
 import { NextApiRequest, NextApiResponse } from "next";
-import { OdooUser, ResolutionEntity, ResolutionEntityEnhanced } from "types";
+import { OdooUser, ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
 import odooClient from "@graphql/odoo";
 import { getUsersQuery } from "@graphql/queries/get-users.query";
-import { getLegacyResolutionQuery } from "@graphql/subgraph/queries/get-legacy-resolution-query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
-import {
-  fetcherGraphqlPublic,
-  isLegacyClientEnabled,
-  legacyFetcherGraphqlPublic,
-} from "@graphql/subgraph/subgraph-client";
+import { fetcherGraphqlPublic } from "@graphql/subgraph/subgraph-client";
 
 import { getEnhancedResolutionMapper } from "@lib/resolutions/common";
 import isCorrupted from "@lib/resolutions/corruption-check";
@@ -32,12 +27,8 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const graphQlResolutionData: any = await fetcherGraphqlPublic([getResolutionQuery, { id: id as string }]);
-    const legacyGraphQlResolutionData: any =
-      graphQlResolutionData.resolution === null && isLegacyClientEnabled
-        ? await legacyFetcherGraphqlPublic([getLegacyResolutionQuery, { id: id as string }])
-        : null;
 
-    if (graphQlResolutionData.resolution === null && legacyGraphQlResolutionData.resolution === null) {
+    if (graphQlResolutionData.resolution === null) {
       return res.status(404).send("resolution not found");
     }
 
@@ -50,7 +41,7 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
-      graphQlResolutionData?.resolution || (legacyGraphQlResolutionData?.resolution as ResolutionEntity),
+      graphQlResolutionData?.resolution,
       true,
     );
 

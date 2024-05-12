@@ -3,9 +3,8 @@ import useSWR from "swr";
 
 import { useMemo } from "react";
 
-import { getLegacyResolutionQuery } from "@graphql/subgraph/queries/get-legacy-resolution-query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
-import { useLegacySubgraphGraphQL, useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
+import { useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
 
 import { fetcher } from "@lib/net";
 import isCorrupted from "@lib/resolutions/corruption-check";
@@ -23,29 +22,12 @@ export default function useGetResolution() {
     [{ id: router.query.id as string }],
   );
 
-  const { data: legacyResolutionData, isLoading: isLoadingLegacyResolution } = useLegacySubgraphGraphQL(
-    router?.query?.id ? getLegacyResolutionQuery : null,
-    {
-      refreshInterval: REFRESH_INTERVAL_MS,
-    },
-    [{ id: router.query.id as string }],
-  );
-
   const { data: dbResolution, isLoading: isLoadingDbResolution } = useSWR<{
     title: string;
     content: string;
     hash: string;
     isRewards: boolean;
-  }>(
-    resolutionData?.resolution || legacyResolutionData?.resolution
-      ? `/api/resolutions/${resolutionData?.resolution?.ipfsDataURI || legacyResolutionData?.resolution?.ipfsDataURI}`
-      : null,
-    fetcher,
-  );
-
-  const resolution =
-    resolutionData?.resolution ||
-    (legacyResolutionData?.resolution ? { ...legacyResolutionData.resolution, isLegacy: true } : null);
+  }>(resolutionData?.resolution ? `/api/resolutions/${resolutionData?.resolution?.hash}` : null, fetcher);
 
   const showCorruptionAlert = useMemo(() => {
     if (!dbResolution) {
@@ -56,8 +38,10 @@ export default function useGetResolution() {
   }, [dbResolution]);
 
   return {
-    resolution: dbResolution ? { ...resolution, title: dbResolution.title, content: dbResolution.content } : resolution,
-    isLoading: isLoadingResolution || isLoadingLegacyResolution || isLoadingDbResolution,
+    resolution: dbResolution
+      ? { ...resolutionData?.resolution, title: dbResolution.title, content: dbResolution.content }
+      : resolutionData?.resolution,
+    isLoading: isLoadingResolution || isLoadingDbResolution,
     showCorruptionAlert,
   };
 }

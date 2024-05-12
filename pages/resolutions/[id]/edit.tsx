@@ -3,13 +3,8 @@ import { useAccount } from "wagmi";
 
 import { Alert, CircularProgress } from "@mui/material";
 
-import { getLegacyResolutionQuery } from "@graphql/subgraph/queries/get-legacy-resolution-query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
-import {
-  fetcherGraphqlPublic,
-  isLegacyClientEnabled,
-  legacyFetcherGraphqlPublic,
-} from "@graphql/subgraph/subgraph-client";
+import { fetcherGraphqlPublic } from "@graphql/subgraph/subgraph-client";
 
 import { getEnhancedResolutionMapper } from "@lib/resolutions/common";
 
@@ -24,12 +19,8 @@ EditResolutionPage.checkMismatch = true;
 
 export const getServerSideProps = async ({ params, res }: any) => {
   const data = await fetcherGraphqlPublic([getResolutionQuery, { id: params.id as string }]);
-  const legacyGraphQlResolutionData: any =
-    data?.resolution === null && isLegacyClientEnabled
-      ? await legacyFetcherGraphqlPublic([getLegacyResolutionQuery, { id: params.id as string }])
-      : null;
 
-  if (!data.resolution && !legacyGraphQlResolutionData?.resolution) {
+  if (!data.resolution) {
     res.statusCode = 404;
 
     return {
@@ -39,11 +30,9 @@ export const getServerSideProps = async ({ params, res }: any) => {
     };
   }
 
-  const [dbResolution] = await getResolution(
-    (data.resolution?.ipfsDataURI || legacyGraphQlResolutionData.resolution?.ipfsDataURI) as string,
-  );
+  const [dbResolution] = await getResolution(data.resolution?.hash as string);
   const enhancedResolution: ResolutionEntityEnhanced = getEnhancedResolutionMapper(+new Date())({
-    ...(data.resolution || legacyGraphQlResolutionData.resolution),
+    ...data.resolution,
     title: dbResolution?.title,
     content: dbResolution?.content,
     isRewards: dbResolution?.isRewards,
@@ -61,7 +50,7 @@ export const getServerSideProps = async ({ params, res }: any) => {
   return {
     props: {
       resolution: {
-        ...(data.resolution || legacyGraphQlResolutionData.resolution),
+        ...data.resolution,
         title: dbResolution?.title,
         content: dbResolution?.content,
       },

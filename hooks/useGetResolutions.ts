@@ -2,9 +2,8 @@ import useSWR from "swr";
 
 import { useMemo } from "react";
 
-import { getLegacyResolutionsQuery } from "@graphql/subgraph/queries/get-legacy-resolutions-query";
 import { getResolutionsQuery } from "@graphql/subgraph/queries/get-resolutions-query";
-import { useLegacySubgraphGraphQL, useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
+import { useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
 
 import { fetcher } from "@lib/net";
 
@@ -18,13 +17,6 @@ export default function useGetResolutions() {
   const { data, isLoading, error } = useSubgraphGraphQL(getResolutionsQuery, {
     refreshInterval: REFRESH_EVERY_MS,
   });
-
-  const { data: legacyResolutionsData, isLoading: isLoadingLegacyFetcher } = useLegacySubgraphGraphQL(
-    getLegacyResolutionsQuery,
-    {
-      refreshInterval: REFRESH_EVERY_MS,
-    },
-  );
 
   const dbResolutionsObject = useMemo(() => {
     if (!dbResolutions) return null;
@@ -42,27 +34,15 @@ export default function useGetResolutions() {
             title: "🔐 Log in to see title",
             isRewards: false,
           })) || []),
-          ...(legacyResolutionsData?.resolutions || []).map((res) => ({
-            ...res,
-            isLegacy: true,
-            title: "🔐 Log in to see title",
-            isRewards: false,
-          })),
         ]
       : [
           ...(data?.resolutions?.map((res) => ({
             ...res,
-            title: dbResolutionsObject[res.ipfsDataURI]?.title,
-            isRewards: dbResolutionsObject[res.ipfsDataURI]?.isRewards,
+            title: dbResolutionsObject[res.hash]?.title,
+            isRewards: dbResolutionsObject[res.hash]?.isRewards,
           })) || []),
-          ...(legacyResolutionsData?.resolutions || []).map((res) => ({
-            ...res,
-            isLegacy: true,
-            title: dbResolutionsObject[res.ipfsDataURI]?.title,
-            isRewards: false,
-          })),
         ],
-    isLoading: isLoading || isLoadingLegacyFetcher || isLoadingDbResolutions,
+    isLoading: isLoading || isLoadingDbResolutions,
     error,
   };
 }

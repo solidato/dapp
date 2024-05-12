@@ -6,7 +6,6 @@ namespace NodeJS {
     NEXT_PUBLIC_ODOO_ENDPOINT: string;
     NEXT_PUBLIC_PROJECT_KEY: "neokingdom" | "teledisko" | "crowdpunk" | "vanilla";
     NEXT_PUBLIC_GRAPHQL_ENDPOINT: string;
-    NEXT_PUBLIC_LEGACY_GRAPHQL_ENDPOINT?: string;
     NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: string;
     NEXT_PUBLIC_ENV: "staging" | "production";
     COOKIE_NAME: string;
