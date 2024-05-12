@@ -38,9 +38,9 @@ import useGetResolutions from "@hooks/useGetResolutions";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 import useUser from "@hooks/useUser";
+import useUsers from "@hooks/useUsers";
 
 import UsersAutocomplete from "../../components/UsersAutocomplete";
-import useOdooUsers from "../../hooks/useOdooUsers";
 import { RESOLUTION_TYPES_TEXTS } from "../../i18n/resolution";
 
 interface ChevronProps extends React.ComponentProps<typeof ExpandMoreIcon> {
@@ -104,8 +104,8 @@ export default function Resolutions() {
     return () => clearTimeout(timeoutId);
   }, [router.query.resolutionTitle, textFilter, updateFilterState]);
 
-  const { getOdooUser } = useOdooUsers();
-  const selectedUser = authorFilter ? getOdooUser(authorFilter as string) : undefined;
+  const { getUser } = useUsers();
+  const selectedUser = authorFilter ? getUser(authorFilter as string) : undefined;
 
   const enhancedResolutions = useMemo(() => {
     if ((isLoading || isLoadingAcl) && resolutions.length === 0) {
@@ -217,7 +217,7 @@ export default function Resolutions() {
                   {selectedUser && (
                     <ListItem>
                       <Chip
-                        label={`Author: ${selectedUser.display_name}`}
+                        label={`Author: ${selectedUser.name}`}
                         onDelete={() => updateFilterState({ authorFilter: "" })}
                       />
                     </ListItem>

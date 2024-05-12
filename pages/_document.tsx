@@ -6,26 +6,10 @@ import * as React from "react";
 import { getInitColorSchemeScript } from "@mui/material";
 
 export const META = {
-  teledisko: {
-    description: "Teledisko DAO description",
-    title: "Teledisko DAO",
-    keywords: "DAO, Teledisko, Blockchain",
-  },
-  neokingdom: {
-    description:
-      "Neokingdom DAO is an innovative Estonian company committed to developing a comprehensive ecosystem for legally compliant DAOs",
-    title: "Neokingdom DAO",
-    keywords: "DAO, NEOKINGDOM, Blockchain",
-  },
-  crowdpunk: {
-    description: "Crowdpunk DAO. Setting new world records in web3",
-    title: "Crowdpunk DAO",
-    keywords: "DAO, Crowdpunk, Blockchain",
-  },
-  vanilla: {
-    description: "Vanilla DAO. One dao to rule them all",
-    title: "Vanilla DAO",
-    keywords: "DAO, Vanilla, Blockchain",
+  solidato: {
+    description: "Automate equity management and corporate governance",
+    title: "Solidato",
+    keywords: "DAO, Solidato, Blockchain",
   },
   solidato: {
     description: "Solidato description",

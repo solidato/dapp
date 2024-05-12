@@ -2,7 +2,6 @@
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import odooGraphQLClient from "@lib/graphql/odoo";
 import { getProjectsQuery } from "@lib/graphql/queries/get-projects.query";
 import { getUserTasksQuery } from "@lib/graphql/queries/get-user-tasks.query";
 import { sessionOptions } from "@lib/session";
@@ -16,16 +15,16 @@ const getAllProjects = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).end();
   }
 
-  const getUserProjectIds = async (userId: number) => {
-    const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
-    return [...new Set(userTasks.ProjectTask.map((t: ProjectTask) => t.project_id.id))];
+  const getUserProjectIds = async (userId?: number) => {
+    // const userTasks = await odooGraphQLClient.query(cookie, getUserTasksQuery, { user_id: userId });
+    return [...new Set([].map((t: ProjectTask) => t.project_id.id))];
   };
 
   const userId = user.id;
   try {
     const userProjectIds = await getUserProjectIds(userId);
-    const data = await odooGraphQLClient.query(cookie, getProjectsQuery, { userId: user.id });
-    const projects = data?.ProjectProject.reduce(
+    // const data = await odooGraphQLClient.query(cookie, getProjectsQuery, { userId: user.id });
+    const projects = [].reduce(
       (acc: any, project: any) => {
         userProjectIds.includes(project.id) ? acc.user.push(project) : acc.other.push(project);
         return acc;

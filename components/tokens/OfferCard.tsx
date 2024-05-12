@@ -22,7 +22,7 @@ export default function OfferCard({ offer, onMatchClicked }: { offer: Offer; onM
         <Typography variant="body1" component="h4" gutterBottom>
           Created on {format(getDateFromUnixTimestamp(offer.createTimestamp), "dd LLL yyyy HH:mm")} by
         </Typography>
-        <User address={offer.from} sx={{ mb: 2 }} shortAddress />
+        <User address={offer.from} sx={{ mb: 2 }} />
         <Box sx={{ textAlign: "center" }}>
           <Typography variant="h6" sx={{ mb: 1 }}>
             Amount: {amount}
@@ -41,7 +41,7 @@ export default function OfferCard({ offer, onMatchClicked }: { offer: Offer; onM
               {offer.matches.map((match) => (
                 <Stack key={match.id} direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
                   <Box>
-                    <User isInline shortAddress key={match.id} address={match.matchedFrom} sx={{ mb: 1 }} />
+                    <User isInline key={match.id} address={match.matchedFrom} sx={{ mb: 1 }} />
                     <Typography variant="body2">
                       {format(getDateFromUnixTimestamp(match.createTimestamp), "dd LLL yyyy HH:mm")}
                     </Typography>

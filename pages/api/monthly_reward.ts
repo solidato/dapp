@@ -2,14 +2,13 @@ import { endOfMonth, format, startOfMonth, subMonths } from "date-fns";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import odooGraphQLClient from "@lib/graphql/odoo";
 import { getMonthlyRewardQuery } from "@lib/graphql/queries/get-monthly-reward.query";
 import { sessionOptions } from "@lib/session";
 
 import { Timesheet } from "../../store/projectTaskStore";
 
 type AccountAnalyticLine = Timesheet & {
-  user_id: { id: number; name: string; email: string; ethereum_address: string };
+  user_id: { id: number; name: string; email: string; ethAddress: string };
   token_amount: number;
 };
 
@@ -25,12 +24,12 @@ export const getMonthlyReward = async (req: NextApiRequest, res: NextApiResponse
     const startDayOfMonth = format(startOfMonth(lastMonth), "yyyy-MM-dd");
     const lastDayOfMonth = format(endOfMonth(lastMonth), "yyyy-MM-dd");
 
-    const data = await odooGraphQLClient.query(cookie, getMonthlyRewardQuery, {
-      startDate: startDayOfMonth,
-      endDate: lastDayOfMonth,
-    });
+    // const data = await odooGraphQLClient.query(cookie, getMonthlyRewardQuery, {
+    //   startDate: startDayOfMonth,
+    //   endDate: lastDayOfMonth,
+    // });
 
-    const tokenAllocations = groupTimeEntriesByUser(data?.AccountAnalyticLine || []);
+    const tokenAllocations = groupTimeEntriesByUser([]);
 
     const getResolution = () => {
       const fullMonth = format(lastMonth, "MMMM");

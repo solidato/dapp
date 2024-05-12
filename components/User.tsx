@@ -1,58 +1,64 @@
+import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import React from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Avatar, Box, Skeleton, SxProps, Tooltip, Typography, Zoom } from "@mui/material";
 import { Variant } from "@mui/material/styles/createTypography";
 
-import { getLettersFromName } from "@lib/utils";
+import { fetcher } from "@lib/net";
+import { generateAvatar, getLettersFromName, isSameAddress, shortEthAddress } from "@lib/utils";
 
-import useOdooUsers from "@hooks/useOdooUsers";
-import useUser from "@hooks/useUser";
-
-import { isSameAddress } from "../lib/utils";
+import { Shareholder } from "../schema/shareholders";
+import { AuthUser } from "../types";
 
 export default function User({
+  user,
   address,
   isInline = false,
   inlineVariant = "body2",
   shouldMarkCurrentUser = true,
-  shortAddress = false,
-  isSkeleton = false,
+  isLoading = false,
   sx = {},
 }: {
+  user?: Partial<Shareholder | AuthUser>;
   address?: string;
   isInline?: boolean;
   shouldMarkCurrentUser?: boolean;
-  shortAddress?: boolean;
   inlineVariant?: Variant;
-  isSkeleton?: boolean;
+  isLoading?: boolean;
   sx?: SxProps;
 }) {
+  const [shareholder, setShareholder] = useState(user || {});
   const { address: connectedAddress } = useAccount();
-  const { user } = useUser();
-  const { filteredOdooUser, isLoading: isLoadingUsers } = useOdooUsers(address);
+  const shortAddress = shortEthAddress(shareholder.ethAddress || address);
+  const { data: fetchedUser } = useSWR<Shareholder>(address && !user ? `/api/users/${address}` : null, fetcher);
+  const [showFullAddress, setShowFullAddress] = useState(false);
 
-  const isLoading = isLoadingUsers || isSkeleton;
+  const avatarURI = useMemo(() => {
+    const randomIcon = "data:image/svg+xml;utf8," + generateAvatar(shareholder.ethAddress || "");
+    return shareholder?.avatar ? `data:image/jpeg;charset=utf-8;base64,${shareholder.avatar}` : randomIcon;
+  }, [shareholder]);
 
-  if (isInline && isLoading) {
-    return (
+  useEffect(() => {
+    if (fetchedUser) {
+      setShareholder(fetchedUser);
+    }
+  }, [fetchedUser]);
+
+  if (isInline) {
+    return isLoading ? (
       <Typography variant="body2" component="span">
         <Skeleton sx={{ width: 100, display: "inline-block" }} />
       </Typography>
-    );
-  }
-
-  if (isInline && !isLoading) {
-    return (
+    ) : (
       <Typography component="span" variant={inlineVariant}>
-        <b>{`${filteredOdooUser?.display_name} (${address?.slice(0, 8)}...)`}</b>
+        <b>{shareholder.name ? `${shareholder.name} (${shortAddress})` : shortAddress}</b>
       </Typography>
     );
   }
 
-  const markCurrentUser =
-    isSameAddress(connectedAddress || (user?.ethereum_address as string), address as string) && shouldMarkCurrentUser;
+  const markCurrentUser = shouldMarkCurrentUser && isSameAddress(connectedAddress, shareholder.ethAddress);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", ...sx }}>
@@ -63,18 +69,20 @@ export default function User({
       ) : (
         <Tooltip title={markCurrentUser ? "you" : ""} placement="top" arrow TransitionComponent={Zoom}>
           <Avatar
-            alt={filteredOdooUser?.display_name}
-            src={`data:image/jpeg;charset=utf-8;base64,${filteredOdooUser?.image || ""}`}
+            alt={shareholder.name}
+            src={avatarURI}
             sx={
               markCurrentUser
                 ? {
                     boxShadow: (theme) => `0 0 0 3px ${theme.palette.success.main}`,
                     "@media print": { boxShadow: "none" },
                   }
-                : {}
+                : {
+                    border: (theme) => `1px solid ${theme.palette.divider}`,
+                  }
             }
           >
-            {getLettersFromName(filteredOdooUser?.display_name || "")}
+            {getLettersFromName(shareholder.name || "")}
           </Avatar>
         </Tooltip>
       )}
@@ -90,26 +98,20 @@ export default function User({
           </>
         ) : (
           <>
-            {filteredOdooUser?.display_name && (
+            {shareholder.name && (
               <Typography variant="h6" sx={{ mb: -1 }}>
-                {filteredOdooUser?.display_name}{" "}
+                {shareholder.name}
               </Typography>
             )}
             <Typography
               variant="caption"
+              onClick={() => setShowFullAddress((sfa) => !sfa)}
               sx={{
                 display: "block",
-                ...(shortAddress
-                  ? {
-                      maxWidth: { xs: "100px", md: "auto" },
-                      overflow: { xs: "hidden", md: "visible" },
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
-                    }
-                  : {}),
+                cursor: "pointer",
               }}
             >
-              {address || user?.ethereum_address}
+              {showFullAddress ? shareholder.ethAddress || address : shortAddress}
             </Typography>
           </>
         )}

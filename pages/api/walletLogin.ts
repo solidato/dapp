@@ -1,54 +1,55 @@
+import { eq } from "drizzle-orm";
 import { withIronSessionApiRoute } from "iron-session/next";
-import { decodeJwt } from "jose";
+import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
+import { recoverMessageAddress } from "viem";
 
-import { getOdooCookie } from "@lib/getOdooCookie";
-import odooClient from "@lib/graphql/odoo";
-import { getUserByAddressQuery } from "@lib/graphql/queries/get-user-by-address.query";
 import { sessionOptions } from "@lib/session";
 import userFactory from "@lib/userFactory";
 
-import { OdooUser } from "../../types";
+import { db } from "../../drizzle";
+import { shareholders } from "../../schema/shareholders";
 
-// Login with Wallet+Odoo
-const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
+// Login with Wallet
+const walletLoginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not defined");
+  }
+
   if (req.method === "GET") {
     try {
-      const response = await fetch(process.env.ODOO_JWT_TOKEN_ENDPOINT, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const { signing_token } = await response.json();
-      const claims = decodeJwt(signing_token);
-      res.json({
-        signingToken: signing_token,
-        message: claims.message,
-      });
+      const message = "Please sign this message to login";
+      const payload = { iat: Date.now(), message };
+      const signingToken = jwt.sign(payload, process.env.JWT_SECRET);
+      res.json({ signingToken, message });
     } catch (error) {
       return res.status(401).json({ error });
     }
   }
 
   if (req.method === "POST") {
-    const { signingToken, address, sig } = req.body as { signingToken: string; address: string; sig: string };
-    const password = JSON.stringify({ signing_token: signingToken, signature: sig });
-    const pwdB64 = Buffer.from(password, "utf8").toString("base64");
+    const { signingToken, signature } = req.body;
     try {
-      const cookie = await getOdooCookie(address.toLowerCase(), pwdB64);
-      const data = await odooClient.query(cookie, getUserByAddressQuery, { address: address.toLowerCase() });
-      const userData = data.ResUsers[0] as OdooUser;
-      const user = userFactory({ ...userData, username: address.toLowerCase(), password: pwdB64, isLoggedIn: true });
-      req.session.cookie = cookie;
-      req.session.user = user;
-      await req.session.save();
-      return res.status(200).json(user);
-    } catch (error: any) {
-      if (error.isBoom) {
-        return res.status(error.output.statusCode).json(error.output.payload);
+      const { message } = jwt.verify(signingToken, process.env.JWT_SECRET) as { message: string };
+      const address = await recoverMessageAddress({ message, signature });
+      // Check if the signer is in the Database!
+      const users = await db.query.shareholders.findMany({ where: eq(shareholders.ethAddress, address) });
+      if (!users.length) {
+        return res.status(401).json({ error: "User not found" });
       }
-      return res.status(500).json({ error: JSON.stringify(error) });
+      const authUser = userFactory({
+        ...users[0],
+        isLoggedIn: true,
+      });
+      const cookie = jwt.sign(authUser, process.env.JWT_SECRET, { expiresIn: "7 days" });
+      req.session.cookie = cookie;
+      await req.session.save();
+      return res.status(200).json(authUser);
+    } catch (err) {
+      console.log("🐞 >>> Error:", err);
+      return res.status(409).json({ error: "Invalid signing token" });
     }
   }
 };
 
-export default withIronSessionApiRoute(loginRoute, sessionOptions);
+export default withIronSessionApiRoute(walletLoginRoute, sessionOptions);

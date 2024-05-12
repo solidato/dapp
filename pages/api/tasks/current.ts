@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { getCurrentTasks } from "@graphql/queries/get-current-tasks.query";
 
-import odooGraphQLClient from "@lib/graphql/odoo";
 import { sessionOptions } from "@lib/session";
 
 async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
@@ -13,8 +12,8 @@ async function tasksRoute(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).end();
   }
 
-  const data = await odooGraphQLClient.query(cookie, getCurrentTasks, { userId: user.id });
-  res.status(200).json(data?.ProjectTask);
+  // const data = await odooGraphQLClient.query(cookie, getCurrentTasks, { userId: user.id });
+  res.status(200).json([]);
 }
 
 export default withIronSessionApiRoute(tasksRoute, sessionOptions);

@@ -1,11 +1,8 @@
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 import NextLink from "next/link";
 import { useAccount } from "wagmi";
 import { shallow } from "zustand/shallow";
 
-import * as React from "react";
-import { ReactElement } from "react";
+import { ReactElement, useMemo, useState } from "react";
 
 import { CheckCircle, Warning } from "@mui/icons-material";
 import {
@@ -22,9 +19,6 @@ import {
   Typography,
 } from "@mui/material";
 
-import { getShareholdersInfo } from "@graphql/subgraph/queries/get-shareholders-info-query";
-import { useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
-
 import { isSameAddress } from "@lib/utils";
 
 import useBlockchainTransactionStore from "@store/blockchainTransactionStore";
@@ -39,24 +33,25 @@ import useUser from "@hooks/useUser";
 import UserCard from "../components/shareholders/UserCard";
 import useDelegate from "../hooks/useDelegate";
 import useDelegationStatus from "../hooks/useDelegationStatus";
-import { ShareholderStatus } from "../types";
-
-const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
+import useShareholders, { DaoUser } from "../hooks/useShareholders";
 
 Delegation.title = "Shareholders";
 Delegation.requireLogin = true;
 Delegation.checkMismatch = true;
 
+type DaoUserWithDelegate = DaoUser & { canBeDelegated: boolean | undefined };
+
 export default function Delegation() {
   const { user } = useUser();
   const { address: walletAddress } = useAccount();
-  const { data, isLoading, error } = useSubgraphGraphQL(getShareholdersInfo);
+  const { daoUsers: shareholders, isLoading, error } = useShareholders();
   const { data: delegationData, isLoading: delegationLoading } = useDelegationStatus();
-  const [onlyManagingBoard, setOnlyManagingBoard] = React.useState(false);
+
+  const [onlyManagingBoard, setOnlyManagingBoard] = useState(false);
   const { isLoading: isLoadingTransaction } = useBlockchainTransactionStore();
   const { onSubmit } = useDelegate();
   const { activeResolutionsWarning, votingResolutions, noticeResolutions } = useGetActiveResolutions();
-  const [activeDelegatingAddress, setActiveDelegatingAddress] = React.useState<string | null>(null);
+  const [activeDelegatingAddress, setActiveDelegatingAddress] = useState<string | null>(null);
 
   const { handleOpenLoginModalFromLink } = useLoginModalStore(
     (state) => ({
@@ -65,44 +60,16 @@ export default function Delegation() {
     shallow,
   );
 
-  const getShareholderStatus = React.useCallback(
-    (address: string): ShareholderStatus[] => {
-      return [
-        data?.daoManager?.managingBoardAddresses.includes(address) && "ManagingBoard",
-        data?.daoManager?.shareholdersAddresses.includes(address) && "Shareholder",
-        data?.daoManager?.contributorsAddresses.includes(address) && "Contributor",
-        data?.daoManager?.investorsAddresses.includes(address) && "Investor",
-      ].filter(Boolean) as ShareholderStatus[];
-    },
-    [data],
-  );
-
-  const [daoUsers, daoUsersAddresses] = React.useMemo(() => {
-    if (!data || !delegationData) {
+  const daoUsers: DaoUserWithDelegate[] = useMemo(() => {
+    if (!shareholders || !delegationData) {
       return [];
     }
-
-    const totalVotingPower = bigIntToNum(data?.daoManager?.totalVotingPower || BigInt(0));
-
-    const users = data?.daoUsers.reduce(
-      (computed: { [id: string]: { power: string; canBeDelegated: boolean | undefined } }, daoUser) => {
-        const userVotingPower = bigIntToNum(daoUser.votingPower);
-        computed[daoUser.address] = {
-          power: ((100 * userVotingPower) / totalVotingPower).toFixed(2),
-          canBeDelegated: delegationData.usersList.find((user) => isSameAddress(daoUser.address, user.address))
-            ?.canBeDelegated,
-        };
-        return computed;
-      },
-      {},
-    );
-
-    const addresses = Object.keys(users)
-      .filter((address) => getShareholderStatus(address).length > 0)
-      .sort((userA, userB) => Number(users[userB].power) - Number(users[userA].power));
-
-    return [users, addresses];
-  }, [data, delegationData, getShareholderStatus]);
+    return shareholders.map((daoUser) => ({
+      ...daoUser,
+      canBeDelegated: delegationData.usersList.find((user) => isSameAddress(daoUser.address, user.address))
+        ?.canBeDelegated,
+    }));
+  }, [shareholders, delegationData]);
 
   const handleDelegate = async (delegatingAddress: string, successElement: ReactElement, errorElement: ReactElement) =>
     onSubmit({ delegatingAddress, successElement, errorElement });
@@ -249,17 +216,15 @@ export default function Delegation() {
         </Box>
       )}
       <Grid container spacing={2}>
-        {daoUsersAddresses
+        {daoUsers
           ?.filter(
-            (userAddress) =>
-              !isSameAddress(userAddress, walletAddress as string) &&
-              (!onlyManagingBoard ||
-                (onlyManagingBoard && data?.daoManager?.managingBoardAddresses.includes(userAddress))),
+            (daoUser) =>
+              !isSameAddress(daoUser.address, walletAddress) &&
+              (!onlyManagingBoard || (onlyManagingBoard && daoUser.status.includes("ManagingBoard"))),
           )
-          .map((userAddress) => {
-            if (!daoUsers) return;
-            const { power, canBeDelegated } = daoUsers[userAddress];
-            const isDelegatedByCurrentUser = delegationData?.signerDelegationStatus?.delegated === userAddress;
+          .map((daoUser) => {
+            const { power, canBeDelegated } = daoUser;
+            const isDelegatedByCurrentUser = delegationData?.signerDelegationStatus?.delegated === daoUser.address;
             const ctaCurrentUser = isDelegatedByCurrentUser ? (
               <Chip icon={<CheckCircle />} label="Delegated" variant="filled" color="success" size="small" />
             ) : null;
@@ -271,16 +236,16 @@ export default function Delegation() {
                   color="primary"
                   onClick={() => {
                     if (activeResolutionsWarning) {
-                      setActiveDelegatingAddress(userAddress);
+                      setActiveDelegatingAddress(daoUser.address);
                       return;
                     }
                     handleDelegate(
-                      userAddress,
+                      daoUser.address,
                       <span>
-                        Successfully delegating <User address={userAddress as string} isInline />
+                        Successfully delegating <User address={daoUser.address as string} isInline />
                       </span>,
                       <span>
-                        Error delegating <User address={userAddress as string} isInline />
+                        Error delegating <User address={daoUser.address as string} isInline />
                       </span>,
                     );
                   }}
@@ -292,13 +257,8 @@ export default function Delegation() {
                 <Chip icon={<Warning />} label="Can't delegate" variant="outlined" color="warning" size="small" />
               );
             return (
-              <Grid item xs={12} md={6} lg={4} key={userAddress}>
-                <UserCard
-                  address={userAddress}
-                  power={power}
-                  statuses={getShareholderStatus(userAddress)}
-                  cta={ctaCurrentUser || ctaCanBeDelegated}
-                />
+              <Grid item xs={12} md={6} lg={4} key={daoUser.address}>
+                <UserCard daoUser={daoUser} cta={ctaCurrentUser || ctaCanBeDelegated} />
               </Grid>
             );
           })}

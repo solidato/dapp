@@ -1,14 +1,13 @@
 import { renderToBuffer } from "@react-pdf/renderer";
-import { getResolution } from "drizzle/db";
+import { db } from "drizzle";
 import { withIronSessionApiRoute } from "iron-session/next";
 import kebabCase from "lodash.kebabcase";
+import { getResolution } from "model/resolution";
 import { NextApiRequest, NextApiResponse } from "next";
-import { OdooUser, ResolutionEntityEnhanced } from "types";
+import { ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
-import odooClient from "@graphql/odoo";
-import { getUsersQuery } from "@graphql/queries/get-users.query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
 import { fetcherGraphqlPublic } from "@graphql/subgraph/subgraph-client";
 
@@ -32,10 +31,10 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).send("resolution not found");
     }
 
-    const usersData = await odooClient.query(cookie, getUsersQuery);
-    const odooUsersData = (usersData.ResUsers as OdooUser[]).map((user) => ({
-      ethereumAddress: user.ethereum_address,
-      name: user.display_name,
+    const shareholders = await db.query.shareholders.findMany();
+    const shareholdersData = shareholders.map((user) => ({
+      ethereumAddress: user.ethAddress,
+      name: user.name,
       email: user.email,
     }));
 
@@ -63,15 +62,10 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
           title: dbResolution.title,
           content: dbResolution.content,
         },
-        usersData: odooUsersData,
-        resolutionUrl: `${
-          {
-            teledisko: "https://dao.teledisko.com",
-            neokingdom: "https://dao.neokingdom.org",
-            crowdpunk: "https://dao.crowdpunk.love",
-            vanilla: "https://dao.vanilla.org",
-          }[process.env.NEXT_PUBLIC_PROJECT_KEY]
-        }/resolutions/${resolutionData.id}`,
+        usersData: shareholdersData,
+        resolutionUrl: `${{ solidato: "https://dao.solidato.org" }[process.env.NEXT_PUBLIC_PROJECT_KEY]}/resolutions/${
+          resolutionData.id
+        }`,
       }),
     );
 

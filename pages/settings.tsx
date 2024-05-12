@@ -12,10 +12,7 @@ import { getChain, getLettersFromName } from "@lib/utils";
 import Dialog from "@components/Dialog";
 
 import useLogout from "@hooks/useLogout";
-import useOdooUsers from "@hooks/useOdooUsers";
 import useUser from "@hooks/useUser";
-
-import { SUPPORTED_CHAINS } from "./_app";
 
 Settings.title = "Settings";
 Settings.requireLogin = false;
@@ -48,7 +45,6 @@ export default function Settings() {
   const chainId = useChainId();
   const chain = useMemo(() => getChain(chainId), [chainId]);
   const { isConnected: isWalletConnected, address } = useAccount();
-  const { currentOdooUser } = useOdooUsers();
   const { data } = useBalance({
     address,
   });
@@ -89,7 +85,7 @@ export default function Settings() {
         </span>
       </Dialog>
       <Typography variant="h3" sx={{ mb: 2 }}>
-        Odoo settings
+        User settings
       </Typography>
       {!user?.isLoggedIn ? (
         <Link component={NextLink} href="/login?redirectTo=settings">
@@ -106,29 +102,20 @@ export default function Settings() {
             justifyContent="center"
           >
             <Box>
-              <Typography variant="body1">Name: {user?.display_name}</Typography>
+              <Typography variant="body1">Name: {user?.name}</Typography>
               <Typography variant="body1">Email: {user?.email}</Typography>
             </Box>
             <Avatar
               sx={{ width: { xs: 64, sm: 124 }, height: { xs: 64, sm: 124 } }}
-              alt={user?.display_name}
-              src={`data:image/jpeg;charset=utf-8;base64,${currentOdooUser?.image || ""}`}
+              alt={user?.name}
+              src={`data:image/jpeg;charset=utf-8;base64,${user?.avatar || ""}`}
             >
-              {getLettersFromName(user?.display_name)}
+              {getLettersFromName(user?.name)}
             </Avatar>
           </Stack>
           <Box sx={{ textAlign: "center", mt: 4 }}>
-            <Button
-              variant="outlined"
-              size="small"
-              href={`${process.env.NEXT_PUBLIC_ODOO_ENDPOINT}/web#id=${user.id}&cids=1&menu_id=77&action=231&model=res.users&view_type=form`}
-              sx={{ mr: 2 }}
-              target="_blank"
-            >
-              Edit on odoo
-            </Button>
             <Button variant="outlined" size="small" onClick={() => logout()}>
-              Log out from odoo
+              Logout
             </Button>
           </Box>
         </>

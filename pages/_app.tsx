@@ -1,19 +1,14 @@
-import { wallets as keplrWallets } from "@cosmos-kit/keplr";
-import { wallets as leapWallets } from "@cosmos-kit/leap";
-import { ChainProvider } from "@cosmos-kit/react";
-import "@interchain-ui/react/styles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
-import { assets, chains } from "chain-registry";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
-import { evmos, polygonMumbai } from "viem/chains";
 import { WagmiProvider } from "wagmi";
+import { evmos, polygonMumbai } from "wagmi/chains";
 
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -41,50 +36,32 @@ const ExtraneousWarning = dynamic(() => import("../components/ExtraneousWarning"
   ssr: false,
 });
 
-const overriddenEvmos: typeof evmos = {
-  id: 9001,
-  name: "Evmos",
-  network: "evmos",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Evmos",
-    symbol: "EVMOS",
-  },
+const evmosLava = {
+  ...evmos,
   rpcUrls: {
     default: {
-      // @ts-ignore
       http: ["https://evmos.lava.build"],
     },
     public: {
-      // @ts-ignore
       http: ["https://evmos.lava.build"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Evmos Block Explorer",
-      url: "https://escan.live",
     },
   },
 };
 
-export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "staging" ? polygonMumbai : overriddenEvmos];
+export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava];
 
 // Wagmi client
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
-
 const queryClient = new QueryClient();
-
 const metadata = {
   name: "Web3Modal",
-  description: "Web3Modal Neokingdom DAO",
+  description: "Web3Modal for Solidato",
   url: "https://web3modal.com",
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
 const wagmiConfig = defaultWagmiConfig({
-  // @ts-ignore not sure how to make ts happy here
-  chains: SUPPORTED_CHAINS,
+  chains: [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava],
   projectId,
   metadata,
   enableCoinbase: false,
@@ -94,6 +71,12 @@ const wagmiConfig = defaultWagmiConfig({
 createWeb3Modal({
   wagmiConfig,
   projectId,
+  featuredWalletIds: [
+    // 'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+    "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust Wallet
+    "3ed8cc046c6211a798dc5ec70f1302b43e07db9639fd287de44a9aa115a21ed6", // Leap Cosmos Wallet
+    "6adb6082c909901b9e7189af3a4a0223102cd6f8d5c39e39f3d49acb92b578bb", // Keplr Wallet
+  ],
   themeVariables: {
     "--w3m-z-index": 2000,
   },
@@ -132,64 +115,47 @@ export default function App({ Component, pageProps }: DappProps) {
     setMounted(true);
   }, []);
 
-  const SUPPORTED_CHAINS = ["evmos", "crescent"];
-  const supportedChains = chains.filter((chain) => SUPPORTED_CHAINS.includes(chain.chain_name));
-  const supportedAssets = assets.filter((asset) => SUPPORTED_CHAINS.includes(asset.chain_name));
-
   const appElement = (
-    <FeatureFlagContextProvider email={user?.email} walletAddress={user?.ethereum_address} erpId={user?.id.toString()}>
+    <FeatureFlagContextProvider email={user?.email} walletAddress={user?.ethAddress} erpId={user?.id?.toString()}>
       <CssVarsProvider theme={newTheme} defaultMode="system">
         <VercelTools />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <WagmiProvider config={wagmiConfig}>
             <QueryClientProvider client={queryClient}>
-              <ChainProvider
-                chains={supportedChains}
-                assetLists={supportedAssets}
-                wallets={[...keplrWallets, ...leapWallets]}
-                logLevel={"DEBUG"}
-                walletConnectOptions={{
-                  // Required if "wallets" contains mobile wallets
-                  signClient: {
-                    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-                  },
-                }}
+              <StyledSnackbarProvider
+                maxSnack={3}
+                autoHideDuration={3000}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                preventDuplicate
               >
-                <StyledSnackbarProvider
-                  maxSnack={3}
-                  autoHideDuration={3000}
-                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                  preventDuplicate
-                >
-                  <CssBaseline />
-                  {Component.noLayout ? (
-                    <>
-                      <ExtraneousWarning>
-                        <Component {...pageProps} />
-                      </ExtraneousWarning>
-                    </>
-                  ) : (
-                    <Layout fullWidth={!!Component.fullWidth} checkMismatch={!!Component.checkMismatch}>
-                      <ExtraneousWarning>
-                        {(isLoading || !mounted) && (
-                          <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
-                            <CircularProgress />
-                          </Box>
-                        )}
-                        {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
-                          <ContractsProvider>
-                            <>
-                              <CheckNeokBalance />
-                              <CheckConnected fullWidth={!!Component.fullWidth} />
-                              <Component {...pageProps} />
-                            </>
-                          </ContractsProvider>
-                        )}
-                      </ExtraneousWarning>
-                    </Layout>
-                  )}
-                </StyledSnackbarProvider>
-              </ChainProvider>
+                <CssBaseline />
+                {Component.noLayout ? (
+                  <>
+                    <ExtraneousWarning>
+                      <Component {...pageProps} />
+                    </ExtraneousWarning>
+                  </>
+                ) : (
+                  <Layout fullWidth={!!Component.fullWidth} checkMismatch={!!Component.checkMismatch}>
+                    <ExtraneousWarning>
+                      {(isLoading || !mounted) && (
+                        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                          <CircularProgress />
+                        </Box>
+                      )}
+                      {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
+                        <ContractsProvider>
+                          <>
+                            <CheckNeokBalance />
+                            <CheckConnected fullWidth={!!Component.fullWidth} />
+                            <Component {...pageProps} />
+                          </>
+                        </ContractsProvider>
+                      )}
+                    </ExtraneousWarning>
+                  </Layout>
+                )}
+              </StyledSnackbarProvider>
             </QueryClientProvider>
           </WagmiProvider>
         </LocalizationProvider>

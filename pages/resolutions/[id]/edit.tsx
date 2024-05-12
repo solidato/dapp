@@ -1,4 +1,4 @@
-import { getResolution } from "drizzle/db";
+import { getResolution } from "model/resolution";
 import { useAccount } from "wagmi";
 
 import { Alert, CircularProgress } from "@mui/material";

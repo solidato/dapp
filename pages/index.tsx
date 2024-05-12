@@ -9,7 +9,6 @@ import { RESOLUTION_STATES, getEnhancedResolutions, getVotingPercentage } from "
 import Section from "@components/Section";
 import Header from "@components/dashboard/Header";
 import InvestorsReport from "@components/dashboard/InvestorsReport";
-import Tasks from "@components/dashboard/Tasks";
 import Tokens from "@components/dashboard/Tokens";
 
 import useGetResolutions from "@hooks/useGetResolutions";
@@ -40,7 +39,7 @@ export default function Home() {
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const { currentTimestamp } = useTimestamp();
   const { isConnected, address } = useAccount();
-  const { user: odooUser } = useUser();
+  const { user } = useUser();
 
   const [enhancedResolutions, enhancedResolutionsToVote, stats, votingPercentageInTheYear]: [
     ResolutionEntityEnhanced[],
@@ -53,7 +52,7 @@ export default function Home() {
     }
 
     const allResolutions = getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl);
-    const votingPercentageInTheYear = getVotingPercentage(allResolutions, address || odooUser?.ethereum_address);
+    const votingPercentageInTheYear = getVotingPercentage(allResolutions, address || user?.ethAddress);
 
     const inProgress = allResolutions.filter(
       (res) => ![RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(res.state),
@@ -99,9 +98,6 @@ export default function Home() {
         }}
       >
         <Header votingPercentageInTheYear={votingPercentageInTheYear} />
-      </Section>
-      <Section inverse={enhancedResolutionsToVote?.length === 0}>
-        <Tasks />
       </Section>
       {!error && (
         <>

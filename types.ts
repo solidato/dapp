@@ -2,6 +2,14 @@ import { Window as KeplrWindow } from "@keplr-wallet/types";
 
 import { GetResolutionsQuery, ResolutionVoter } from "@graphql/subgraph/generated/graphql";
 
+import { Shareholder } from "./schema/shareholders";
+
+export type ShareholderStatus = "ManagingBoard" | "Investor" | "Contributor" | "Shareholder";
+
+export type AuthUser = Partial<Shareholder> & {
+  isLoggedIn: boolean;
+};
+
 export type ResolutionVoterEnhanced = NonNullable<ResolutionEntity["voters"]>["0"] & {
   votingPowerInt: number;
   usedPoa: boolean;
@@ -89,25 +97,6 @@ export type ResolutionFormState = {
   typeId: string | null;
 };
 
-export type OdooUser = {
-  id: number;
-  email: string;
-  ethereum_address: string;
-  name: string;
-  display_name: string;
-  image?: string;
-  avatar_256?: string;
-};
-
-export type OdooUserTransformed = {
-  email: string;
-  ethereumAddress: string;
-  displayName: string;
-  image: string;
-};
-
-export type UsersWithEthereumAddress = Record<string, OdooUserTransformed>;
-
 export type DelegationUser = {
   id: string;
   address: string;
@@ -137,8 +126,6 @@ export type Offer = {
   matches: OfferMatch[];
 };
 
-export type ShareholderStatus = "ManagingBoard" | "Investor" | "Contributor" | "Shareholder";
-
 export type ComputedBalances = {
   governanceTokens: number;
   neokTokens: number;
@@ -157,7 +144,7 @@ export type MonthlyRewardsUserData = {
 
 export type RewardsResponseEntry = {
   user: {
-    ethereum_address: string;
+    ethAddress: string;
   };
   token_amount: number;
 };
@@ -192,7 +179,7 @@ export type Task = {
   user_id?: {
     id: number;
     name: string;
-    ethereum_address: string;
+    ethAddress: string;
   };
   timesheet_ids: {
     name: string;

@@ -1,7 +1,7 @@
-import { addResolution, getResolution } from "drizzle/db";
 import { keccak256, toUtf8Bytes } from "ethers/lib/utils";
 import { withIronSessionApiRoute } from "iron-session/next";
 import stringifyDeterministic from "json-stringify-deterministic";
+import { addResolution, getResolution } from "model/resolution";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { ResolutionData } from "@lib/resolutions/validation";

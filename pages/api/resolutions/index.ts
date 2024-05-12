@@ -1,5 +1,5 @@
-import { getResolutions } from "drizzle/db";
 import { withIronSessionApiRoute } from "iron-session/next";
+import { getResolutions } from "model/resolution";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { sessionOptions } from "@lib/session";

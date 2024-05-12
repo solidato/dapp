@@ -17,8 +17,7 @@ import type {
   RewardsResponse,
 } from "../../types";
 
-// 106 is a Test resolution (Ragnar's test) => https://dao.neokingdom.org/resolutions/106
-const RESOLUTIONS_IDS_TO_SKIP = process.env.NEXT_PUBLIC_PROJECT_KEY === "neokingdom" ? ["106"] : [];
+const RESOLUTIONS_IDS_TO_SKIP: string[] = [];
 
 export const RESOLUTION_STATES: ResolutionStates = {
   PRE_DRAFT: "pre-draft", // default state
@@ -201,12 +200,12 @@ export const getExecutionPayload = async (
 
   return Promise.all(
     token_allocations.map(async (allocation) => ({
-      address: allocation.user.ethereum_address,
+      address: allocation.user.ethAddress,
       tokens: allocation.token_amount,
       executionData:
         (
           await $tokenContract.populateTransaction.mint(
-            allocation.user.ethereum_address,
+            allocation.user.ethAddress,
             parseEther(String(allocation.token_amount)),
           )
         )?.data || "",

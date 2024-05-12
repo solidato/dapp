@@ -1,35 +1,44 @@
 import { useWeb3ModalTheme } from "@web3modal/wagmi/react";
 import dynamic from "next/dynamic";
-import { Stardos_Stencil } from "next/font/google";
+import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import React, { useEffect, useMemo } from "react";
 
-import { Badge, Chip, Container, Divider, Slide, Stack, useScrollTrigger } from "@mui/material";
+import {
+  Badge,
+  Chip,
+  Container,
+  Divider,
+  Slide,
+  Stack,
+  useColorScheme,
+  useScrollTrigger,
+  useTheme,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import { useColorScheme } from "@mui/material/styles";
 
 import { useCheckSubgraphState } from "@hooks/useCheckSubgraphState";
 import useGetActiveResolutions from "@hooks/useGetActiveResolutions";
 import useUser from "@hooks/useUser";
 
 import useDelegationStatus from "../hooks/useDelegationStatus";
-import CrowdpunkLogo from "../images/logo-crowdpunk.png";
-import TelediskoLogo from "../images/logo-teledisko.png";
-import VanillaLogo from "../images/vanilla-logo.svg";
+import SolidatoLogo from "../images/logo-solidato.png";
 import AccountMenu from "./AccountMenu";
 import LoginModal from "./LoginModal";
 import MismatchNotifier from "./mismatch-notifier/MismatchNotifier";
-import NkdLogo from "./svg-logos/NkdLogo";
+
+const interFont = Inter({
+  weight: "700",
+  subsets: ["latin"],
+});
 
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
-
-const TimeEntryWidget = dynamic(() => import("./time-entry/TimeEntry"), { ssr: false });
 
 export default function Layout({
   children,
@@ -49,6 +58,7 @@ export default function Layout({
   const { votingResolutions } = useGetActiveResolutions();
 
   const { setThemeMode } = useWeb3ModalTheme();
+  const theme = useTheme();
   const { mode } = useColorScheme();
 
   useEffect(() => {
@@ -59,18 +69,11 @@ export default function Layout({
 
   const delegationActive = data.signerDelegatedBy.length > 0 || data.signerDelegationStatus?.isDelegating;
 
-  const LOGO = {
-    neokingdom: <NkdLogo height={70} style={{ transform: "scale(0.8)" }} />,
-    teledisko: <Image height={35} src={TelediskoLogo} alt="Teledisko DAO" />,
-    crowdpunk: <Image width={80} height={80} src={CrowdpunkLogo} alt="Crowdpunk DAO" />,
-    vanilla: <Image height={35} src={VanillaLogo} alt="Vanilla DAO" />,
-  };
-
   return (
     <>
       {checkMismatch && <MismatchNotifier />}
       <LoginModal />
-      {user?.isLoggedIn && <TimeEntryWidget />}
+      {/* {user?.isLoggedIn && <TimeEntryWidget />} */}
       <Box
         sx={{
           backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -102,8 +105,22 @@ export default function Layout({
                 },
               }}
             >
-              <Link href="/" style={{ display: "flex", height: 70, alignItems: "center", textDecoration: "none" }}>
-                {LOGO[process.env.NEXT_PUBLIC_PROJECT_KEY]}
+              <Link
+                href="/"
+                style={
+                  {
+                    color: theme.palette.text.primary,
+                    display: "flex",
+                    height: 70,
+                    alignItems: "center",
+                    textDecoration: "none",
+                  } as any
+                }
+              >
+                <Image height={35} src={SolidatoLogo} alt="Solidato Logo" />
+                <Box sx={{ fontSize: 24, ml: 1 }} className={interFont.className}>
+                  Solidato
+                </Box>
               </Link>
               <Box sx={{ ml: "auto" }}>
                 <AccountMenu />
@@ -152,7 +169,7 @@ export default function Layout({
                 />
               )}
 
-              {user?.isLoggedIn && (
+              {/* {user?.isLoggedIn && (
                 <Chip
                   label="Tasks"
                   component={Link}
@@ -160,7 +177,7 @@ export default function Layout({
                   variant={isActive("/tasks") ? "filled" : "outlined"}
                   clickable
                 />
-              )}
+              )} */}
 
               <Badge
                 color="success"
@@ -230,14 +247,6 @@ export default function Layout({
                 component={Link}
                 href="/shareholders"
                 variant={isActive("/shareholders") ? "filled" : "outlined"}
-                clickable
-              />
-
-              <Chip
-                label="IBC tools"
-                component={Link}
-                href="/ibc"
-                variant={isActive("/ibc") ? "filled" : "outlined"}
                 clickable
               />
             </Stack>

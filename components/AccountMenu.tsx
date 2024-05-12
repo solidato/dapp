@@ -24,20 +24,15 @@ import { getLettersFromName } from "@lib/utils";
 import useLoginModalStore from "@store/loginModal";
 
 import useLogout from "@hooks/useLogout";
-import useOdooUsers from "@hooks/useOdooUsers";
 import useUser from "@hooks/useUser";
 
 export default function AccountMenu() {
-  const { mode, setMode } = useColorScheme();
   const { user } = useUser();
   const { logout } = useLogout();
-
   const { isConnected: isWalletConnected } = useAccount();
-
+  const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = React.useState(false);
   const isConnected = mounted && isWalletConnected;
-
-  const { currentOdooUser } = useOdooUsers();
 
   useEffect(() => {
     setMounted(true);
@@ -78,10 +73,10 @@ export default function AccountMenu() {
               {user?.isLoggedIn ? (
                 <Avatar
                   sx={{ width: 32, height: 32 }}
-                  alt={user?.display_name}
-                  src={`data:image/jpeg;charset=utf-8;base64,${currentOdooUser?.image || ""}`}
+                  alt={user?.name}
+                  src={`data:image/jpeg;charset=utf-8;base64,${user?.avatar || ""}`}
                 >
-                  {getLettersFromName(user?.display_name)}
+                  {getLettersFromName(user?.name)}
                 </Avatar>
               ) : (
                 <Avatar sx={{ width: 32, height: 32 }} />
@@ -128,7 +123,7 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {!user?.isLoggedIn && (
-          <MenuItem href="/login" onClick={handleModalOpen} component={Link}>
+          <MenuItem href="/login" component={Link}>
             Login
           </MenuItem>
         )}

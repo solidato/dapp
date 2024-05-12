@@ -3,10 +3,11 @@ import { download, generateCsv, mkConfig } from "export-to-csv";
 
 import { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
-import { OdooUser, Offer, OfferMatch } from "../types";
+import { Shareholder } from "../schema/shareholders";
+import { Offer, OfferMatch } from "../types";
 import { formatTimestampToDate } from "./utils";
 
-type GetUserInfo = (address: string) => OdooUser | undefined;
+type GetUserInfo = (address: string) => Shareholder | undefined;
 
 const getMatchHeader = (index: number) => `Match ${index + 1} - From Address - From Name - Amount - Date`;
 
@@ -15,7 +16,7 @@ const formatOfferMatch = (getUserInfo: GetUserInfo) => (match: OfferMatch, index
 
   let matchString = [
     match.matchedFrom,
-    fromUser?.display_name || "",
+    fromUser?.name || "",
     bigIntToNum(match.amount),
     formatTimestampToDate(match.createTimestamp),
   ].join(" - ");
@@ -37,7 +38,7 @@ const formatOffersToExport = (offers: Offer[], getUserInfo: GetUserInfo) => {
 
     return {
       "From Address": o.from,
-      "From Name": fromUser?.display_name || "",
+      "From Name": fromUser?.name || "",
       Amount: amount,
       Expiration: formatTimestampToDate(o.expirationTimestamp),
       Creation: formatTimestampToDate(o.createTimestamp),
