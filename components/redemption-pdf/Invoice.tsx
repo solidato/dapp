@@ -7,29 +7,8 @@ import React from "react";
 import { TOKEN_SYMBOL } from "@lib/utils";
 
 const invoiceTo = {
-  neokingdom: {
-    name: "Neokingdom DAO OÜ",
-    address: "Sõle tn 14",
-    address2: "10611, Tallinn, Estonia",
-    registryCode: "16638166",
-    vatNumber: "EE102569025",
-  },
-  crowdpunk: {
-    name: "Crowdpunk OÜ",
-    address: "Sõle tn 14",
-    address2: "10611, Tallinn, Estonia",
-    registryCode: "16813917",
-    vatNumber: "EE102654736",
-  },
-  teledisko: {
-    name: "Teledisko OÜ",
-    address: "Sõle tn 14",
-    address2: "10611, Tallinn, Estonia",
-    registryCode: "16374990",
-    vatNumber: "EE102438910",
-  },
-  vanilla: {
-    name: "Vanilla OÜ",
+  solidato: {
+    name: "Solidato OÜ",
     address: "Sõle tn 14",
     address2: "10611, Tallinn, Estonia",
     registryCode: "...",
