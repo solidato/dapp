@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
-import { assets, chains } from "chain-registry";
 import { NextPage } from "next";
 import { AppProps } from "next/app";
 import dynamic from "next/dynamic";
@@ -107,8 +106,8 @@ export default function App({ Component, pageProps }: DappProps) {
   const { asPath } = useRouter();
   const [mounted, setMounted] = useState(!!Component.renderOnServer);
 
-  const { user, isLoading } = useUser({
-    redirectTo: `/login?redirectTo=${asPath}`,
+  const { isLoading, user } = useUser({
+    redirectTo: `/login?redirectTo=${encodeURIComponent(asPath)}`,
     shouldSkip: !Component.requireLogin,
   });
 

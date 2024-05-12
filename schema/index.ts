@@ -1,3 +1,4 @@
+import { resolutionsTable } from "./resolutions";
 import { shareholders } from "./shareholders";
 
-export { shareholders };
+export { shareholders, resolutionsTable };

@@ -17,7 +17,7 @@ import useTimestamp from "@hooks/useTimestamp";
 import useUser from "@hooks/useUser";
 
 import ResolutionsStats from "../components/dashboard/ResolutionsStats";
-import { ResolutionEntityEnhanced } from "../types";
+import { ResolutionEntity, ResolutionEntityEnhanced } from "../types";
 
 Home.renderOnServer = false;
 Home.requireLogin = true;
@@ -51,7 +51,7 @@ export default function Home() {
       return [[], [], emptyStats, null];
     }
 
-    const allResolutions = getEnhancedResolutions(resolutions, +currentTimestamp, acl);
+    const allResolutions = getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl);
     const votingPercentageInTheYear = getVotingPercentage(allResolutions, address || user?.ethAddress);
 
     const inProgress = allResolutions.filter(

@@ -40,8 +40,6 @@ const interFont = Inter({
 const initActiveStyle = (currentPath: string) => (href: string) =>
   currentPath === href || (href !== "/" && currentPath.startsWith(href));
 
-// const TimeEntryWidget = dynamic(() => import("./time-entry/TimeEntry"), { ssr: false });
-
 export default function Layout({
   children,
   fullWidth = false,

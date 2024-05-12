@@ -1,25 +1,21 @@
 import { renderToBuffer } from "@react-pdf/renderer";
+import { db } from "drizzle";
 import { withIronSessionApiRoute } from "iron-session/next";
 import kebabCase from "lodash.kebabcase";
+import { getResolution } from "model/resolution";
 import { NextApiRequest, NextApiResponse } from "next";
-import { ResolutionEntity, ResolutionEntityEnhanced } from "types";
+import { ResolutionEntityEnhanced } from "types";
 
 import React from "react";
 
-import { getLegacyResolutionQuery } from "@graphql/subgraph/queries/get-legacy-resolution-query";
 import { getResolutionQuery } from "@graphql/subgraph/queries/get-resolution-query";
-import {
-  fetcherGraphqlPublic,
-  isLegacyClientEnabled,
-  legacyFetcherGraphqlPublic,
-} from "@graphql/subgraph/subgraph-client";
+import { fetcherGraphqlPublic } from "@graphql/subgraph/subgraph-client";
 
 import { getEnhancedResolutionMapper } from "@lib/resolutions/common";
+import isCorrupted from "@lib/resolutions/corruption-check";
 import { sessionOptions } from "@lib/session";
 
 import ResolutionPdf from "@components/resolutions/Pdf";
-
-import { db } from "../../../../drizzle";
 
 const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
@@ -30,12 +26,8 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const graphQlResolutionData: any = await fetcherGraphqlPublic([getResolutionQuery, { id: id as string }]);
-    const legacyGraphQlResolutionData: any =
-      graphQlResolutionData.resolution === null && isLegacyClientEnabled
-        ? await legacyFetcherGraphqlPublic([getLegacyResolutionQuery, { id: id as string }])
-        : null;
 
-    if (graphQlResolutionData.resolution === null && legacyGraphQlResolutionData.resolution === null) {
+    if (graphQlResolutionData.resolution === null) {
       return res.status(404).send("resolution not found");
     }
 
@@ -48,14 +40,28 @@ const getResolutionPdf = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const currentTimestamp = +new Date();
     const resolutionData: ResolutionEntityEnhanced = getEnhancedResolutionMapper(currentTimestamp)(
-      graphQlResolutionData?.resolution || (legacyGraphQlResolutionData?.resolution as ResolutionEntity),
+      graphQlResolutionData?.resolution,
       true,
     );
+
+    const [dbResolution] = await getResolution(resolutionData.ipfsDataURI as string);
+
+    if (!dbResolution) {
+      return res.status(404).end();
+    }
+
+    if (isCorrupted(dbResolution.hash, dbResolution)) {
+      return res.status(500).send("This resolution is corrupted. Please reach out to engineers ASAP");
+    }
 
     const pdf = await renderToBuffer(
       // @ts-ignore
       React.createElement(ResolutionPdf, {
-        resolution: resolutionData,
+        resolution: {
+          ...resolutionData,
+          title: dbResolution.title,
+          content: dbResolution.content,
+        },
         usersData: shareholdersData,
         resolutionUrl: `${{ solidato: "https://dao.solidato.org" }[process.env.NEXT_PUBLIC_PROJECT_KEY]}/resolutions/${
           resolutionData.id
