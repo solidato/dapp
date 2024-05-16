@@ -18,18 +18,12 @@ const documents = {
     types.DaoManagerFragmentFragmentDoc,
   "\n  fragment resolutionTypeFragment on ResolutionType {\n    id\n    name\n    quorum\n    noticePeriod\n    votingPeriod\n    canBeNegative\n  }\n":
     types.ResolutionTypeFragmentFragmentDoc,
-  "\n  fragment resolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n":
+  "\n  fragment resolutionFragment on Resolution {\n    id\n    hash\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n":
     types.ResolutionFragmentFragmentDoc,
-  "\n  fragment legacyResolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n":
-    types.LegacyResolutionFragmentFragmentDoc,
   '\n  query GetDaoManager {\n    daoManager(id: "0") {\n      ...daoManagerFragment\n    }\n  }\n':
     types.GetDaoManagerDocument,
   "\n  query GetDelegationUsers {\n    delegationUsers {\n      id\n      address\n      delegated\n    }\n  }\n":
     types.GetDelegationUsersDocument,
-  "\n  query GetLegacyResolution($id: ID!) {\n    resolution(id: $id) {\n      ...legacyResolutionFragment\n    }\n  }\n":
-    types.GetLegacyResolutionDocument,
-  "\n  query GetLegacyResolutions {\n    resolutions(orderBy: createTimestamp, orderDirection: desc) {\n      ...legacyResolutionFragment\n    }\n  }\n":
-    types.GetLegacyResolutionsDocument,
   "\n  query GetResolution($id: ID!) {\n    resolution(id: $id) {\n      ...resolutionFragment\n    }\n  }\n":
     types.GetResolutionDocument,
   "\n  query GetResolutionTypes {\n    resolutionTypes {\n      ...resolutionTypeFragment\n    }\n  }\n":
@@ -78,14 +72,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "\n  fragment resolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n",
-): (typeof documents)["\n  fragment resolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n  fragment legacyResolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n",
-): (typeof documents)["\n  fragment legacyResolutionFragment on Resolution {\n    id\n    ipfsDataURI\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n"];
+  source: "\n  fragment resolutionFragment on Resolution {\n    id\n    hash\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n",
+): (typeof documents)["\n  fragment resolutionFragment on Resolution {\n    id\n    hash\n    isNegative\n    resolutionType {\n      ...resolutionTypeFragment\n    }\n    yesVotesTotal\n    createTimestamp\n    updateTimestamp\n    approveTimestamp\n    rejectTimestamp\n    executionTimestamp\n    createBy\n    updateBy\n    approveBy\n    rejectBy\n    hasQuorum\n    executionTo\n    executionData\n    addressedContributor\n    voters {\n      id\n      address\n      votingPower\n      hasVoted\n      hasVotedYes\n      delegated\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -98,18 +86,6 @@ export function graphql(
 export function graphql(
   source: "\n  query GetDelegationUsers {\n    delegationUsers {\n      id\n      address\n      delegated\n    }\n  }\n",
 ): (typeof documents)["\n  query GetDelegationUsers {\n    delegationUsers {\n      id\n      address\n      delegated\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n  query GetLegacyResolution($id: ID!) {\n    resolution(id: $id) {\n      ...legacyResolutionFragment\n    }\n  }\n",
-): (typeof documents)["\n  query GetLegacyResolution($id: ID!) {\n    resolution(id: $id) {\n      ...legacyResolutionFragment\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "\n  query GetLegacyResolutions {\n    resolutions(orderBy: createTimestamp, orderDirection: desc) {\n      ...legacyResolutionFragment\n    }\n  }\n",
-): (typeof documents)["\n  query GetLegacyResolutions {\n    resolutions(orderBy: createTimestamp, orderDirection: desc) {\n      ...legacyResolutionFragment\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

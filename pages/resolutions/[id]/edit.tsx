@@ -30,7 +30,7 @@ export const getServerSideProps = async ({ params, res }: any) => {
     };
   }
 
-  const [dbResolution] = await getResolution(data.resolution?.hash as string);
+  const dbResolution = await getResolution(data.resolution?.hash as string);
   const enhancedResolution: ResolutionEntityEnhanced = getEnhancedResolutionMapper(+new Date())({
     ...data.resolution,
     title: dbResolution?.title,
