@@ -8,7 +8,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { SnackbarProvider } from "notistack";
 import { WagmiProvider } from "wagmi";
-import { evmos, polygonMumbai } from "wagmi/chains";
+import { optimism } from "wagmi/chains";
 
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -36,19 +36,7 @@ const ExtraneousWarning = dynamic(() => import("../components/ExtraneousWarning"
   ssr: false,
 });
 
-const evmosLava = {
-  ...evmos,
-  rpcUrls: {
-    default: {
-      http: ["https://evmos.lava.build"],
-    },
-    public: {
-      http: ["https://evmos.lava.build"],
-    },
-  },
-};
-
-export const SUPPORTED_CHAINS = [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava];
+export const SUPPORTED_CHAINS = [optimism];
 
 // Wagmi client
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
@@ -61,7 +49,7 @@ const metadata = {
 };
 
 const wagmiConfig = defaultWagmiConfig({
-  chains: [process.env.NEXT_PUBLIC_ENV === "development" ? polygonMumbai : evmosLava],
+  chains: [optimism],
   projectId,
   metadata,
   enableCoinbase: false,

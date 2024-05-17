@@ -22,7 +22,7 @@ import {
   Voting,
   Voting__factory,
 } from "../contracts/typechain";
-import networksSolidato from "../networks/neokingdom.json";
+import networksSolidato from "../networks/solidato.json";
 
 export const networks: Record<string, any> = {
   solidato: networksSolidato,
@@ -100,7 +100,7 @@ export function useContracts() {
       try {
         const signer = walletClientToSigner(walletClient);
 
-        if (!SUPPORTED_CHAINS.map((chain) => chain.id).includes(chainId as 9001 | 80001)) {
+        if (!SUPPORTED_CHAINS.some((chain) => chain.id === chainId)) {
           throw new Error(`You're connected to an unsupported network, please connect to ${SUPPORTED_CHAINS[0].name}`);
         }
 
