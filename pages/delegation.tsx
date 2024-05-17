@@ -34,6 +34,7 @@ import UserCard from "../components/shareholders/UserCard";
 import useDelegate from "../hooks/useDelegate";
 import useDelegationStatus from "../hooks/useDelegationStatus";
 import useShareholders, { DaoUser } from "../hooks/useShareholders";
+import { SHAREHOLDERS_ROLES } from "../lib/constants";
 
 Delegation.title = "Shareholders";
 Delegation.requireLogin = true;
@@ -220,7 +221,7 @@ export default function Delegation() {
           ?.filter(
             (daoUser) =>
               !isSameAddress(daoUser.address, walletAddress) &&
-              (!onlyManagingBoard || (onlyManagingBoard && daoUser.status.includes("ManagingBoard"))),
+              (!onlyManagingBoard || (onlyManagingBoard && daoUser.status.includes(SHAREHOLDERS_ROLES.BOARD_MEMBER))),
           )
           .map((daoUser) => {
             const { power, canBeDelegated } = daoUser;

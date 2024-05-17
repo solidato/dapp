@@ -4,7 +4,7 @@ import { GetResolutionsQuery, ResolutionVoter } from "@graphql/subgraph/generate
 
 import { Shareholder } from "./schema/shareholders";
 
-export type ShareholderStatus = "ManagingBoard" | "Investor" | "Contributor" | "Shareholder";
+export type ShareholderStatus = "Board Member" | "Common Shareholder" | "Active Shareholder" | "Passive Shareholder";
 
 export type AuthUser = Partial<Shareholder> & {
   isLoggedIn: boolean;
@@ -26,6 +26,9 @@ export type ResolutionsAcl = {
   isManagingBoard?: boolean;
   isContributor?: boolean;
   isExtraneous?: boolean;
+  isCommonShareholder?: boolean;
+  isActiveShareholder?: boolean;
+  isPassiveShareholder?: boolean;
 };
 
 export type ResolutionTypeEntity = {

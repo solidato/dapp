@@ -9,6 +9,7 @@ import { getShareholdersInfo } from "@graphql/subgraph/queries/get-shareholders-
 import { sessionOptions } from "@lib/session";
 
 import { db } from "../../../drizzle";
+import { SHAREHOLDERS_ROLES } from "../../../lib/constants";
 import { fetcherGraphqlPublic } from "../../../lib/graphql/subgraph/subgraph-client";
 import { insertShareholdersSchema, shareholders } from "../../../schema/shareholders";
 import { Shareholder } from "../../../schema/shareholders";
@@ -35,6 +36,8 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
         ...daoUser,
         status: getShareholderStatus(daoUser.address, users.daoManager),
         power: ((100 * bigIntToNum(daoUser.votingPower)) / totalVotingPower).toFixed(2),
+        // ownership: number of gov token in wallet + shares / total supply of gov token + shares * 100,
+        // shareholder rights: number of gov token in wallet + shares
         user: shareholdersAddresses[daoUser.address],
       }))
       .filter((user) => user.status.length > 0)
@@ -66,11 +69,17 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
 
 function getShareholderStatus(address: string, daoManager: any) {
   if (!daoManager || !address) return [];
+  const isManagingBoard = daoManager?.managingBoardAddresses.includes(address.toLowerCase());
+  const isContributor = daoManager?.contributorsAddresses.includes(address.toLowerCase());
+  const isShareholder = daoManager?.shareholdersAddresses.includes(address.toLowerCase());
+  const isCommonShareholder = isManagingBoard && !isContributor;
+  const isActiveShareholder = isManagingBoard && isContributor;
+  const isPassiveShareholder = isShareholder;
   return [
-    daoManager?.managingBoardAddresses.includes(address.toLowerCase()) && "ManagingBoard",
-    daoManager?.shareholdersAddresses.includes(address.toLowerCase()) && "Shareholder",
-    daoManager?.contributorsAddresses.includes(address.toLowerCase()) && "Contributor",
-    daoManager?.investorsAddresses.includes(address.toLowerCase()) && "Investor",
+    isManagingBoard && SHAREHOLDERS_ROLES.BOARD_MEMBER,
+    isCommonShareholder && SHAREHOLDERS_ROLES.COMMON_SHAREHOLDER,
+    isActiveShareholder && SHAREHOLDERS_ROLES.ACTIVE_SHAREHOLDER,
+    isPassiveShareholder && SHAREHOLDERS_ROLES.PASSIVE_SHAREHOLDER,
   ].filter(Boolean);
 }
 

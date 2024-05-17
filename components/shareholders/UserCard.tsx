@@ -93,7 +93,7 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
         <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
           <Box>
             {(daoUser.status || daoUser.user?.status || []).map((status) => (
-              <Chip key={status} size="small" label={status} />
+              <Chip sx={{ mr: 1 }} key={status} size="small" label={status} />
             ))}
           </Box>
         </Stack>

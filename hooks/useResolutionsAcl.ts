@@ -12,6 +12,9 @@ const DEFAULT_ACL = {
   isShareholder: false,
   isManagingBoard: false,
   isContributor: false,
+  isCommonShareholder: false,
+  isActiveShareholder: false,
+  isPassiveShareholder: false,
   isExtraneous: true,
 };
 
@@ -23,9 +26,12 @@ export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: bool
     return { acl: DEFAULT_ACL, error, isLoading: isLoading };
   }
 
-  const isContributor = data.daoManager?.contributorsAddresses.includes(address.toLowerCase());
   const isManagingBoard = data.daoManager?.managingBoardAddresses.includes(address.toLowerCase());
+  const isContributor = data.daoManager?.contributorsAddresses.includes(address.toLowerCase());
   const isShareholder = data.daoManager?.shareholdersAddresses.includes(address.toLowerCase());
+  const isCommonShareholder = isManagingBoard && !isContributor;
+  const isActiveShareholder = isManagingBoard && isContributor;
+  const isPassiveShareholder = isShareholder;
   const isExtraneous = !isContributor && !isManagingBoard && !isShareholder;
 
   const acl = {
@@ -37,6 +43,9 @@ export default function useResolutionsAcl(): { acl: ResolutionsAcl; error?: bool
     isShareholder,
     isManagingBoard,
     isContributor,
+    isCommonShareholder,
+    isActiveShareholder,
+    isPassiveShareholder,
     isExtraneous,
   };
 
