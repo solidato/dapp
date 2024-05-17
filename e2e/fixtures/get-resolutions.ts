@@ -5,7 +5,7 @@ export const resolutionsMock: GetResolutionsQuery = {
     {
       id: "1",
       isNegative: false,
-      ipfsDataURI: "ipfs",
+      hash: "hash",
       resolutionType: {
         id: "8",
         name: "30sNotice3mVoting",
@@ -32,7 +32,7 @@ export const resolutionsMock: GetResolutionsQuery = {
     },
     {
       id: "2",
-      ipfsDataURI: "ipfs",
+      hash: "hash",
       isNegative: false,
       resolutionType: {
         id: "6",
