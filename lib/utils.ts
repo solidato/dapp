@@ -1,4 +1,6 @@
 import { format, isSameDay } from "date-fns";
+import { BigNumber } from "ethers";
+import { formatEther } from "ethers/lib/utils";
 import produce from "immer";
 import { ResolutionEntityEnhanced } from "types";
 import * as chains from "viem/chains";
@@ -8,6 +10,8 @@ import { Project, ProjectTask, Timesheet } from "@store/projectTaskStore";
 import { META } from "../pages/_document";
 import { STAGE_TO_COLOR_MAP } from "./constants";
 import { getDateFromUnixTimestamp } from "./resolutions/common";
+
+export const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 export const getLettersFromName = (name?: string) =>
   name

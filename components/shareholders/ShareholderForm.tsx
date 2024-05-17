@@ -6,13 +6,6 @@ import { Box, Button, Grid, TextField } from "@mui/material";
 
 import { Shareholder } from "../../schema/shareholders";
 
-type FormData = {
-  name: string;
-  email: string;
-  ethAddress: string;
-  avatar?: string | null;
-};
-
 export default function ShareholderForm({
   shareholder,
   onConfirm,
@@ -29,8 +22,18 @@ export default function ShareholderForm({
     email: "",
     ethAddress: ethAddress?.toString() || "",
     avatar: "",
+    personalIdNumber: "",
+    birthdate: "",
+    residenceAddress: "",
+    country: "",
+    nationality: "",
+    phone: "",
+    hourlyRate: "",
   };
-  const { control, handleSubmit } = useForm<FormData>({ defaultValues, ...(shareholder && { values: shareholder }) });
+  const { control, handleSubmit } = useForm<Shareholder>({
+    defaultValues,
+    ...(shareholder && { values: shareholder }),
+  });
 
   return (
     <Box
@@ -58,7 +61,7 @@ export default function ShareholderForm({
             name="email"
             control={control}
             render={({ field }) => (
-              <TextField required sx={{ mt: 3, width: "100%" }} id="user-email" label="Email" {...field} />
+              <TextField required sx={{ mt: 1, width: "100%" }} id="user-email" label="Email" {...field} />
             )}
           />
         </Grid>
@@ -70,7 +73,7 @@ export default function ShareholderForm({
             render={({ field }) => (
               <TextField
                 required
-                sx={{ mt: 3, width: "100%" }}
+                sx={{ mt: 1, width: "100%" }}
                 id="user-ethAddress"
                 label="Ethereum address"
                 {...field}
@@ -81,10 +84,90 @@ export default function ShareholderForm({
 
         <Grid item xs={12}>
           <Controller
+            name="personalIdNumber"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                sx={{ mt: 1, width: "100%" }}
+                id="personalIdNumber"
+                label="Personal identification number (only Estonians and e-residents)"
+                {...field}
+              />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Controller
+            name="birthdate"
+            control={control}
+            render={({ field }) => (
+              <TextField sx={{ mt: 1, width: "100%" }} id="birthdate" label="Date of birth (dd/mm/yy)" {...field} />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            name="residenceAddress"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                sx={{ mt: 1, width: "100%" }}
+                id="residenceAddress"
+                label="Residence address (apartment, house, street, city, postal code)"
+                {...field}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            name="country"
+            control={control}
+            render={({ field }) => (
+              <TextField sx={{ mt: 1, width: "100%" }} id="country" label="Country of residence" {...field} />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            name="nationality"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                sx={{ mt: 1, width: "100%" }}
+                id="nationality"
+                label="Nationality (as in the presented document)"
+                {...field}
+              />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <TextField sx={{ mt: 1, width: "100%" }} id="phone" label="Phone number (with country code)" {...field} />
+            )}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Controller
+            name="hourlyRate"
+            control={control}
+            render={({ field }) => (
+              <TextField sx={{ mt: 1, width: "100%" }} id="hourlyRate" label="Hourly Rate" {...field} />
+            )}
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <Controller
             name="avatar"
             control={control}
             render={({ field }) => (
-              <TextField sx={{ mt: 3, width: "100%" }} id="user-avatar" label="Avatar" {...field} />
+              <TextField sx={{ mt: 1, mb: 2, width: "100%" }} id="user-avatar" label="Avatar" {...field} />
             )}
           />
         </Grid>

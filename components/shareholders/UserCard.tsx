@@ -22,7 +22,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { isSameAddress } from "@lib/utils";
+import { bigIntToNum, isSameAddress } from "@lib/utils";
 
 import { useActions } from "@store/shareholderStore";
 
@@ -76,6 +76,9 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
         }
       />
       <CardContent sx={{ p: 0, pb: 3 }}>
+        <Box sx={{ textAlign: "center", mb: 1 }}>
+          <Typography variant="body2">Shareholding rights: {bigIntToNum(daoUser.votingPower)}</Typography>
+        </Box>
         <Stack
           direction="row"
           justifyContent="center"
@@ -84,7 +87,15 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
           sx={{ textAlign: "center" }}
         >
           <Box>
-            <Typography variant="body2">Voting power</Typography>
+            <Typography variant="body2">Ownership</Typography>
+            <Typography variant="caption">{daoUser.power}%</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2">Voting rights</Typography>
+            <Typography variant="caption">{daoUser.power}%</Typography>
+          </Box>
+          <Box>
+            <Typography variant="body2">Dividend rights</Typography>
             <Typography variant="caption">{daoUser.power}%</Typography>
           </Box>
         </Stack>

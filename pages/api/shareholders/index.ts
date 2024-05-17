@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 import { ZodError } from "zod";
@@ -11,10 +9,9 @@ import { sessionOptions } from "@lib/session";
 import { db } from "../../../drizzle";
 import { SHAREHOLDERS_ROLES } from "../../../lib/constants";
 import { fetcherGraphqlPublic } from "../../../lib/graphql/subgraph/subgraph-client";
+import { bigIntToNum } from "../../../lib/utils";
 import { insertShareholdersSchema, shareholders } from "../../../schema/shareholders";
 import { Shareholder } from "../../../schema/shareholders";
-
-const bigIntToNum = (bigIntNum: BigInt) => Number(formatEther(BigNumber.from(bigIntNum)));
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const cookie = req.session.cookie;

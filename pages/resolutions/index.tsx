@@ -5,8 +5,12 @@ import { useAccount } from "wagmi";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Chip,
@@ -56,7 +60,7 @@ const Chevron = styled(({ expand, ...other }: ChevronProps) => <ExpandMoreIcon {
 
 Resolutions.title = "Resolutions";
 Resolutions.checkMismatch = true;
-Resolutions.fullWidth = true;
+Resolutions.fullWidth = false;
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -171,15 +175,30 @@ export default function Resolutions() {
 
   return (
     <>
+      <Alert severity="info" sx={{ mb: 4 }}>
+        <AlertTitle>Shareholders Resolutions</AlertTitle>
+        Shareholders have agreed to adopt shareholders resolution exclusively online without convening a physical or
+        digital meeting of shareholders. <br />
+        Only members of the management board has the right to initiate new votings, however, shareholders representing a
+        certain threshold can force the management board to initiate a vote. <br />
+        Only shareholders with voting right can participate in the adoption of shareholders resolutions. <br />
+        Certain shareholders my be excluded from voting for a certain draft resolution based on the rules set in the
+        Articles of Association of the company (e.g. if the resolution is deciding upon filing a complaint against a
+        shareholder, then that shareholder will be excluded from that voting). <br />
+        List of shareholders, their voting power and delegations between shareholders will be fixed automatically at the
+        time of the initiation of the voting. No further changes during the notification period or voting period will be
+        taken into account. <br />
+        Notice periods, voting periods and thresholds are based on the Articles of Association of the company. <br />
+      </Alert>
       <Section sx={{ pt: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {isConnected && acl.isContributor && (
             <Stack direction="row" spacing={2}>
               <Button component={Link} href="/resolutions/new" variant="outlined">
-                Create new Resolution
+                <AddIcon sx={{ mr: 1 }} /> New Resolution
               </Button>
               <Button component={Link} href="/resolutions/new?template=monthlyRewards" variant="outlined">
-                Monthly Rewards
+                <SwapVertIcon sx={{ mr: 1 }} /> Convert Contributed Time to Shareholding
               </Button>
             </Stack>
           )}
