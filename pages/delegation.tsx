@@ -126,30 +126,34 @@ export default function Delegation() {
         </Typography>
       </Dialog>
       <Alert severity="info" sx={{ mb: 2 }}>
-        <AlertTitle>Delegation Information</AlertTitle>
-        Delegating your voting power to someone else means that they can vote on resolutions using your voting power.
+        <AlertTitle>Delegating between shareholders</AlertTitle>
+        Delegating your voting power to someone else means that they can vote on resolutions using your voting power.{" "}
         <br />
         This is a useful tool if you are going offline for some time (e.g. long holidays) or you want to become a
-        passive DAO member. <br />
+        passive shareholder. <br />
         <br />
-        However, you need to bear in mind the following features of delegations: <br />
-        a) delegation applies only to resolutions that are announced after you have delegated your voting power
-        (delegation does not apply to votings that have already be announced by that time);
-        <br />
-        b) the person you delegated to can vote however he/she chooses, without needing your consent for each vote;
-        <br />
-        c) if the person you have delegated to, is excluded from a specific voting, your delegation is neglected;
-        <br />
-        d) if the person you have delegated to looses its voting rights, your delegation is neglected;
-        <br />
-        e) you can always vote and your vote overrules any delegated voting on your behalf;
-        <br />
-        f) delegation applies to all the votings that are announced before the cancellation of the delegation
-        (delegation is in force with respect of votings announced before the cancellation of the delegation);
-        <br />
-        g) if you fail to vote in the adoption of at least 51% of the resolutions of the calendar year (resolutions
-        submitted in a negative manner shall not be taken into account), you be suspended from voting rights for an
-        indefinite term by a resolution of the shareholders.
+        However, you need to bear in mind the following features of delegations:
+        <ol>
+          <li>passive shareholders cannot delegate and they cannot be delegated as they have no voting rights;</li>
+          <li>
+            delegation applies only to resolutions that are announced after you have delegated your voting power
+            (delegation does not apply to votings that have already been announced by that time);
+          </li>
+          <li>
+            the person you delegated to can vote however he/she chooses, without needing your consent for each vote;
+          </li>
+          <li>if the person you have delegated to is excluded from a specific voting, your delegation is neglected;</li>
+          <li>if the person you have delegated to looses its voting rights, your delegation is neglected;</li>
+          <li>you can always vote and your vote overrules any delegated voting on your behalf;</li>
+          <li>
+            delegation applies to all the votings that are announced before the cancellation of the delegation
+            (delegation is in force with respect of votings announced before the cancellation of the delegation);
+          </li>
+          <li>
+            sub-delegations are not allowed (i.e. person, who has been delegated, cannot delegate; person who has
+            delegated, cannot be delegated).
+          </li>
+        </ol>
         <br />
       </Alert>
 

@@ -97,57 +97,58 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
             ))}
           </Box>
         </Stack>
-        <Menu
-          id="user-actions-menu"
-          aria-labelledby="user-actions-menu"
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={closeMenu}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          {daoUser.user ? (
-            <>
-              <MenuItem component={Link} href={`/shareholders/${daoUser.user.id}/edit`} key="edit">
-                <EditIcon sx={{ mr: 1 }} />
-                Edit
-              </MenuItem>
-              <MenuItem
-                sx={{ color: (theme) => theme.palette.error.light }}
-                onClick={() => {
-                  openDeleteModal(true);
-                  closeMenu();
-                }}
-                key="delete"
-              >
-                <DeleteOutlineIcon sx={{ mr: 1, color: (theme) => theme.palette.error.light }} />
-                Delete
-              </MenuItem>
-            </>
-          ) : (
-            <MenuItem component={Link} href={`/shareholders/new?ethAddress=${daoUser.address}`} key="add">
-              <AddIcon sx={{ mr: 1 }} /> Add User
-            </MenuItem>
-          )}
-        </Menu>
-        <Dialog
-          open={showDeleteModal}
-          handleClose={() => openDeleteModal(false)}
-          handleApprove={handleDeleteShareholder}
-          descriptionId="dialog-delete-shareholder"
-          title={"Delete Shareholder"}
-        >
-          <Typography variant="body1">
-            Are you sure you want to delete the shareholder <b>{daoUser?.user?.name}</b>?
-          </Typography>
-        </Dialog>
+        {cta}
       </CardActions>
+      <Menu
+        id="user-actions-menu"
+        aria-labelledby="user-actions-menu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={closeMenu}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        {daoUser.user ? (
+          <>
+            <MenuItem component={Link} href={`/shareholders/${daoUser.user.id}/edit`} key="edit">
+              <EditIcon sx={{ mr: 1 }} />
+              Edit
+            </MenuItem>
+            <MenuItem
+              sx={{ color: (theme) => theme.palette.error.light }}
+              onClick={() => {
+                openDeleteModal(true);
+                closeMenu();
+              }}
+              key="delete"
+            >
+              <DeleteOutlineIcon sx={{ mr: 1, color: (theme) => theme.palette.error.light }} />
+              Delete
+            </MenuItem>
+          </>
+        ) : (
+          <MenuItem component={Link} href={`/shareholders/new?ethAddress=${daoUser.address}`} key="add">
+            <AddIcon sx={{ mr: 1 }} /> Add User
+          </MenuItem>
+        )}
+      </Menu>
+      <Dialog
+        open={showDeleteModal}
+        handleClose={() => openDeleteModal(false)}
+        handleApprove={handleDeleteShareholder}
+        descriptionId="dialog-delete-shareholder"
+        title={"Delete Shareholder"}
+      >
+        <Typography variant="body1">
+          Are you sure you want to delete the shareholder <b>{daoUser?.user?.name}</b>?
+        </Typography>
+      </Dialog>
     </Card>
   );
 }
