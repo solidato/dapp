@@ -5,9 +5,9 @@ const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
 export default defineConfig({
+  dialect: "postgresql",
   schema: "./schema/index.ts",
-  driver: "pg",
   dbCredentials: {
-    connectionString: process.env.POSTGRES_URL!,
+    url: process.env.POSTGRES_URL!,
   },
 });
