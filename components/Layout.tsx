@@ -169,15 +169,40 @@ export default function Layout({
                 />
               )}
 
-              {/* {user?.isLoggedIn && (
-                <Chip
-                  label="Tasks"
-                  component={Link}
-                  href={"/tasks"}
-                  variant={isActive("/tasks") ? "filled" : "outlined"}
-                  clickable
-                />
-              )} */}
+              <Chip
+                label="Shareholders"
+                component={Link}
+                href="/shareholders"
+                variant={isActive("/shareholders") ? "filled" : "outlined"}
+                clickable
+              />
+
+              {typeof window !== "undefined" && user?.isLoggedIn && (
+                <Badge
+                  color="success"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      top: 10,
+                      right: 3,
+                      ...(!data.signerDelegationStatus?.isDelegating && {
+                        border: (t) => `2px solid ${t.palette.background.paper}`,
+                        padding: "0 4px",
+                      }),
+                    },
+                  }}
+                  badgeContent={data?.signerDelegatedBy?.length || "1"}
+                  invisible={!delegationActive}
+                  variant={data?.signerDelegationStatus?.isDelegating ? "dot" : "standard"}
+                >
+                  <Chip
+                    label="Delegation"
+                    component={Link}
+                    href="/delegation"
+                    variant={isActive("/delegation") ? "filled" : "outlined"}
+                    clickable
+                  />
+                </Badge>
+              )}
 
               <Badge
                 color="success"
@@ -207,48 +232,27 @@ export default function Layout({
 
               {user?.isLoggedIn && (
                 <Chip
-                  label="Tokens & Offers"
+                  label="Time Tracking  🚧"
                   component={Link}
-                  href="/tokens-offers"
-                  variant={isActive("/tokens-offers") ? "filled" : "outlined"}
-                  clickable
+                  href={"/tasks"}
+                  variant={isActive("/tasks") ? "filled" : "outlined"}
+                  disabled
                 />
               )}
 
-              {typeof window !== "undefined" && user?.isLoggedIn && (
-                <Badge
-                  color="success"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      top: 10,
-                      right: 3,
-                      ...(!data.signerDelegationStatus?.isDelegating && {
-                        border: (t) => `2px solid ${t.palette.background.paper}`,
-                        padding: "0 4px",
-                      }),
-                    },
-                  }}
-                  badgeContent={data?.signerDelegatedBy?.length || "1"}
-                  invisible={!delegationActive}
-                  variant={data?.signerDelegationStatus?.isDelegating ? "dot" : "standard"}
-                >
-                  <Chip
-                    label="Delegation"
-                    component={Link}
-                    href="/delegation"
-                    variant={isActive("/delegation") ? "filled" : "outlined"}
-                    clickable
-                  />
-                </Badge>
+              {user?.isLoggedIn && (
+                <Chip label="Decisions 🚧" component={Link} href="/decisions" variant="outlined" disabled />
               )}
 
-              <Chip
-                label="Shareholders"
-                component={Link}
-                href="/shareholders"
-                variant={isActive("/shareholders") ? "filled" : "outlined"}
-                clickable
-              />
+              {user?.isLoggedIn && (
+                <Chip
+                  label="Internal Market 🚧"
+                  component={Link}
+                  href="/tokens-offers"
+                  variant={isActive("/tokens-offers") ? "filled" : "outlined"}
+                  disabled
+                />
+              )}
             </Stack>
           </Toolbar>
         </AppBar>
