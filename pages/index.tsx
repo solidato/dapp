@@ -2,11 +2,13 @@ import { useAccount } from "wagmi";
 
 import { useMemo } from "react";
 
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 import { RESOLUTION_STATES, getEnhancedResolutions, getVotingPercentage } from "@lib/resolutions/common";
 
+import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
+import CompanyTabs from "@components/dashboard/CompanyTabs";
 import Header from "@components/dashboard/Header";
 import InvestorsReport from "@components/dashboard/InvestorsReport";
 import Tokens from "@components/dashboard/Tokens";
@@ -41,48 +43,13 @@ export default function Home() {
   const { isConnected, address } = useAccount();
   const { user } = useUser();
 
-  const [enhancedResolutions, enhancedResolutionsToVote, stats, votingPercentageInTheYear]: [
-    ResolutionEntityEnhanced[],
-    ResolutionEntityEnhanced[],
-    typeof emptyStats,
-    number | null,
-  ] = useMemo(() => {
+  const enhancedResolutionsToVote = useMemo(() => {
     if (isLoading || isLoadingAcl || error) {
-      return [[], [], emptyStats, null];
+      return [];
     }
 
     const allResolutions = getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl);
-    const votingPercentageInTheYear = getVotingPercentage(allResolutions, address || user?.ethAddress);
-
-    const inProgress = allResolutions.filter(
-      (res) => ![RESOLUTION_STATES.ENDED, RESOLUTION_STATES.REJECTED].includes(res.state),
-    );
-    const resolutionsToVote = allResolutions.filter((res) => res.state === RESOLUTION_STATES.VOTING);
-    const withQuorum = allResolutions.filter((res) => res.state === RESOLUTION_STATES.ENDED && res.hasQuorum);
-    const withoutQuorum = allResolutions.filter((res) => res.state === RESOLUTION_STATES.ENDED && !res.hasQuorum);
-    const rejected = allResolutions.filter((res) => res.state === RESOLUTION_STATES.REJECTED);
-    const typesTotals = allResolutions.reduce((totals, res) => {
-      const name = res.isNegative ? `${res.resolutionType.name}Veto` : res.resolutionType.name;
-      totals[name] = (totals[name] || 0) + 1;
-      return totals;
-    }, {} as any);
-
-    const statsValues =
-      allResolutions.length === 0
-        ? emptyStats
-        : {
-            withQuorum: (100 * withQuorum.length) / allResolutions.length,
-            withoutQuorum: (100 * withoutQuorum.length) / allResolutions.length,
-            rejected: (100 * rejected.length) / allResolutions.length,
-            withQuorumTot: withQuorum.length,
-            withoutQuorumTot: withoutQuorum.length,
-            rejectedTot: rejected.length,
-            inProgress: (100 * inProgress.length) / allResolutions.length,
-            inProgressTot: inProgress.length,
-            typesTotals,
-          };
-
-    return [allResolutions, resolutionsToVote, statsValues, votingPercentageInTheYear];
+    return allResolutions.filter((res) => res.state === RESOLUTION_STATES.VOTING);
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl, error]);
 
   return (
@@ -97,23 +64,35 @@ export default function Home() {
           flexWrap: "wrap",
         }}
       >
-        <Header votingPercentageInTheYear={votingPercentageInTheYear} />
+        <Header />
       </Section>
       {!error && (
         <>
-          <Section inverse={enhancedResolutionsToVote?.length > 0}>
-            <ResolutionsStats
-              stats={stats}
-              isLoading={isLoading && resolutions?.length === 0 && !error}
-              totalResolutions={enhancedResolutions.length}
-            />
+          <Section inverse>
+            <CompanyTabs />
           </Section>
+          {enhancedResolutionsToVote.length > 0 && (
+            <Section inverse={false}>
+              <>
+                <Typography variant="h4" sx={{ mb: 4 }}>
+                  Upcoming and ongoing votes
+                </Typography>
+                <Grid container spacing={3}>
+                  {enhancedResolutionsToVote.map((resolution) => (
+                    <Grid item xs={12} md={6} lg={4} key={resolution.id}>
+                      <ResolutionCard resolution={resolution} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </>
+            </Section>
+          )}
           {isConnected && (
-            <Section inverse={enhancedResolutionsToVote?.length === 0}>
+            <Section inverse={enhancedResolutionsToVote.length > 0}>
               <Tokens />
             </Section>
           )}
-          <Section inverse={isConnected && enhancedResolutionsToVote?.length > 0}>
+          <Section inverse={enhancedResolutionsToVote.length === 0}>
             <>
               <Typography variant="h4" sx={{ mb: 4 }}>
                 Investors transparency report

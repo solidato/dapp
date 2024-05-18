@@ -10,7 +10,7 @@ import UserBalance from "@components/tokens/UserBalance";
 import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
 export default function Tokens() {
-  const { data, error } = useUserBalanceAndOffers();
+  const { data } = useUserBalanceAndOffers();
   const { data: daoManagerData } = useSubgraphGraphQL(getDaoManagerQuery);
 
   const totalVotingPower = bigIntToNum(daoManagerData?.daoManager?.totalVotingPower || BigInt(0));
@@ -20,9 +20,15 @@ export default function Tokens() {
     <>
       <UserBalance />
       <Divider sx={{ mt: 2 }} />
-      <Box sx={{ textAlign: "center", mt: 4 }}>
-        <Typography sx={{ mb: 4 }} variant="h4">
-          Your voting Power: {error ? "-" : `${userVotingPower}%`}
+      <Box sx={{ display: "flex", mt: 4, justifyContent: "space-between" }}>
+        <Typography sx={{ mb: 4 }} variant="h6">
+          Your ownership rights: TBD
+        </Typography>
+        <Typography sx={{ mb: 4 }} variant="h6">
+          Your voting rights: TBD
+        </Typography>
+        <Typography sx={{ mb: 4 }} variant="h6">
+          Your dividend rights: TBD
         </Typography>
       </Box>
     </>

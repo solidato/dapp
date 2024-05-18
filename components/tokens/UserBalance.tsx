@@ -36,10 +36,10 @@ export default function UserBalance() {
       <Stack direction="row" justifyContent="center" spacing={1} sx={{ pb: 4 }}>
         <Paper sx={PAPER_SX}>
           <Typography variant="h4" sx={{ mb: 0.5 }}>
-            Your internal governance tokens
+            Your shareholding rights
           </Typography>
           <Typography variant="h6" sx={ELLIPSIS_SX}>
-            {data?.balance.governanceTokens}
+            TBD
           </Typography>
         </Paper>
       </Stack>

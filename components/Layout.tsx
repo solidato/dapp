@@ -1,5 +1,4 @@
 import { useWeb3ModalTheme } from "@web3modal/wagmi/react";
-import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -118,8 +117,8 @@ export default function Layout({
                 }
               >
                 <Image height={35} src={SolidatoLogo} alt="Solidato Logo" />
-                <Box sx={{ fontSize: 24, ml: 1 }} className={interFont.className}>
-                  Solidato
+                <Box sx={{ fontSize: 24, ml: 1, color: "#02bbff" }} className={interFont.className}>
+                  solidato
                 </Box>
               </Link>
               <Box sx={{ ml: "auto" }}>
