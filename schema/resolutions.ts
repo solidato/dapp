@@ -11,7 +11,7 @@ export const resolutionsTable = pgTable(
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     project: varchar("project")
       .notNull()
-      .default(process.env.NEXT_PUBLIC_PROJECT_KEY || "neokingdom"),
+      .default(process.env.NEXT_PUBLIC_PROJECT_KEY || "solidato"),
   },
   (resolutions) => {
     return {

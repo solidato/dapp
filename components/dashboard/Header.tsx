@@ -45,10 +45,10 @@ export default function Header() {
         </Typography>
         <User user={user || {}} shouldMarkCurrentUser={false} />
         <Stack sx={{ pt: 2 }} spacing={1} direction="row">
-          {isDeveloper && <Chip size="small" label={"Developer"} color={"info"}></Chip>}
           {user?.status?.map((status) => (
             <Chip key={status} size="small" label={status} />
           ))}
+          {isDeveloper && <Chip size="small" label="Developer" color="info" />}
         </Stack>
       </Box>
     </>

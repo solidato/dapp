@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
-import { Alert, AlertTitle, Box, Button, CircularProgress, FormControlLabel, Grid, Link, Switch } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, FormControlLabel, Grid, Link, Switch, Typography } from "@mui/material";
 
 import UserCard from "@components/shareholders/UserCard";
 
@@ -33,8 +33,10 @@ export default function Shareholders() {
 
   return (
     <>
+      <Typography variant="h3" gutterBottom>
+        Shareholder register
+      </Typography>
       <Alert severity="info" sx={{ mb: 4 }}>
-        <AlertTitle>Shareholder Register</AlertTitle>
         The company has three possible types of shareholders:
         <ul>
           <li>Common Shareholder</li>
@@ -52,7 +54,7 @@ export default function Shareholders() {
 
       <Box display="flex" justifyContent="space-between" sx={{ mt: 2, mb: 2 }}>
         <Box display="flex">
-          <Button sx={{ mr: 2 }} variant="outlined" href="/shareholders/new">
+          <Button sx={{ mr: 2 }} variant="outlined" href="/shareholders/new" LinkComponent={NextLink}>
             <AddIcon sx={{ mr: 1 }} /> New shareholder
           </Button>
           <Button variant="outlined" onClick={() => downloadShareholderList()}>

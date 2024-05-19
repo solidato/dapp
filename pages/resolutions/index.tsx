@@ -175,8 +175,10 @@ export default function Resolutions() {
 
   return (
     <>
+      <Typography variant="h3" gutterBottom>
+        Shareholders&apos; Resolutions
+      </Typography>
       <Alert severity="info" sx={{ mb: 4 }}>
-        <AlertTitle>Shareholders Resolutions</AlertTitle>
         Shareholders have agreed to adopt shareholders resolution exclusively online without convening a physical or
         digital meeting of shareholders. <br />
         Only members of the management board has the right to initiate new votings, however, shareholders representing a
@@ -204,7 +206,7 @@ export default function Resolutions() {
           )}
         </Box>
       </Section>
-      {user?.isLoggedIn && (
+      {user?.isLoggedIn && resolutions.length > 0 && (
         <Section inverse sx={{ pb: 0 }}>
           <>
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -367,23 +369,25 @@ export default function Resolutions() {
           </>
         </Section>
       )}
-      <Section inverse={activeResolutions?.length === 0}>
-        <>
-          {activeResolutions?.length > 0 && (
-            <Typography variant="h5" sx={{ mb: 2 }}>
-              Other resolutions
-            </Typography>
-          )}
-          {(isLoading || isLoadingAcl) && resolutions?.length === 0 && <CircularProgress />}
-          <Grid container spacing={3}>
-            {inactiveResolutions.map((resolution) => (
-              <Grid item xs={12} md={6} lg={4} key={resolution.id}>
-                <ResolutionCard resolution={resolution} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      </Section>
+      {resolutions?.length > 0 && (
+        <Section inverse={activeResolutions?.length === 0}>
+          <>
+            {activeResolutions?.length > 0 && (
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Other resolutions
+              </Typography>
+            )}
+            {(isLoading || isLoadingAcl) && resolutions?.length === 0 && <CircularProgress />}
+            <Grid container spacing={3}>
+              {inactiveResolutions.map((resolution) => (
+                <Grid item xs={12} md={6} lg={4} key={resolution.id}>
+                  <ResolutionCard resolution={resolution} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        </Section>
+      )}
     </>
   );
 }

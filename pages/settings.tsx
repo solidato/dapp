@@ -34,8 +34,8 @@ Commit: ${process.env.LATEST_COMMIT_HASH}
 ${"```"}
 `);
 
-const DAPP_ISSUES_URL = "https://github.com/NeokingdomDAO/dapp/issues/new";
-const COMMIT_URL = "https://github.com/NeokingdomDAO/dapp/commit";
+const DAPP_ISSUES_URL = "https://github.com/solidato/dapp/issues/new";
+const COMMIT_URL = "https://github.com/solidato/dapp/commit";
 const RELOAD_AFTER = 1000;
 
 export default function Settings() {

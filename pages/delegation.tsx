@@ -125,8 +125,10 @@ export default function Delegation() {
           Proceed delegating to <User address={activeDelegatingAddress as string} isInline />?
         </Typography>
       </Dialog>
+      <Typography variant="h3" gutterBottom>
+        Delegating between shareholders
+      </Typography>
       <Alert severity="info" sx={{ mb: 2 }}>
-        <AlertTitle>Delegating between shareholders</AlertTitle>
         Delegating your voting power to someone else means that they can vote on resolutions using your voting power.{" "}
         <br />
         This is a useful tool if you are going offline for some time (e.g. long holidays) or you want to become a
