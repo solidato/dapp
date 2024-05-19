@@ -40,7 +40,7 @@ const TOKEN_CMC_PAGE = {
 
 const TOKEN_API_ENDPOINT = `/api/token-price/${TOKEN_CMC_PAGE}`;
 
-export default function InvestorsReport() {
+export default function ShareholdingValue() {
   const {
     data: tokenPrice,
     isLoading: isLoadingGetTokenPrice,

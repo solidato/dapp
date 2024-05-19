@@ -10,7 +10,7 @@ import ResolutionCard from "@components/ResolutionCard";
 import Section from "@components/Section";
 import CompanyTabs from "@components/dashboard/CompanyTabs";
 import Header from "@components/dashboard/Header";
-import InvestorsReport from "@components/dashboard/InvestorsReport";
+import ShareholdingValue from "@components/dashboard/ShareholdingValue";
 import Tokens from "@components/dashboard/Tokens";
 
 import useGetResolutions from "@hooks/useGetResolutions";
@@ -94,10 +94,10 @@ export default function Home() {
           )}
           <Section inverse={enhancedResolutionsToVote.length === 0}>
             <>
-              <Typography variant="h4" sx={{ mb: 4 }}>
-                Investors transparency report
+              <Typography variant="h4" sx={{ mb: 4 }} textAlign="center">
+                Shareholding&apos;s value
               </Typography>
-              <InvestorsReport />
+              <ShareholdingValue />
             </>
           </Section>
         </>
