@@ -25,7 +25,7 @@ export default function Tokens() {
           Your ownership rights: TBD
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your voting rights: TBD
+          Your voting rights: {userVotingPower} %
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
           Your dividend rights: TBD

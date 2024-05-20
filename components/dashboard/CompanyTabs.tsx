@@ -19,12 +19,12 @@ interface TabPanelProps {
 }
 
 const companyInfo = {
-  "Company name": "Solidato",
-  "Registry code": "123456789",
-  Address: "Some address",
-  "VAT number": "123456789",
-  "Phone number": "123456789",
-  "E-mail": "hello@solidato.com",
+  "Company name": "Solidato OÜ",
+  "Registry code": "16932823",
+  Address: "Harju maakond, Tallinn, Põhja-Tallinna linnaosa, Sõle tn 14, 10611",
+  "VAT number": "EE102713130",
+  "Phone number": "+372 5532 1462",
+  "E-mail": "ragnar@reindoff.ee",
 };
 
 function TabPanel(props: TabPanelProps) {
@@ -125,7 +125,12 @@ export default function CompanyTabs() {
               This contains real-time info about the company. Info fields can be chosen during the process
             </Typography>
           </div>
-          <Button variant="contained" color="primary">
+          <Button
+            variant="contained"
+            color="primary"
+            target="_blank"
+            href="https://ariregister.rik.ee/eng/company/16932823/Solidato-O%C3%9C"
+          >
             Generate from the register
           </Button>
         </Paper>
