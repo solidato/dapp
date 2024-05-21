@@ -39,7 +39,7 @@ export default function UserBalance() {
             Your shareholding rights
           </Typography>
           <Typography variant="h6" sx={ELLIPSIS_SX}>
-            TBD
+            {data?.balance.governanceTokens || "-"}
           </Typography>
         </Paper>
       </Stack>

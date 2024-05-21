@@ -22,13 +22,13 @@ export default function Tokens() {
       <Divider sx={{ mt: 2 }} />
       <Box sx={{ display: "flex", mt: 4, justifyContent: "space-between" }}>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your ownership rights: TBD
+          Your ownership rights: {userVotingPower} %
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
           Your voting rights: {userVotingPower} %
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your dividend rights: TBD
+          Your dividend rights: {userVotingPower} %
         </Typography>
       </Box>
     </>

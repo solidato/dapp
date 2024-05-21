@@ -24,7 +24,7 @@ const companyInfo = {
   Address: "Harju maakond, Tallinn, Põhja-Tallinna linnaosa, Sõle tn 14, 10611",
   "VAT number": "EE102713130",
   "Phone number": "+372 5532 1462",
-  "E-mail": "ragnar@reindoff.ee",
+  "E-mail": "info@solidato.com",
 };
 
 function TabPanel(props: TabPanelProps) {
@@ -99,7 +99,12 @@ export default function CompanyTabs() {
             <Divider />
             <Typography variant="caption">Enforce from: 01.01.2024, Last updated: 15.02.2024</Typography>
           </div>
-          <Button variant="contained" color="primary">
+          <Button
+            href="https://drive.google.com/file/d/1Rs5kVAU5_wsNI4BzYgis8Zbtrlz3r0MB/view?usp=drive_link"
+            target="_blank"
+            variant="contained"
+            color="primary"
+          >
             Download
           </Button>
         </Paper>
@@ -111,7 +116,12 @@ export default function CompanyTabs() {
             <Divider />
             <Typography variant="caption">Enforce from: 01.01.2024, Last updated: N/A</Typography>
           </div>
-          <Button variant="contained" color="primary">
+          <Button
+            href="https://drive.google.com/file/d/1Rs5kVAU5_wsNI4BzYgis8Zbtrlz3r0MB/view?usp=drive_link"
+            target="_blank"
+            variant="contained"
+            color="primary"
+          >
             Download
           </Button>
         </Paper>
