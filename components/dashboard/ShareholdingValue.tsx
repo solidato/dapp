@@ -1,6 +1,8 @@
+import { useContractsContext } from "contexts/ContractsContext";
+import { BigNumber } from "ethers";
 import useSWR from "swr";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { InfoOutlined } from "@mui/icons-material";
 import {
@@ -30,6 +32,7 @@ import Modal from "@components/Modal";
 
 import useGetInvestorsReportData from "@hooks/investors-report/useGetInvestorsReportData";
 
+import { bigIntToNum } from "../../lib/utils";
 import Chart from "./Chart";
 
 type ChartVizType = "default" | "accumulated";
@@ -47,6 +50,19 @@ export default function ShareholdingValue() {
     error: errorGettingTokenPrice,
   } = useSWR<{ priceEur: number; priceUsd: number }>(TOKEN_API_ENDPOINT, fetcher);
   const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
+  const { governanceTokenContract } = useContractsContext();
+  const [totalSupply, setTotalSupply] = useState(1);
+
+  useEffect(() => {
+    if (governanceTokenContract) {
+      const fetchTotalSupply = async () => {
+        const res = await governanceTokenContract?.totalSupply();
+        setTotalSupply(bigIntToNum(res.toBigInt()));
+      };
+      fetchTotalSupply();
+    }
+  }, [governanceTokenContract]);
+
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -64,7 +80,7 @@ export default function ShareholdingValue() {
     return <CircularProgress />;
   }
 
-  const totalSupply = dataAccumulated.slice(dataAccumulated.length - 1)[0]?.minted || 0;
+  // const totalSupply = dataAccumulated.slice(dataAccumulated.length - 1)[0]?.minted || 0;
 
   return (
     <Stack
@@ -78,13 +94,13 @@ export default function ShareholdingValue() {
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
         <Typography variant="h6">Your shareholding&apos;s value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
-          TBD {/* {moneyFormatter.format(totalSupply)} */}
+          {moneyFormatter.format(totalSupply)}
         </Typography>
       </Paper>
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
         <Typography variant="h6">Company total value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
-          TBD {/* {moneyFormatter.format(totalSupply * (tokenPrice?.priceEur || 1))} */}
+          {moneyFormatter.format(totalSupply * (tokenPrice?.priceEur || 1))}
         </Typography>
       </Paper>
     </Stack>
