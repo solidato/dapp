@@ -8,7 +8,6 @@ import { sessionOptions } from "@lib/session";
 import { getShareholderStatus } from "@lib/shareholders";
 
 import { db } from "../../../drizzle";
-import { SHAREHOLDERS_ROLES } from "../../../lib/constants";
 import { fetcherGraphqlPublic } from "../../../lib/graphql/subgraph/subgraph-client";
 import { bigIntToNum } from "../../../lib/utils";
 import { insertShareholdersSchema, shareholders } from "../../../schema/shareholders";
