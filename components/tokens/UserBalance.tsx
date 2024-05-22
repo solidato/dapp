@@ -1,7 +1,11 @@
+import { useAccount } from "wagmi";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 
 import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
+
+import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
 
 const PAPER_SX = {
   p: 4,
@@ -26,6 +30,7 @@ const ELLIPSIS_SX = {
 
 export default function UserBalance() {
   const { data, isLoading } = useUserBalanceAndOffers();
+  const { address } = useAccount();
 
   if (isLoading) {
     return <CircularProgress />;
@@ -39,7 +44,8 @@ export default function UserBalance() {
             Your shareholding rights
           </Typography>
           <Typography variant="h6" sx={ELLIPSIS_SX}>
-            {data?.balance.governanceTokens || "-"}
+            {/* {data?.balance.governanceTokens || "-"} */}
+            {address ? TEMP_SHAREHOLDERS_VALUES[address.toLowerCase()].shares : "-"}
           </Typography>
         </Paper>
       </Stack>

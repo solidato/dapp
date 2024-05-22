@@ -1,6 +1,7 @@
 import { useContractsContext } from "contexts/ContractsContext";
 import { BigNumber } from "ethers";
 import useSWR from "swr";
+import { useAccount } from "wagmi";
 
 import { useEffect, useState } from "react";
 
@@ -32,6 +33,7 @@ import Modal from "@components/Modal";
 
 import useGetInvestorsReportData from "@hooks/investors-report/useGetInvestorsReportData";
 
+import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
 import { bigIntToNum } from "../../lib/utils";
 import Chart from "./Chart";
 
@@ -52,6 +54,9 @@ export default function ShareholdingValue() {
   const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
   const { governanceTokenContract } = useContractsContext();
   const [totalSupply, setTotalSupply] = useState(1);
+
+  const { address } = useAccount();
+  const shares = address ? TEMP_SHAREHOLDERS_VALUES[address.toLowerCase()].shares : 0;
 
   useEffect(() => {
     if (governanceTokenContract) {
@@ -94,13 +99,14 @@ export default function ShareholdingValue() {
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
         <Typography variant="h6">Your shareholding&apos;s value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
-          {moneyFormatter.format(totalSupply)}
+          {/* {moneyFormatter.format(totalSupply)} */} {moneyFormatter.format(shares)}
         </Typography>
       </Paper>
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
         <Typography variant="h6">Company total value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
-          {moneyFormatter.format(totalSupply * (tokenPrice?.priceEur || 1))}
+          {/* {moneyFormatter.format(totalSupply * (tokenPrice?.priceEur || 1))} */}
+          {moneyFormatter.format(16925)}
         </Typography>
       </Paper>
     </Stack>
