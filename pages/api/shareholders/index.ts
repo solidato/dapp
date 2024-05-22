@@ -27,8 +27,6 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       return acc;
     }, {} as Record<string, Shareholder>);
 
-    console.log("🐞 > daoUser:", users.daoUsers[0]);
-
     const totalVotingPower = bigIntToNum(users?.daoManager?.totalVotingPower || BigInt(0));
     const daoUsers = users.daoUsers
       .map((daoUser) => ({

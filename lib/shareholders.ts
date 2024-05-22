@@ -11,6 +11,11 @@ export function getShareholderStatus(address: string, daoManager: any) {
   const isCommonShareholder = isManagingBoard && !isContributor;
   const isPassiveShareholder = isShareholder || isInvestor;
 
+  if (address === "0x4706ed7a10064801f260bbf94743f241fcef815e") {
+    // neokingdom
+    return [SHAREHOLDERS_ROLES.PASSIVE_SHAREHOLDER];
+  }
+
   return [
     isManagingBoard && SHAREHOLDERS_ROLES.BOARD_MEMBER,
     isCommonShareholder && SHAREHOLDERS_ROLES.COMMON_SHAREHOLDER,
