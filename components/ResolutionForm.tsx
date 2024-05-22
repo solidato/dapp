@@ -123,9 +123,8 @@ export default function ResolutionForm({
         <textarea ref={editorRef} />
       </Box>
       <Grid container sx={{ mb: 4, mt: 4 }}>
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={10}>
           <FormControl>
-            <FormLabel id="radio-buttons-group-label">Resolution Type</FormLabel>
             {isLoadingTypes ? (
               <CircularProgress />
             ) : (
@@ -139,14 +138,16 @@ export default function ResolutionForm({
                   <FormControlLabel
                     value={resolutionType.id}
                     key={resolutionType.id}
-                    control={<Radio disabled={isMonthlyRewards} />}
+                    control={<Radio disabled={isMonthlyRewards} sx={{ mr: 2 }} />}
+                    sx={{ mb: 2 }}
                     label={
                       <>
                         <Typography variant="h4">
                           {RESOLUTION_TYPES_TEXTS[resolutionType.name]?.title || resolutionType.name}
                         </Typography>
                         <Typography
-                          variant="caption"
+                          variant="h6"
+                          fontWeight={200}
                           dangerouslySetInnerHTML={{
                             __html:
                               RESOLUTION_TYPES_TEXTS[resolutionType.name]?.description ||
