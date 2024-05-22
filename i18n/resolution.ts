@@ -44,12 +44,12 @@ export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
     title: "Instant (100%)",
     description:
       "Covers all resolutions. No notice period. Voting ends as soon as all shareholders agree. Otherwise voting fails after 5-days period.",
-    disabled: false,
+    disabled: true,
   },
   genesis: {
-    title: "Genesis",
+    title: "Instant (100%)",
     description:
-      "It looks like you are creating a new DAO! This resolution has no notice and has a voting time of 4 days.",
-    disabled: true,
+      "Covers all resolutions. No notice period. Voting ends as soon as all shareholders agree. Otherwise voting fails after 5-days period.",
+    disabled: false,
   },
 };

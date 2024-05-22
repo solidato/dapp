@@ -29,8 +29,6 @@ export default function Shareholders() {
     return <CircularProgress />;
   }
 
-  const downloadShareholderList = () => console.log("downloadShareholderList");
-
   return (
     <>
       <Typography variant="h3" gutterBottom>
@@ -57,7 +55,12 @@ export default function Shareholders() {
           <Button sx={{ mr: 2 }} variant="outlined" href="/shareholders/new" LinkComponent={NextLink}>
             <AddIcon sx={{ mr: 1 }} /> New shareholder
           </Button>
-          <Button variant="outlined" onClick={() => downloadShareholderList()}>
+          {/* TODO: this pdf will be generated via endpoint */}
+          <Button
+            variant="outlined"
+            href="https://drive.google.com/file/d/114TH9dLJLfHcDwF1TfgxjtEFKi0LbIQ6/view?usp=drive_link"
+            target="_blank"
+          >
             <DownloadIcon sx={{ mr: 1 }} /> DOWNLOAD SHAREHOLDER LIST
           </Button>
         </Box>

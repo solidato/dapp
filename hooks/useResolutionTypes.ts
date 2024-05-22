@@ -10,6 +10,7 @@ export default function useResolutionTypes(): { types: ResolutionTypeEntity[]; e
   if (!data || error || isLoading) {
     return { types: [], error, isLoading };
   }
+  console.log("data: ", data);
 
   const resolutionTypes = [
     ...data.resolutionTypes
@@ -22,10 +23,10 @@ export default function useResolutionTypes(): { types: ResolutionTypeEntity[]; e
           return [
             ...all,
             current,
-            {
-              id: "routineVeto",
-              name: "routineVeto",
-            },
+            // {
+            //   id: "routineVeto",
+            //   name: "routineVeto",
+            // },
           ] as ResolutionTypeEntity[];
         }
         return [...all, current];

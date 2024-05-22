@@ -11,8 +11,7 @@ const NOTIFY_CONTRACT_ERROR_TIMEOUT = 30000;
 const NOTIFY_TX_STUCK_TIMEOUT = 40000;
 
 const REQUIRED_NETWORK: any = {
-  9001: "Please connect to evmos mainnet",
-  9000: "Please connect to evmos testnet",
+  10: "Please connect to optimism mainnet",
 };
 
 type ExecuteTxParams<TC, TP> = {
