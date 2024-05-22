@@ -18,8 +18,8 @@ export default function ExtraneousWarning({ children }: { children: React.ReactN
     return (
       <Container maxWidth="lg" sx={{ mb: 6, mt: 1 }}>
         <Alert severity="error">
-          There are indexing problems. This is probably due to evmos being down. The dev team will do an announcement on
-          discord as soon as this will be fixed
+          There&apos;s an issue connecting to subgraph. Try to check your connection and refresh the page. If the error
+          persists please contact the dev team.
         </Alert>
       </Container>
     );
