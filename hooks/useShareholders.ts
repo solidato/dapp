@@ -17,6 +17,8 @@ export type DaoUser = {
   shareholderRegistryBalance: number;
   neokigdomTokenBalance: number;
   power: string;
+  ownership: string;
+  shareholdingRights: string;
   status: ShareholderStatus[];
   user?: Shareholder;
 };

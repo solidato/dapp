@@ -32,7 +32,6 @@ import useErrorHandler from "@hooks/useErrorHandler";
 import useShareholders, { DaoUser } from "@hooks/useShareholders";
 import useUser from "@hooks/useUser";
 
-import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
 import Dialog from "../Dialog";
 
 export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: ReactElement }) {
@@ -78,10 +77,7 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
       />
       <CardContent sx={{ p: 0, pb: 3 }}>
         <Box sx={{ textAlign: "center", mb: 1 }}>
-          {/* <Typography variant="body2">Shareholding rights: {bigIntToNum(daoUser.votingPower)}</Typography> */}
-          <Typography variant="body2">
-            Shareholding rights: {TEMP_SHAREHOLDERS_VALUES[daoUser.address.toLowerCase()].shares}
-          </Typography>
+          <Typography variant="body2">Shareholding rights: {daoUser.shareholdingRights}</Typography>
         </Box>
         <Stack
           direction="row"
@@ -92,22 +88,15 @@ export default function UserCard({ daoUser, cta }: { daoUser: DaoUser; cta?: Rea
         >
           <Box>
             <Typography variant="body2">Ownership</Typography>
-            {/* <Typography variant="caption">{daoUser.power}%</Typography> */}
-            <Typography variant="caption">
-              {TEMP_SHAREHOLDERS_VALUES[daoUser.address.toLowerCase()].percentage}%
-            </Typography>
+            <Typography variant="caption">{daoUser.ownership}%</Typography>
           </Box>
           <Box>
             <Typography variant="body2">Voting rights</Typography>
-            <Typography variant="caption">
-              {TEMP_SHAREHOLDERS_VALUES[daoUser.address.toLowerCase()].percentage}%
-            </Typography>
+            <Typography variant="caption">{daoUser.power}%</Typography>
           </Box>
           <Box>
             <Typography variant="body2">Dividend rights</Typography>
-            <Typography variant="caption">
-              {TEMP_SHAREHOLDERS_VALUES[daoUser.address.toLowerCase()].percentage}%
-            </Typography>
+            <Typography variant="caption">{daoUser.ownership}%</Typography>
           </Box>
         </Stack>
       </CardContent>

@@ -1,6 +1,8 @@
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 
+import { useMemo } from "react";
+
 import { Box, Divider, Typography } from "@mui/material";
 
 import { getDaoManagerQuery } from "@graphql/subgraph/queries/get-dao-manager-query";
@@ -10,30 +12,29 @@ import UserBalance from "@components/tokens/UserBalance";
 
 import useUserBalanceAndOffers, { bigIntToNum } from "@hooks/useUserBalanceAndOffers";
 
-import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
+import useShareholders from "../../hooks/useShareholders";
 
 export default function Tokens() {
-  const { data } = useUserBalanceAndOffers();
-  const { data: daoManagerData } = useSubgraphGraphQL(getDaoManagerQuery);
+  // const { data } = useUserBalanceAndOffers();
   const { address } = useAccount();
-
-  const totalVotingPower = bigIntToNum(daoManagerData?.daoManager?.totalVotingPower || BigInt(0));
-  const userVotingPower = ((100 * (data?.balance?.votingPower || 0)) / totalVotingPower).toFixed(2);
-  const percentage = address ? TEMP_SHAREHOLDERS_VALUES[address.toLowerCase()].percentage : "-";
+  const { daoUsers } = useShareholders();
+  const daoUser = useMemo(() => {
+    return daoUsers?.find((user) => user.address.toLowerCase() === address?.toLowerCase());
+  }, [daoUsers]);
 
   return (
     <>
-      <UserBalance />
+      <UserBalance balance={daoUser?.shareholdingRights || "-"} />
       <Divider sx={{ mt: 2 }} />
       <Box sx={{ display: "flex", mt: 4, justifyContent: "space-between" }}>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your ownership rights: {percentage} %
+          Your ownership rights: {daoUser?.ownership} %
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your voting rights: {percentage} %
+          Your voting rights: {daoUser?.power} %
         </Typography>
         <Typography sx={{ mb: 4 }} variant="h6">
-          Your dividend rights: {percentage} %
+          Your dividend rights: {daoUser?.ownership} %
         </Typography>
       </Box>
     </>

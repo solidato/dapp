@@ -27,14 +27,19 @@ const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       return acc;
     }, {} as Record<string, Shareholder>);
 
+    console.log("🐞 > daoUser:", users.daoUsers[0]);
+
     const totalVotingPower = bigIntToNum(users?.daoManager?.totalVotingPower || BigInt(0));
     const daoUsers = users.daoUsers
       .map((daoUser) => ({
         ...daoUser,
         status: getShareholderStatus(daoUser.address, users.daoManager),
         power: ((100 * bigIntToNum(daoUser.votingPower)) / totalVotingPower).toFixed(2),
-        // ownership: number of gov token in wallet + shares / total supply of gov token + shares * 100,
-        // shareholder rights: number of gov token in wallet + shares
+        ownership: (
+          (100 * (bigIntToNum(daoUser.governanceBalance) + bigIntToNum(daoUser.shareholderRegistryBalance))) /
+          totalVotingPower
+        ).toFixed(2),
+        shareholdingRights: bigIntToNum(daoUser.governanceBalance) + bigIntToNum(daoUser.shareholderRegistryBalance),
         user: shareholdersAddresses[daoUser.address],
       }))
       .filter((user) => user.status.length > 0)

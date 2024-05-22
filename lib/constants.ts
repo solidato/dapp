@@ -1,44 +1,5 @@
 import { ShareholderStatus } from "../types";
 
-export const TEMP_SHAREHOLDERS_VALUES: Record<string, { percentage: number; shares: number }> = {
-  "0xbded7c8a2efa4cf2ee6c953e6447a246f3ac4e12": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0xace13f04231222a585573312ccf811e9e61ed958": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0xa64d568f331f2774d5cff492f2299505abc0186a": {
-    percentage: 23.63,
-    shares: 4000,
-  },
-  "0x8e2e09eb2a0a8e6e1d8de3e5fb09ec1e05b0cdbf": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0x6b7bfdeb2c5282f284111738987ccf54291bd3da": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0x62817523f3b94182b9df911a8071764f998f11a4": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0x4b2625de2d7236b18f728d8c56ae9d9fce910f9f": {
-    percentage: 11.82,
-    shares: 2000,
-  },
-  "0xda817b0e5dd79303239876c64ff6d2047077ff6c": {
-    percentage: 0.47,
-    shares: 79,
-  },
-  "0x4706ed7a10064801f260bbf94743f241fcef815e": {
-    percentage: 5.0,
-    shares: 846,
-  },
-};
-
 export const ODOO_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 export const SHAREHOLDERS_ROLES: Record<string, ShareholderStatus> = {

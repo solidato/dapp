@@ -70,7 +70,7 @@ export default function Tokens() {
 
   return (
     <>
-      <UserBalance />
+      <UserBalance balance={"-"} />
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="tasks tabs" variant="scrollable" scrollButtons="auto">
           <Tab label="Tokens" {...a11yProps(0)} />

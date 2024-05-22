@@ -5,8 +5,6 @@ import { Box, CircularProgress, Paper, Stack, Typography } from "@mui/material";
 
 import useUserBalanceAndOffers from "@hooks/useUserBalanceAndOffers";
 
-import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
-
 const PAPER_SX = {
   p: 4,
   borderRadius: 3,
@@ -28,7 +26,7 @@ const ELLIPSIS_SX = {
   },
 };
 
-export default function UserBalance() {
+export default function UserBalance({ balance }: { balance: string }) {
   const { data, isLoading } = useUserBalanceAndOffers();
   const { address } = useAccount();
 
@@ -45,7 +43,7 @@ export default function UserBalance() {
           </Typography>
           <Typography variant="h6" sx={ELLIPSIS_SX}>
             {/* {data?.balance.governanceTokens || "-"} */}
-            {address ? TEMP_SHAREHOLDERS_VALUES[address.toLowerCase()].shares : "-"}
+            {balance}
           </Typography>
         </Paper>
       </Stack>

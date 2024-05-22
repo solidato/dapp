@@ -1,9 +1,7 @@
-import { useContractsContext } from "contexts/ContractsContext";
-import { BigNumber } from "ethers";
 import useSWR from "swr";
 import { useAccount } from "wagmi";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { InfoOutlined } from "@mui/icons-material";
 import {
@@ -27,15 +25,11 @@ import {
 } from "@mui/material";
 
 import { fetcher } from "@lib/net";
-import { TOKEN_SYMBOL, moneyFormatter } from "@lib/utils";
-
-import Modal from "@components/Modal";
+import { moneyFormatter } from "@lib/utils";
 
 import useGetInvestorsReportData from "@hooks/investors-report/useGetInvestorsReportData";
 
-import { TEMP_SHAREHOLDERS_VALUES } from "../../lib/constants";
-import { bigIntToNum } from "../../lib/utils";
-import Chart from "./Chart";
+import useShareholders from "../../hooks/useShareholders";
 
 type ChartVizType = "default" | "accumulated";
 
@@ -46,31 +40,20 @@ const TOKEN_CMC_PAGE = {
 const TOKEN_API_ENDPOINT = `/api/token-price/${TOKEN_CMC_PAGE}`;
 
 export default function ShareholdingValue() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const {
     data: tokenPrice,
     isLoading: isLoadingGetTokenPrice,
     error: errorGettingTokenPrice,
   } = useSWR<{ priceEur: number; priceUsd: number }>(TOKEN_API_ENDPOINT, fetcher);
-  const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
-  const { governanceTokenContract } = useContractsContext();
-  const [totalSupply, setTotalSupply] = useState(1);
+  // const { data, dataAccumulated, isLoading, error } = useGetInvestorsReportData();
 
   const { address } = useAccount();
-  const shares = address ? TEMP_SHAREHOLDERS_VALUES[address.toLowerCase()].shares : 0;
-
-  useEffect(() => {
-    if (governanceTokenContract) {
-      const fetchTotalSupply = async () => {
-        const res = await governanceTokenContract?.totalSupply();
-        setTotalSupply(bigIntToNum(res.toBigInt()));
-      };
-      fetchTotalSupply();
-    }
-  }, [governanceTokenContract]);
-
-  const theme = useTheme();
-
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { daoUsers, isLoading, error } = useShareholders();
+  const daoUser = useMemo(() => {
+    return daoUsers?.find((user) => user.address.toLowerCase() === address?.toLowerCase());
+  }, [daoUsers]);
 
   if (error || errorGettingTokenPrice) {
     return (
@@ -99,7 +82,8 @@ export default function ShareholdingValue() {
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
         <Typography variant="h6">Your shareholding&apos;s value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
-          {/* {moneyFormatter.format(totalSupply)} */} {moneyFormatter.format(shares)}
+          {/* {moneyFormatter.format(totalSupply)} */}
+          {moneyFormatter.format(Number(daoUser?.shareholdingRights))}
         </Typography>
       </Paper>
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
