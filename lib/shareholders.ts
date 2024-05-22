@@ -6,9 +6,11 @@ export function getShareholderStatus(address: string, daoManager: any) {
   const isContributor = daoManager?.contributorsAddresses.includes(address.toLowerCase());
   const isShareholder = daoManager?.shareholdersAddresses.includes(address.toLowerCase());
   const isInvestor = daoManager?.investorsAddresses.includes(address.toLowerCase());
+
+  const isActiveShareholder = isManagingBoard || isContributor;
   const isCommonShareholder = isManagingBoard && !isContributor;
-  const isActiveShareholder = isManagingBoard && isContributor;
   const isPassiveShareholder = isShareholder || isInvestor;
+
   return [
     isManagingBoard && SHAREHOLDERS_ROLES.BOARD_MEMBER,
     isCommonShareholder && SHAREHOLDERS_ROLES.COMMON_SHAREHOLDER,
