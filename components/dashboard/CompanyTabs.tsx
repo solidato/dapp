@@ -66,7 +66,7 @@ export default function CompanyTabs() {
   return (
     <Box ref={ref}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange} aria-label="tasks tabs">
+        <Tabs value={value} onChange={handleChange} aria-label="company tabs" variant="scrollable" scrollButtons="auto">
           <Tab label="Company data" {...a11yProps(0)} />
           <Tab label="Management board" {...a11yProps(1)} />
           <Tab label="Legal docs" {...a11yProps(2)} />
