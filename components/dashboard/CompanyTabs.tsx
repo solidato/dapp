@@ -92,7 +92,14 @@ export default function CompanyTabs() {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Paper
-          sx={{ mb: 1, p: 2, display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: 2 }}
+          sx={{
+            mb: 1,
+            p: 2,
+            display: { md: "flex" },
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: 2,
+          }}
         >
           <div>
             <Typography variant="h6">Articles of association</Typography>
@@ -104,12 +111,20 @@ export default function CompanyTabs() {
             target="_blank"
             variant="contained"
             color="primary"
+            sx={{ mt: { xs: 2, md: 0 } }}
           >
             Download
           </Button>
         </Paper>
         <Paper
-          sx={{ mb: 1, p: 2, display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: 2 }}
+          sx={{
+            mb: 1,
+            p: 2,
+            display: { md: "flex" },
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: 2,
+          }}
         >
           <div>
             <Typography variant="h6">Shareholders&apos; Agreement</Typography>
@@ -121,12 +136,20 @@ export default function CompanyTabs() {
             target="_blank"
             variant="contained"
             color="primary"
+            sx={{ mt: { xs: 2, md: 0 } }}
           >
             Download
           </Button>
         </Paper>
         <Paper
-          sx={{ mb: 1, p: 2, display: "flex", alignItems: "center", justifyContent: "space-between", borderRadius: 2 }}
+          sx={{
+            mb: 1,
+            p: 2,
+            display: { md: "flex" },
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: 2,
+          }}
         >
           <div>
             <Typography variant="h6">Extract from Commercial Registry</Typography>
@@ -140,6 +163,7 @@ export default function CompanyTabs() {
             color="primary"
             target="_blank"
             href="https://ariregister.rik.ee/eng/company/16932823/Solidato-O%C3%9C"
+            sx={{ mt: { xs: 2, md: 0 } }}
           >
             Generate from the register
           </Button>
