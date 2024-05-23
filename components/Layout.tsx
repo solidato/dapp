@@ -260,7 +260,7 @@ export default function Layout({
         component="main"
         sx={{
           p: { md: fullWidth ? 0 : 3 },
-          ...((shouldNotifyMismatch || user?.isLoggedIn) && {
+          ...(shouldNotifyMismatch && {
             pb: { xs: 12, md: 12 },
           }),
           pt: { xs: fullWidth ? 15 : 18, md: 18 },

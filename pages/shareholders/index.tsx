@@ -50,9 +50,14 @@ export default function Shareholders() {
         Each Shareholder shall be assigned its shareholder type upon joining the company (can be changed afterwards).
       </Alert>
 
-      <Box display="flex" justifyContent="space-between" sx={{ mt: 2, mb: 2 }}>
-        <Box display="flex">
-          <Button sx={{ mr: 2 }} variant="outlined" href="/shareholders/new" LinkComponent={NextLink}>
+      <Box justifyContent="space-between" sx={{ mt: 2, mb: 2, display: { md: "flex" } }}>
+        <Box sx={{ display: { md: "flex" } }}>
+          <Button
+            sx={{ mr: 2, mb: { xs: 1, md: 0 }, width: { xs: "100%", md: "auto" } }}
+            variant="outlined"
+            href="/shareholders/new"
+            LinkComponent={NextLink}
+          >
             <AddIcon sx={{ mr: 1 }} /> New shareholder
           </Button>
           {/* TODO: this pdf will be generated via endpoint */}
@@ -60,6 +65,7 @@ export default function Shareholders() {
             variant="outlined"
             href="https://drive.google.com/file/d/114TH9dLJLfHcDwF1TfgxjtEFKi0LbIQ6/view?usp=drive_link"
             target="_blank"
+            sx={{ mb: { xs: 1, md: 0 }, width: { xs: "100%", md: "auto" } }}
           >
             <DownloadIcon sx={{ mr: 1 }} /> DOWNLOAD SHAREHOLDER LIST
           </Button>

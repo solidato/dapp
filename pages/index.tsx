@@ -40,8 +40,7 @@ export default function Home() {
 
   const { acl, isLoading: isLoadingAcl } = useResolutionsAcl();
   const { currentTimestamp } = useTimestamp();
-  const { isConnected, address } = useAccount();
-  const { user } = useUser();
+  const { isConnected } = useAccount();
 
   const enhancedResolutionsToVote = useMemo(() => {
     if (isLoading || isLoadingAcl || error) {
