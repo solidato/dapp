@@ -35,6 +35,9 @@ const Section = ({
         },
       }),
       ...sx,
+      "&:last-child": {
+        pb: 4,
+      },
     }}
     {...(innerRef && { ref: innerRef })}
   >

@@ -86,7 +86,7 @@ export default function Shareholders() {
           </Alert>
         </Box>
       )}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ pb: 4 }}>
         {daoUsers
           ?.filter(
             (user) =>
