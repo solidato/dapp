@@ -15,7 +15,9 @@ import { Shareholder } from "../../../schema/shareholders";
 
 const shareholdersRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const cookie = req.session.cookie;
-  if (!cookie) {
+  const authToken = (req.headers.authorization || "").split("Bearer ").at(1);
+  const isAuthorized = authToken && authToken === process.env.AUTH_API_TOKEN;
+  if (!cookie && !isAuthorized) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 

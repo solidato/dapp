@@ -10,5 +10,6 @@ namespace NodeJS {
     NEXT_PUBLIC_HYPERTUNE_TOKEN: string;
     HYPERTUNE_OUTPUT_FILE_PATH: string;
     JWT_SECRET: string;
+    AUTH_API_TOKEN: string;
   }
 }
