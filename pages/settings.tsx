@@ -108,7 +108,7 @@ export default function Settings() {
             <Avatar
               sx={{ width: { xs: 64, sm: 124 }, height: { xs: 64, sm: 124 } }}
               alt={user?.name}
-              src={user?.avatar}
+              src={user?.avatar || ""}
             >
               {getLettersFromName(user?.name)}
             </Avatar>
