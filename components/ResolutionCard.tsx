@@ -3,7 +3,7 @@ import NextLink from "next/link";
 import * as React from "react";
 import { useState } from "react";
 
-import { Alert, Box, Button, LinearProgress, Link, Stack, SxProps, Tooltip } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, LinearProgress, Link, Stack, SxProps, Tooltip } from "@mui/material";
 import Card, { CardProps } from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -126,7 +126,8 @@ export default function ResolutionCard({
             <Alert severity="info">Resolution is in draft and awaiting approval</Alert>
           )}
           {resolution.state === RESOLUTION_STATES.NOTICE && (
-            <Alert severity="info">
+            <Alert severity="warning" sx={{ fontSize: "1.1rem" }}>
+              <AlertTitle>Heads up</AlertTitle>
               <Countdown
                 targetDate={resolution.resolutionTypeInfo.noticePeriodEnds as Date}
                 prefixLabel="Voting starts"

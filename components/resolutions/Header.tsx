@@ -68,7 +68,8 @@ export default function Header({
         ))}
       {resolution.state === RESOLUTION_STATES.NOTICE && (
         <Section>
-          <Alert severity="info" sx={{ mt: 2 }}>
+          <Alert severity="warning" sx={{ mt: 2, fontSize: "1.1rem" }}>
+            <AlertTitle>Heads up</AlertTitle>
             <Countdown
               targetDate={resolution.resolutionTypeInfo.noticePeriodEnds as Date}
               prefixLabel="Voting starts"
