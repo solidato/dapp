@@ -35,11 +35,6 @@ export default function User({
   const { data: fetchedUser } = useSWR<Shareholder>(address && !user ? `/api/users/${address}` : null, fetcher);
   const [showFullAddress, setShowFullAddress] = useState(false);
 
-  const avatarURI = useMemo(() => {
-    const randomIcon = "data:image/svg+xml;utf8," + generateAvatar(shareholder.ethAddress || "");
-    return shareholder?.avatar ? `data:image/jpeg;charset=utf-8;base64,${shareholder.avatar}` : randomIcon;
-  }, [shareholder]);
-
   useEffect(() => {
     if (fetchedUser) {
       setShareholder(fetchedUser);
@@ -70,7 +65,7 @@ export default function User({
         <Tooltip title={markCurrentUser ? "you" : ""} placement="top" arrow TransitionComponent={Zoom}>
           <Avatar
             alt={shareholder.name}
-            src={avatarURI}
+            src={shareholder.avatar || ""}
             sx={
               markCurrentUser
                 ? {

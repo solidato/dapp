@@ -123,7 +123,7 @@ export default function ResolutionForm({
         <textarea ref={editorRef} />
       </Box>
       <Grid container sx={{ mb: 4, mt: 4 }}>
-        <Grid item xs={12} lg={10}>
+        <Grid item xs={12}>
           <FormControl>
             {isLoadingTypes ? (
               <CircularProgress />

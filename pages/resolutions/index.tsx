@@ -208,14 +208,6 @@ export default function Resolutions() {
             >
               <AddIcon sx={{ mr: 1 }} /> New Resolution
             </Button>
-            <Button
-              sx={{ width: { xs: "100%", md: "auto " } }}
-              component={Link}
-              href="/resolutions/new?template=monthlyRewards"
-              variant="outlined"
-            >
-              <SwapVertIcon sx={{ mr: 1 }} /> Convert Contributed Time to Shareholding
-            </Button>
           </Box>
         </Section>
       )}

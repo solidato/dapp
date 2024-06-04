@@ -71,11 +71,7 @@ export default function AccountMenu() {
           >
             <Badge color="success" variant="dot" invisible={!isConnected}>
               {user?.isLoggedIn ? (
-                <Avatar
-                  sx={{ width: 32, height: 32 }}
-                  alt={user?.name}
-                  src={`data:image/jpeg;charset=utf-8;base64,${user?.avatar || ""}`}
-                >
+                <Avatar sx={{ width: 32, height: 32 }} alt={user?.name} src={user?.avatar || ""}>
                   {getLettersFromName(user?.name)}
                 </Avatar>
               ) : (

@@ -53,11 +53,7 @@ export default function UsersAutocomplete({
       getOptionLabel={(option) => option.name}
       renderOption={(props, option) => (
         <Box component="li" {...props}>
-          <Avatar
-            sx={{ width: 32, height: 32, flexShrink: 0, mr: 2 }}
-            alt={option?.name}
-            src={`data:image/jpeg;charset=utf-8;base64,${option?.image || ""}`}
-          >
+          <Avatar sx={{ width: 32, height: 32, flexShrink: 0, mr: 2 }} alt={option?.name} src={option?.image || ""}>
             {getLettersFromName(option?.name)}
           </Avatar>
           {option.name}
