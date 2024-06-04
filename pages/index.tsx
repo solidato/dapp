@@ -18,8 +18,7 @@ import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 import useUser from "@hooks/useUser";
 
-import ResolutionsStats from "../components/dashboard/ResolutionsStats";
-import { ResolutionEntity, ResolutionEntityEnhanced } from "../types";
+import { ResolutionEntity } from "../types";
 
 Home.renderOnServer = false;
 Home.requireLogin = true;
@@ -50,6 +49,9 @@ export default function Home() {
     const allResolutions = getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl);
     return allResolutions.filter((res) => res.state === RESOLUTION_STATES.VOTING);
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl, error]);
+
+  const { user } = useUser();
+  console.log("user: ", user);
 
   return (
     <>

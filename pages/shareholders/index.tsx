@@ -15,6 +15,7 @@ import { SHAREHOLDERS_ROLES } from "../../lib/constants";
 
 Shareholders.title = "Shareholders";
 Shareholders.checkMismatch = true;
+Shareholders.requireLogin = true;
 
 export default function Shareholders() {
   const { user } = useUser();

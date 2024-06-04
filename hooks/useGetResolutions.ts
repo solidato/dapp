@@ -7,7 +7,7 @@ import { useSubgraphGraphQL } from "@graphql/subgraph/subgraph-client";
 
 import { fetcher } from "@lib/net";
 
-const REFRESH_EVERY_MS = 3000;
+const REFRESH_EVERY_MS = 2000;
 
 export default function useGetResolutions() {
   const { data: dbResolutions, isLoading: isLoadingDbResolutions } = useSWR<

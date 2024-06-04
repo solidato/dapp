@@ -89,6 +89,16 @@ const StyledSnackbarProvider = styled(SnackbarProvider)`
   }
 `;
 
+const UnloggedRedirect = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/login?redirectTo=/");
+  }, []);
+
+  return null;
+};
+
 export default function App({ Component, pageProps }: DappProps) {
   const pageTitle = Component.title ? `${META.title} | ${Component.title}` : META.title;
   const { asPath } = useRouter();
@@ -131,7 +141,7 @@ export default function App({ Component, pageProps }: DappProps) {
                           <CircularProgress />
                         </Box>
                       )}
-                      {((mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn) && (
+                      {(mounted && !isLoading && !Component.requireLogin) || user?.isLoggedIn ? (
                         <ContractsProvider>
                           <>
                             <CheckNeokBalance />
@@ -139,6 +149,8 @@ export default function App({ Component, pageProps }: DappProps) {
                             <Component {...pageProps} />
                           </>
                         </ContractsProvider>
+                      ) : (
+                        <UnloggedRedirect />
                       )}
                     </ExtraneousWarning>
                   </Layout>
