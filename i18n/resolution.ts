@@ -27,7 +27,7 @@ export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
     title: "Significant (at least 66.7%)",
     description:
       "Significant decisions based on AoA. Voting takes 10 days (6-days notice period + 4-days voting period).",
-    disabled: false,
+    disabled: true,
   },
   dissolution: {
     title: "Dissolution",

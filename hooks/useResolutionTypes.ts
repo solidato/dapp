@@ -10,7 +10,6 @@ export default function useResolutionTypes(): { types: ResolutionTypeEntity[]; e
   if (!data || error || isLoading) {
     return { types: [], error, isLoading };
   }
-  console.log("data: ", data);
 
   const resolutionTypes = [
     ...data.resolutionTypes
