@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Box, Button, Divider, Stack, Typography } from "@mui/material";
 
+import { RESOLUTIONS_TO_SKIP } from "@lib/constants";
 import { RESOLUTION_STATES } from "@lib/resolutions/common";
 import { isSameAddress } from "@lib/utils";
 
@@ -33,7 +34,7 @@ export default function MainInfo({ resolution }: { resolution: ResolutionEntityE
       <Stack direction="row" alignItems="center">
         <Box sx={{ width: resolution.state === RESOLUTION_STATES.VOTING ? "calc(100% - 120px)" : "auto" }}>
           <Typography variant="h5">
-            Topic of the resolution: #{resolution.id} {resolution.title}
+            Topic of the resolution: #{Number(resolution.id) - RESOLUTIONS_TO_SKIP} {resolution.title}
           </Typography>
           <Typography variant="body2" sx={{ pt: 1, pb: 0.5 }}>
             Created {resolution.createdAt} by

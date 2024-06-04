@@ -6,6 +6,7 @@ import { ResolutionEntityEnhanced } from "types";
 import React from "react";
 import Html from "react-pdf-html";
 
+import { RESOLUTIONS_TO_SKIP } from "@lib/constants";
 import { RESOLUTION_STATES, getDateFromUnixTimestamp } from "@lib/resolutions/common";
 import { getPdfSigner } from "@lib/utils";
 
@@ -160,7 +161,7 @@ const ResolutionPdf = ({
           </View>
         </View>
         <Text style={styles.title}>
-          Topic of the resolution: #{resolution.id} {resolution.title}
+          Topic of the resolution: #{Number(resolution.id) - RESOLUTIONS_TO_SKIP} {resolution.title}
         </Text>
         <Text style={{ ...styles.subTitle, marginBottom: "2px" }}>
           Created on {resolution.createdAt} by {getUserName(resolution.createBy)}{" "}

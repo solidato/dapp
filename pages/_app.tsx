@@ -89,12 +89,14 @@ const StyledSnackbarProvider = styled(SnackbarProvider)`
   }
 `;
 
-const UnloggedRedirect = () => {
+const UnloggedRedirect = ({ isLoading }: { isLoading: boolean }) => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/login?redirectTo=/");
-  }, []);
+    if (!isLoading) {
+      router.push("/login?redirectTo=/");
+    }
+  }, [isLoading]);
 
   return null;
 };
@@ -150,7 +152,7 @@ export default function App({ Component, pageProps }: DappProps) {
                           </>
                         </ContractsProvider>
                       ) : (
-                        <UnloggedRedirect />
+                        <UnloggedRedirect isLoading={isLoading} />
                       )}
                     </ExtraneousWarning>
                   </Layout>

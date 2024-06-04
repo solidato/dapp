@@ -210,3 +210,5 @@ export const getStageId = (stageName: string) => {
   const stage = PROJECT_TASK_TYPE?.find((projectType) => projectType.name.toLowerCase() === stageName.toLowerCase());
   return stage?.id;
 };
+
+export const RESOLUTIONS_TO_SKIP = 9;

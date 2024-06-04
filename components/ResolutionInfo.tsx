@@ -1,3 +1,4 @@
+import { RESOLUTION_TYPES_TEXTS } from "i18n/resolution";
 import { useAccount } from "wagmi";
 
 import { Box, Chip, Stack, Typography, alpha } from "@mui/material";
@@ -127,7 +128,9 @@ export default function ResolutionInfo({
             <Typography variant="body2">Resolution Type: </Typography>
             <Chip
               variant="outlined"
-              label={`${resolution.resolutionType.name} ${resolution.isNegative ? " (veto)" : ""}`}
+              label={`${RESOLUTION_TYPES_TEXTS[resolution.resolutionType.name].title} ${
+                resolution.isNegative ? " (veto)" : ""
+              }`}
               sx={{ ml: 0.5 }}
               size={chipSize}
             />

@@ -10,6 +10,8 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 
+import { RESOLUTIONS_TO_SKIP } from "@lib/constants";
+
 import ResolutionInfo from "@components/ResolutionInfo";
 import User from "@components/User";
 
@@ -69,7 +71,7 @@ export default function ResolutionCard({
             component={NextLink}
             href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
           >
-            #{resolution.id} {resolution.title}
+            #{Number(resolution.id) - RESOLUTIONS_TO_SKIP} {resolution.title}
           </Link>
         }
         titleTypographyProps={{
