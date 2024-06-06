@@ -1,6 +1,6 @@
 import "easymde/dist/easymde.min.css";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   Alert,
@@ -28,6 +28,7 @@ import UsersAutocomplete from "./UsersAutocomplete";
 
 interface FormProps {
   isMonthlyRewards?: boolean;
+  isConfirmation?: boolean;
   title: string;
   content: string;
   typeId: string;
@@ -42,6 +43,7 @@ interface FormProps {
 
 export default function ResolutionForm({
   isMonthlyRewards = false,
+  isConfirmation = false,
   title,
   content,
   typeId,
@@ -57,6 +59,13 @@ export default function ResolutionForm({
   const editorRef = useRef(null);
 
   const [withExclusion, setWithExclusion] = useState(exclusionAddress !== "");
+
+  const filteredTypes = useMemo(() => {
+    if (types && isConfirmation) {
+      return types.filter((type) => type.name === "confirmation");
+    }
+    return types;
+  }, [types]);
 
   useEffect(() => {
     let easyMdeInstance: any = null;
@@ -134,7 +143,7 @@ export default function ResolutionForm({
                 name="radio-buttons-group"
                 onChange={onUpdateType}
               >
-                {types.map((resolutionType) => (
+                {filteredTypes.map((resolutionType) => (
                   <FormControlLabel
                     value={resolutionType.id}
                     key={resolutionType.id}

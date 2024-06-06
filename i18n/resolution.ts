@@ -5,6 +5,11 @@ export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
       "Bruce Wayne, eccentric billionaire. My anger outweights my guilt. Bats frighten me. It's time my enemies shared my dread. Does it come in black? It's not who I am underneath but what I do that defines me.",
     disabled: true,
   },
+  confirmation: {
+    title: "Confirmation",
+    description: "Voting takes 4 days (0 days notice period). Quorum: 100%.",
+    disabled: false,
+  },
   capitalChange: {
     title: "Capital Change",
     description:

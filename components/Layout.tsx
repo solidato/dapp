@@ -231,6 +231,15 @@ export default function Layout({
 
               {user?.isLoggedIn && (
                 <Chip
+                  label="Confirmations"
+                  component={Link}
+                  href={"/confirmations"}
+                  variant={isActive("/confirmations") ? "filled" : "outlined"}
+                />
+              )}
+
+              {user?.isLoggedIn && (
+                <Chip
                   label="Time Tracking  🚧"
                   component={Link}
                   href={"/tasks"}
