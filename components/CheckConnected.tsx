@@ -29,8 +29,7 @@ export default function CheckConnected({ fullWidth = false }: { fullWidth?: bool
         }
       >
         <AlertTitle>Reminder</AlertTitle>
-        You are currently just connected through Odoo. Please connect your wallet for seamless interaction within the
-        dapp.
+        Please connect your wallet for seamless interaction within the dapp.
       </Alert>
     </Component>
   );

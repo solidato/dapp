@@ -83,7 +83,7 @@ export default function ShareholdingValue() {
         <Typography variant="h6">Your shareholding&apos;s value</Typography>
         <Typography variant="h4" sx={{ pt: 2 }}>
           {/* {moneyFormatter.format(totalSupply)} */}
-          {moneyFormatter.format(Number(daoUser?.shareholdingRights))}
+          {daoUser?.shareholdingRights ? moneyFormatter.format(Number(daoUser?.shareholdingRights)) : "N/A"}
         </Typography>
       </Paper>
       <Paper sx={{ p: 4, width: { xs: "100%", sm: "49%" }, position: "relative" }}>
