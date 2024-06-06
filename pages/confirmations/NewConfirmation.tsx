@@ -27,14 +27,6 @@ export default function NewConfirmation({}) {
   const { reset, ...formProps } = useStore(store, (s) => s);
 
   const disabledSubmit = !acl?.canCreate || !formProps.title.trim() || !formProps.content.trim();
-  console.log("🐞 > formProps:", formProps);
-  console.log(
-    "🐞 > !formProps.typeId || !acl?.canCreate || !formProps.title.trim() || !formProps.content.trim():",
-    !formProps.typeId,
-    !acl?.canCreate,
-    !formProps.title.trim(),
-    !formProps.content.trim(),
-  );
   const loadingSubmit = isAwaitingConfirmation || isLoading;
 
   const featureFlags = useFeatureFlags();

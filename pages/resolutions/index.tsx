@@ -113,7 +113,9 @@ export default function Resolutions() {
     if ((isLoading || isLoadingAcl) && resolutions.length === 0) {
       return [];
     }
-    return getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl);
+    return getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl).filter(
+      (res) => res.resolutionType.name !== "confirmation",
+    );
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 
   const resolutionTypes = useMemo(() => {
