@@ -72,7 +72,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
     });
 
     if (submittedCorrectly) {
-      router.push("/resolutions");
+      router.push(isConfirmation ? "/confirmations" : "/resolutions");
     }
   };
 
@@ -88,7 +88,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
     setApproveDialogOpen(false);
     const submittedCorrectly = await onSubmitApprove({ resolutionId: resolution.id });
     if (submittedCorrectly) {
-      router.push("/resolutions");
+      router.push(isConfirmation ? "/confirmations" : "/resolutions");
     }
   };
 
@@ -104,7 +104,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
     setRejectDialogOpen(false);
     const submittedCorrectly = await onSubmitReject({ resolutionId: resolution.id });
     if (submittedCorrectly) {
-      router.push("/resolutions");
+      router.push(isConfirmation ? "/confirmations" : "/resolutions");
     }
   };
 
