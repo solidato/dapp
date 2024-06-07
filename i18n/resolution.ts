@@ -8,6 +8,11 @@ export const RESOLUTION_TYPES_TEXTS: Record<string, any> = {
   confirmation: {
     title: "Confirmation",
     description: "Voting takes 4 days (0 days notice period). Quorum: 100%.",
+    disabled: true,
+  },
+  confirmation2: {
+    title: "Confirmation",
+    description: "Voting takes 4 days (0 days notice period). Quorum: 100%.",
     disabled: false,
   },
   capitalChange: {

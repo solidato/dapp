@@ -23,6 +23,7 @@ import { getPreviousMonth } from "@lib/resolutions/common";
 import useResolutionTypes from "@hooks/useResolutionTypes";
 
 import { RESOLUTION_TYPES_TEXTS } from "../i18n/resolution";
+import { CONFIRMATION_TYPE } from "../lib/constants";
 import User from "./User";
 import UsersAutocomplete from "./UsersAutocomplete";
 
@@ -62,7 +63,7 @@ export default function ResolutionForm({
 
   const filteredTypes = useMemo(() => {
     if (types && isConfirmation) {
-      return types.filter((type) => type.name === "confirmation");
+      return types.filter((type) => type.name === CONFIRMATION_TYPE.name);
     }
     return types;
   }, [types]);

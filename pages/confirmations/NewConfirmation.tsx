@@ -18,6 +18,8 @@ import ResolutionForm from "@components/ResolutionForm";
 import useResolutionCreate from "@hooks/useResolutionCreate";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 
+import { CONFIRMATION_TYPE } from "../../lib/constants";
+
 export default function NewConfirmation({}) {
   const { acl } = useResolutionsAcl();
   const { onSubmit } = useResolutionCreate();
@@ -44,7 +46,7 @@ export default function NewConfirmation({}) {
     const submittedSuccessfully = await onSubmit({
       vetoTypeId: null,
       currentResolution: {
-        typeId: "10",
+        typeId: CONFIRMATION_TYPE.id,
         title: formProps.title,
         content: formProps.content,
         exclusionAddress: formProps.exclusionAddress,
@@ -65,7 +67,7 @@ export default function NewConfirmation({}) {
       <Typography variant="h3">
         {formProps.title.trim() ? `Preliminary draft: ${formProps.title}` : "Preliminary draft Resolution"}
       </Typography>
-      <ResolutionForm {...formProps} typeId={"10"} isConfirmation={true} isMonthlyRewards={false} />
+      <ResolutionForm {...formProps} typeId={CONFIRMATION_TYPE.id} isConfirmation={true} isMonthlyRewards={false} />
       <LoadingButton
         size="large"
         loading={loadingSubmit}

@@ -2,6 +2,11 @@ import { ShareholderStatus } from "../types";
 
 export const ODOO_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+export const CONFIRMATION_TYPE = {
+  id: "11",
+  name: "confirmation2",
+};
+
 export const SHAREHOLDERS_ROLES: Record<string, ShareholderStatus> = {
   BOARD_MEMBER: "Board Member",
   ACTIVE_SHAREHOLDER: "Active Shareholder",

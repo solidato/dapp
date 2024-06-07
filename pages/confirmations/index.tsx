@@ -19,6 +19,8 @@ import useResolutionsAcl from "@hooks/useResolutionsAcl";
 import useTimestamp from "@hooks/useTimestamp";
 import useUser from "@hooks/useUser";
 
+import { CONFIRMATION_TYPE } from "../../lib/constants";
+
 Confirmations.title = "Confirmations";
 Confirmations.checkMismatch = true;
 Confirmations.fullWidth = true;
@@ -38,7 +40,7 @@ export default function Confirmations() {
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 
   const filteredResolutions = useMemo(() => {
-    return enhancedResolutions.filter((r) => r.resolutionType.name === "confirmation");
+    return enhancedResolutions.filter((r) => ["confirmation", CONFIRMATION_TYPE.name].includes(r.resolutionType.name));
   }, [enhancedResolutions]);
 
   const [activeResolutions, inactiveResolutions] = useMemo(() => {

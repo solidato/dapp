@@ -25,6 +25,7 @@ import useResolutionTypes from "@hooks/useResolutionTypes";
 import useResolutionUpdate from "@hooks/useResolutionUpdate";
 import useResolutionsAcl from "@hooks/useResolutionsAcl";
 
+import { CONFIRMATION_TYPE } from "../lib/constants";
 import { ResolutionEntityEnhanced } from "../types";
 import Dialog from "./Dialog";
 
@@ -40,7 +41,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
   const canCreateResolutions = featureFlags.canCreateResolutions().get(true);
   const router = useRouter();
   const isVeto = resolution.resolutionType.name === "routine" && resolution.isNegative;
-  const isConfirmation = resolution.resolutionType.name === "confirmation";
+  const isConfirmation = resolution.resolutionType.name === CONFIRMATION_TYPE.name;
   const store = useRef(
     createResolutionFormStore({
       title: resolution?.title || "",

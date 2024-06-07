@@ -44,6 +44,7 @@ import useUsers from "@hooks/useUsers";
 
 import UsersAutocomplete from "../../components/UsersAutocomplete";
 import { RESOLUTION_TYPES_TEXTS } from "../../i18n/resolution";
+import { CONFIRMATION_TYPE } from "../../lib/constants";
 
 interface ChevronProps extends React.ComponentProps<typeof ExpandMoreIcon> {
   expand: boolean;
@@ -114,7 +115,7 @@ export default function Resolutions() {
       return [];
     }
     return getEnhancedResolutions(resolutions as ResolutionEntity[], +currentTimestamp, acl).filter(
-      (res) => res.resolutionType.name !== "confirmation",
+      (res) => ![CONFIRMATION_TYPE.name, "confirmation"].includes(res.resolutionType.name),
     );
   }, [resolutions, currentTimestamp, acl, isLoading, isLoadingAcl]);
 

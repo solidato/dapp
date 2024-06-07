@@ -10,7 +10,7 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 
-import { RESOLUTIONS_TO_SKIP } from "@lib/constants";
+import { CONFIRMATION_TYPE, RESOLUTIONS_TO_SKIP } from "@lib/constants";
 
 import ResolutionInfo from "@components/ResolutionInfo";
 import User from "@components/User";
@@ -42,7 +42,7 @@ export default function ResolutionCard({
   };
 
   const canEdit = resolution.state === RESOLUTION_STATES.PRE_DRAFT && acl.canUpdate;
-  const isConfirmation = resolution.resolutionType.name === "confirmation";
+  const isConfirmation = resolution.resolutionType.name === CONFIRMATION_TYPE.name;
 
   const cardProps: Partial<CardProps> =
     resolution.state === RESOLUTION_STATES.VOTING
