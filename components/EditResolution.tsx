@@ -40,6 +40,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
   const canCreateResolutions = featureFlags.canCreateResolutions().get(true);
   const router = useRouter();
   const isVeto = resolution.resolutionType.name === "routine" && resolution.isNegative;
+  const isConfirmation = resolution.resolutionType.name === "confirmation";
   const store = useRef(
     createResolutionFormStore({
       title: resolution?.title || "",
@@ -150,6 +151,7 @@ export default function EditResolution({ resolution }: { resolution: ResolutionE
       <ResolutionForm
         {...formProps}
         isMonthlyRewards={(resolution.executionData || []).length > 0}
+        isConfirmation={isConfirmation}
         isEditing
         addressedContributor={resolution?.addressedContributor}
       />

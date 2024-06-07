@@ -42,6 +42,7 @@ export default function ResolutionCard({
   };
 
   const canEdit = resolution.state === RESOLUTION_STATES.PRE_DRAFT && acl.canUpdate;
+  const isConfirmation = resolution.resolutionType.name === "confirmation";
 
   const cardProps: Partial<CardProps> =
     resolution.state === RESOLUTION_STATES.VOTING
@@ -69,7 +70,11 @@ export default function ResolutionCard({
         title={
           <Link
             component={NextLink}
-            href={canEdit ? `/resolutions/${resolution.id}/edit` : `/resolutions/${resolution.id}`}
+            href={
+              canEdit
+                ? `/${isConfirmation ? "confirmations" : "resolutions"}/${resolution.id}/edit`
+                : `/${isConfirmation ? "confirmations" : "resolutions"}/${resolution.id}`
+            }
           >
             #{Number(resolution.id) - RESOLUTIONS_TO_SKIP} {resolution.title}
           </Link>

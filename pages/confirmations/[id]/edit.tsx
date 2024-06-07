@@ -42,7 +42,7 @@ export const getServerSideProps = async ({ params, res }: any) => {
     return {
       redirect: {
         permanent: true,
-        destination: `/resolutions/${params.id}`,
+        destination: `/confirmations/${params.id}`,
       },
     };
   }
