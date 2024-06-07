@@ -62,10 +62,11 @@ export default function ResolutionForm({
   const [withExclusion, setWithExclusion] = useState(exclusionAddress !== "");
 
   const filteredTypes = useMemo(() => {
-    if (types && isConfirmation) {
-      return types.filter((type) => type.name === CONFIRMATION_TYPE.name);
+    if (types) {
+      return types.filter((type) =>
+        isConfirmation ? type.name === CONFIRMATION_TYPE.name : type.name !== CONFIRMATION_TYPE.name,
+      );
     }
-    return types;
   }, [types]);
 
   useEffect(() => {
